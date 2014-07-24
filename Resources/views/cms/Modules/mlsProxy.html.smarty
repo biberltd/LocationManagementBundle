@@ -1,0 +1,19 @@
+{*
+    INFO:
+    =============================================================================
+    Name:           cms/Form/mlsProxy.html.smarty
+    Author:         Can Berkol
+    Version:        1.0.0
+    Date:           12.03.2014
+
+    Description:    Proxy to create multi language view
+
+    PARAMETERS:
+    =============================================================================
+    $mlsForm
+    $renderedModal
+*}
+{$mlsForm}
+{if isset($renderedModal)}
+    {$renderedModal}
+{/if}

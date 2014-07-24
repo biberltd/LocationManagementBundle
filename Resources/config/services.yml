@@ -1,0 +1,4 @@
+services:
+    locationmanagement.model:
+        class:        BiberLtd\Core\Bundles\LocationManagementBundle\Services\LocationManagementModel
+        arguments:    [@kernel, "default", "doctrine"]
