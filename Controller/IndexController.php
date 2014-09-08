@@ -18,7 +18,7 @@
  *
  */
 
-namespace BiberLtd\Core\Bundles\LocationManagementBundle\Controller;
+namespace BiberLtd\Bundle\LocationManagementBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller,
     Symfony\Component\HttpKernel\Exception,

@@ -1,10 +1,10 @@
 <?php
 
-namespace BiberLtd\Core\Bundles\LocationManagementBundle;
+namespace BiberLtd\Bundle\LocationManagementBundle;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
-class BiberLtdCoreBundlesLocationManagementBundle extends Bundle
+class BiberLtdBundleLocationManagementBundle extends Bundle
 {
 
 }

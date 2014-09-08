@@ -15,7 +15,7 @@
  * @description Model / Entity class.
  *
  */
-namespace BiberLtd\Core\Bundles\LocationManagementBundle\Entity;
+namespace BiberLtd\Bundle\LocationManagementBundle\Entity;
 use Doctrine\ORM\Mapping AS ORM;
 use BiberLtd\Core\CoreEntity;
 
@@ -77,25 +77,25 @@ class Office extends CoreEntity
     private $email;
 
     /** 
-     * @ORM\ManyToOne(targetEntity="BiberLtd\Core\Bundles\LocationManagementBundle\Entity\City")
+     * @ORM\ManyToOne(targetEntity="BiberLtd\Bundle\LocationManagementBundle\Entity\City")
      * @ORM\JoinColumn(name="city", referencedColumnName="id", nullable=false)
      */
     private $city;
 
     /** 
-     * @ORM\ManyToOne(targetEntity="BiberLtd\Core\Bundles\LocationManagementBundle\Entity\State")
+     * @ORM\ManyToOne(targetEntity="BiberLtd\Bundle\LocationManagementBundle\Entity\State")
      * @ORM\JoinColumn(name="state", referencedColumnName="id")
      */
     private $state;
 
     /** 
-     * @ORM\ManyToOne(targetEntity="BiberLtd\Core\Bundles\LocationManagementBundle\Entity\Country")
+     * @ORM\ManyToOne(targetEntity="BiberLtd\Bundle\LocationManagementBundle\Entity\Country")
      * @ORM\JoinColumn(name="country", referencedColumnName="id", nullable=false)
      */
     private $country;
 
     /** 
-     * @ORM\ManyToOne(targetEntity="BiberLtd\Core\Bundles\SiteManagementBundle\Entity\Site")
+     * @ORM\ManyToOne(targetEntity="BiberLtd\Bundle\SiteManagementBundle\Entity\Site")
      * @ORM\JoinColumn(name="site", referencedColumnName="id", onDelete="CASCADE")
      */
     private $site;

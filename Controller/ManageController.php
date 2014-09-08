@@ -16,7 +16,7 @@
  *
  */
 
-namespace BiberLtd\Core\Bundles\LocationManagementBundle\Controller;
+namespace BiberLtd\Bundle\LocationManagementBundle\Controller;
 
 use BiberLtd\Core\CoreController;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller,

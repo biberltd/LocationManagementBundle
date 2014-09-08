@@ -1,7 +1,7 @@
 {*
     INFO:
     =============================================================================
-    Name:           BiberLtdCoreBundlesBundle/LocationManagementBundle/views/Pages/cmsnewCountry.html.smarty
+    Name:           BiberLtdBundleBundle/LocationManagementBundle/views/Pages/cmsnewCountry.html.smarty
     Author:         Can Berkol
     Version:        1.0.0
     Date:           12.03.2014

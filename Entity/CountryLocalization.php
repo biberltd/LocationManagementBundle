@@ -13,7 +13,7 @@
  * @description Model / Entity class.
  *
  */
-namespace BiberLtd\Core\Bundles\LocationManagementBundle\Entity;
+namespace BiberLtd\Bundle\LocationManagementBundle\Entity;
 use Doctrine\ORM\Mapping AS ORM;
 use BiberLtd\Core\CoreEntity;
 
@@ -43,7 +43,7 @@ class CountryLocalization extends CoreEntity
 
     /** 
      * @ORM\Id
-     * @ORM\ManyToOne(targetEntity="BiberLtd\Core\Bundles\MultiLanguageSupportBundle\Entity\Language")
+     * @ORM\ManyToOne(targetEntity="BiberLtd\Bundle\MultiLanguageSupportBundle\Entity\Language")
      * @ORM\JoinColumn(name="language", referencedColumnName="id", onDelete="CASCADE")
      */
     private $language;
@@ -51,7 +51,7 @@ class CountryLocalization extends CoreEntity
     /** 
      * @ORM\Id
      * @ORM\ManyToOne(
-     *     targetEntity="BiberLtd\Core\Bundles\LocationManagementBundle\Entity\Country",
+     *     targetEntity="BiberLtd\Bundle\LocationManagementBundle\Entity\Country",
      *     inversedBy="localizations"
      * )
      * @ORM\JoinColumn(name="country", referencedColumnName="id", onDelete="CASCADE")

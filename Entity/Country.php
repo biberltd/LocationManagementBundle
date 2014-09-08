@@ -13,7 +13,7 @@
  * @description Model / Entity class.
  *
  */
-namespace BiberLtd\Core\Bundles\LocationManagementBundle\Entity;
+namespace BiberLtd\Bundle\LocationManagementBundle\Entity;
 use Doctrine\ORM\Mapping AS ORM;
 use BiberLtd\Core\CoreLocalizableEntity;
 
@@ -44,19 +44,19 @@ class Country extends CoreLocalizableEntity
 
     /**
      * @ORM\OneToMany(
-     *     targetEntity="BiberLtd\Core\Bundles\LocationManagementBundle\Entity\CountryLocalization",
+     *     targetEntity="BiberLtd\Bundle\LocationManagementBundle\Entity\CountryLocalization",
      *     mappedBy="country"
      * )
      */
     protected $localizations;
 
     /**
-     * @ORM\OneToMany(targetEntity="BiberLtd\Core\Bundles\LocationManagementBundle\Entity\City", mappedBy="country")
+     * @ORM\OneToMany(targetEntity="BiberLtd\Bundle\LocationManagementBundle\Entity\City", mappedBy="country")
      */
     private $cities;
 
     /**
-     * @ORM\OneToMany(targetEntity="BiberLtd\Core\Bundles\LocationManagementBundle\Entity\State", mappedBy="country")
+     * @ORM\OneToMany(targetEntity="BiberLtd\Bundle\LocationManagementBundle\Entity\State", mappedBy="country")
      */
     private $states;
 
