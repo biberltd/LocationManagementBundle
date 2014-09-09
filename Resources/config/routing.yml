@@ -1,3 +1,48 @@
-biber_ltd_location_management_homepage:
-    path:     /hello/{name}
-    defaults: { _controller: BiberLtdLocationManagementBundle:Default:index }
+manage_city_edit:
+    pattern:  manage/city/edit/{id}
+    defaults: { _controller: BiberLtdCoreBundlesLocationManagementBundle:Manage:editCity }
+manage_city_new:
+    pattern:  manage/city/new
+    defaults: { _controller: BiberLtdCoreBundlesLocationManagementBundle:Manage:newCity }
+manage_city_list:
+    pattern:  manage/city/list
+    defaults: { _controller: BiberLtdCoreBundlesLocationManagementBundle:Manage:listCities }
+manage_city_delete:
+    pattern:  manage/city/delete/{id}
+    defaults: { _controller: BiberLtdCoreBundlesLocationManagementBundle:Manage:deleteCity, id:-1 }
+manage_state_edit:
+    pattern:  manage/state/edit/{id}
+    defaults: { _controller: BiberLtdCoreBundlesLocationManagementBundle:Manage:editState }
+manage_state_new:
+    pattern:  manage/state/new
+    defaults: { _controller: BiberLtdCoreBundlesLocationManagementBundle:Manage:newState }
+manage_state_update:
+    pattern:  manage/state/update
+    defaults: { _controller: BiberLtdCoreBundlesLocationManagementBundle:Manage:updateStatesOnCountryChange }
+manage_state_list:
+    pattern:  manage/state/list
+    defaults: { _controller: BiberLtdCoreBundlesLocationManagementBundle:Manage:listStates }
+manage_statedelete:
+    pattern:  manage/state/delete/{id}
+    defaults: { _controller: BiberLtdCoreBundlesLocationManagementBundle:Manage:deleteState, id: -1 }
+manage_country_edit:
+    pattern:  manage/country/edit/{id}
+    defaults: { _controller: BiberLtdCoreBundlesLocationManagementBundle:Manage:editCountry }
+manage_country_new:
+    pattern:  manage/country/new
+    defaults: { _controller: BiberLtdCoreBundlesLocationManagementBundle:Manage:newCountry }
+manage_country_list:
+    pattern:  manage/country/list
+    defaults: { _controller: BiberLtdCoreBundlesLocationManagementBundle:Manage:listCountries }
+manage_country_delete:
+    pattern:  manage/country/delete/{id}
+    defaults: { _controller: BiberLtdCoreBundlesLocationManagementBundle:Manage:deleteCountry, id: -1 }
+manage_process_city:
+    pattern:  manage/city/process/{processType}/{id}
+    defaults: { _controller: BiberLtdCoreBundlesLocationManagementBundle:Manage:processCity, id:-1 }
+manage_process_country:
+    pattern:  manage/country/process/{processType}/{id}
+    defaults: { _controller: BiberLtdCoreBundlesLocationManagementBundle:Manage:processCountry, id:-1 }
+manage_process_state:
+    pattern:  manage/state/process/{processType}/{id}
+    defaults: { _controller: BiberLtdCoreBundlesLocationManagementBundle:Manage:processState, id:-1 }
