@@ -1,7 +1,7 @@
 <?php
 /**
  * @name        CountryLocalization
- * @package		BiberLtd\Core\LocationManagementBundle
+ * @package		BiberLtd\Bundle\CoreBundle\LocationManagementBundle
  *
  * @author		Murat Ünal
  * @version     1.0.0
@@ -13,9 +13,9 @@
  * @description Model / Entity class.
  *
  */
-namespace BiberLtd\Core\Bundles\LocationManagementBundle\Entity;
+namespace BiberLtd\Bundle\LocationManagementBundle\Entity;
 use Doctrine\ORM\Mapping AS ORM;
-use BiberLtd\Core\CoreEntity;
+use BiberLtd\Bundle\CoreBundle\CoreEntity;
 
 /** 
  * @ORM\Entity
@@ -43,7 +43,7 @@ class CountryLocalization extends CoreEntity
 
     /** 
      * @ORM\Id
-     * @ORM\ManyToOne(targetEntity="BiberLtd\Core\Bundles\MultiLanguageSupportBundle\Entity\Language")
+     * @ORM\ManyToOne(targetEntity="BiberLtd\Bundle\MultiLanguageSupportBundle\Entity\Language")
      * @ORM\JoinColumn(name="language", referencedColumnName="id", onDelete="CASCADE")
      */
     private $language;
@@ -51,7 +51,7 @@ class CountryLocalization extends CoreEntity
     /** 
      * @ORM\Id
      * @ORM\ManyToOne(
-     *     targetEntity="BiberLtd\Core\Bundles\LocationManagementBundle\Entity\Country",
+     *     targetEntity="BiberLtd\Bundle\LocationManagementBundle\Entity\Country",
      *     inversedBy="localizations"
      * )
      * @ORM\JoinColumn(name="country", referencedColumnName="id", onDelete="CASCADE")

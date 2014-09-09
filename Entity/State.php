@@ -1,7 +1,7 @@
 <?php
 /**
  * @name        State
- * @package		BiberLtd\Core\LocationManagementBundle
+ * @package		BiberLtd\Bundle\CoreBundle\LocationManagementBundle
  *
  * @author		Murat Ünal
  * @version     1.0.1
@@ -14,9 +14,9 @@
  *
  */
 
-namespace BiberLtd\Core\Bundles\LocationManagementBundle\Entity;
+namespace BiberLtd\Bundle\LocationManagementBundle\Entity;
 use Doctrine\ORM\Mapping AS ORM;
-use BiberLtd\Core\CoreLocalizableEntity;
+use BiberLtd\Bundle\CoreBundle\CoreLocalizableEntity;
 
 /**
  * @ORM\Entity
@@ -43,20 +43,20 @@ class State extends CoreLocalizableEntity
 
     /**
      * @ORM\OneToMany(
-     *     targetEntity="BiberLtd\Core\Bundles\LocationManagementBundle\Entity\StateLocalization",
+     *     targetEntity="BiberLtd\Bundle\LocationManagementBundle\Entity\StateLocalization",
      *     mappedBy="state"
      * )
      */
     protected $localizations;
 
     /**
-     * @ORM\OneToMany(targetEntity="BiberLtd\Core\Bundles\LocationManagementBundle\Entity\City", mappedBy="state")
+     * @ORM\OneToMany(targetEntity="BiberLtd\Bundle\LocationManagementBundle\Entity\City", mappedBy="state")
      */
     private $cities;
 
     /**
      * @ORM\ManyToOne(
-     *     targetEntity="BiberLtd\Core\Bundles\LocationManagementBundle\Entity\Country",
+     *     targetEntity="BiberLtd\Bundle\LocationManagementBundle\Entity\Country",
      *     inversedBy="states"
      * )
      * @ORM\JoinColumn(name="country", referencedColumnName="id", onDelete="CASCADE")

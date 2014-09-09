@@ -247,7 +247,7 @@
     </association>
     <comment caption="LocationManagementBundle Pricing" description="city: 130 TL&#10;city_localization: 130 TL&#10;country: 40 TL&#10;country_localization: 130 TL&#10;office: 360 TL&#10;state: 85 TL&#10;state_localization: 130 TL&#10;&#10;toplam: 1005 TL" uuid="8df36609-2c22-47f5-b0ed-349e8665c036"/>
     <orm-attributes>
-      <attribute name="namespace">BiberLtd\Core\Bundles\LocationManagementBundle\Entity</attribute>
+      <attribute name="namespace">BiberLtd\Bundle\LocationManagementBundle\Entity</attribute>
       <attribute name="filename-format">entity-name-only</attribute>
       <attribute name="file-suffix">without-suffix</attribute>
     </orm-attributes>

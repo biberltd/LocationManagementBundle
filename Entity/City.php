@@ -1,7 +1,7 @@
 <?php
 /**
  * @name        City
- * @package		BiberLtd\Core\LocationManagementBundle
+ * @package		BiberLtd\Bundle\CoreBundle\LocationManagementBundle
  *
  * @author		Murat Ünal
  * @version     1.0.1
@@ -13,9 +13,9 @@
  * @description Model / Entity class.
  *
  */
-namespace BiberLtd\Core\Bundles\LocationManagementBundle\Entity;
+namespace BiberLtd\Bundle\LocationManagementBundle\Entity;
 use Doctrine\ORM\Mapping AS ORM;
-use BiberLtd\Core\CoreLocalizableEntity;
+use BiberLtd\Bundle\CoreBundle\CoreLocalizableEntity;
 
 /** 
  * @ORM\Entity
@@ -44,7 +44,7 @@ class City extends CoreLocalizableEntity
 
     /** 
      * @ORM\OneToMany(
-     *     targetEntity="BiberLtd\Core\Bundles\LocationManagementBundle\Entity\CityLocalization",
+     *     targetEntity="BiberLtd\Bundle\LocationManagementBundle\Entity\CityLocalization",
      *     mappedBy="city"
      * )
      */
@@ -52,7 +52,7 @@ class City extends CoreLocalizableEntity
 
     /** 
      * @ORM\ManyToOne(
-     *     targetEntity="BiberLtd\Core\Bundles\LocationManagementBundle\Entity\Country",
+     *     targetEntity="BiberLtd\Bundle\LocationManagementBundle\Entity\Country",
      *     inversedBy="cities"
      * )
      * @ORM\JoinColumn(name="country", referencedColumnName="id", nullable=false, onDelete="CASCADE")
@@ -60,7 +60,7 @@ class City extends CoreLocalizableEntity
     private $country;
 
     /** 
-     * @ORM\ManyToOne(targetEntity="BiberLtd\Core\Bundles\LocationManagementBundle\Entity\State", inversedBy="cities")
+     * @ORM\ManyToOne(targetEntity="BiberLtd\Bundle\LocationManagementBundle\Entity\State", inversedBy="cities")
      * @ORM\JoinColumn(name="state", referencedColumnName="id", onDelete="CASCADE")
      */
     private $state;
