@@ -18,7 +18,7 @@
     ],
     "require": {
         "biberltd/core-bundle" : "self.version",
-	"biberltd/site-management-bundle" : "self.version",
+	"biberltd/site-management-bundle" : "self.version"
     },
     "autoload": {
         "psr-0": { "BiberLtd\\Bundle\\LocationManagementBundle": "" }
