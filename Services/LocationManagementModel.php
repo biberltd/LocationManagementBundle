@@ -14,9 +14,9 @@
  *
  * @copyright   Biber Ltd. (www.biberltd.com)
  *
- * @version     1.0.4
+ * @version     1.0.5
  *
- * @date        20.03.2014
+ * @date        17.04.2015
  *
  * =============================================================================================================
  * !! INSTRUCTIONS ON IMPORTANT ASPECTS OF MODEL METHODS !!!
@@ -2979,6 +2979,42 @@ class LocationManagementModel extends CoreModel {
     }
 
     /**
+     * @name            listOfficesByType()
+     * Lists offices details with given type.
+     *
+     * @since           1.0.5
+     * @version         1.0.5
+     *
+     * @author          Said İmamoğlu
+     *
+     * @use             $this->listOffices()
+     *
+     *
+     * @param           string  $type
+     *
+     * @return          array   $response
+     *
+     */
+
+    public function listOfficesByType($type) {
+
+        $filter[] = array(
+            'glue' => ' and',
+            'condition' => array(
+                array(
+                    'glue' => 'and',
+                    'condition' => array(
+                        'column' => $this->entity['office']['alias'] . '.type',
+                        'comparison' => '=',
+                        'value' => $type
+                    )
+                )
+            )
+        );
+        return $this->listOffices($filter);
+    }
+
+    /**
      * @name            listOfficesInCity()
      *                  Lists offices located in a city.
      *
@@ -3104,11 +3140,8 @@ class LocationManagementModel extends CoreModel {
      * 
      * @use             $this->listOffices()
      * 
-     * @param           array   $filter         Multi dimensional array
-     * @param           array   $sortorder      'coloumn' => 'asc|desc'
-     * @param           array   $limit          start,count
-     * @param           string  $query_str      If a custom query string needs to be defined.
-     * 
+     * @param           int   $site
+     *
      * @return          array   $response
      * 
      */
@@ -3116,9 +3149,45 @@ class LocationManagementModel extends CoreModel {
         $filter[] = array(
             'glue' => ' and',
             'condition' => array(
+                array(
                 'column' => $this->entity['office']['alias'] . '.site',
                 'comparison' => '=',
                 'value' => $site
+                )
+            )
+        );
+        return $this->listOffices($filter);
+    }
+    /**
+     * @name            listOfficesOfSite()
+     * Lists office details of given site by site.
+     *
+     * @since           1.0.5
+     * @version         1.0.5
+     * @author          Said İmamoğlu
+     *
+     * @use             $this->listOffices()
+     *
+     * @param           int   $site
+     * @param           string   $type
+     *
+     * @return          array   $response
+     *
+     */
+    public function listOfficesOfSiteBySite($site,$type) {
+        $filter[] = array(
+            'glue' => ' and',
+            'condition' => array(
+                array(
+                'column' => $this->entity['office']['alias'] . '.site',
+                'comparison' => '=',
+                'value' => $site
+                ),
+                array(
+                    'column' => $this->entity['office']['alias'] . '.type',
+                    'comparison' => '=',
+                    'value' => $type
+                ),
             )
         );
         return $this->listOffices($filter);
@@ -3264,6 +3333,12 @@ class LocationManagementModel extends CoreModel {
 
 /**
 * Change Log
+ * **************************************
+ * v1.0.5                      Said İmamoğlu
+ * 17.04.2015
+ * **************************************
+ * A listOfficesBySite()
+ * A listOfficesOfSiteBySite()
  * **************************************
  * v1.0.4                      Can Berkol
  * 20.03.2014
