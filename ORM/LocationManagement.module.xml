@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<skipper version="3.0.0.1104" mvc="Symfony2" orm="Doctrine2">
+<skipper version="3.1.2.1193" mvc="Symfony2" orm="Doctrine2">
   <module name="LocationManagementBundle" import-format="Doctrine2Php" import-path="../Entity" uuid="116d2750-ee5f-4537-84d5-7d45771499d3">
     <entity name="Office" description="Stores locations of offices that belong to the web site owner." uuid="08d2afb5-f4dd-4e24-82bb-1e5f529f940d">
       <field name="id" description="System given id." type="integer" size="10" required="true" unique="true" primary="true" auto-increment="true" uuid="11beb035-59e1-4804-bfda-7ddcb6703c2f"/>
@@ -15,6 +15,7 @@
       <field name="fax" description="Fax number of office." type="string" size="45" uuid="ddc49b09-2039-4260-a455-1eb3d72649c7"/>
       <field name="email" description="Contact email of office." type="string" size="45" uuid="c8c3fde2-08fb-4c71-b7cf-b07c274198d6"/>
       <field name="site" description="Site that office belongs to." type="integer" size="10" uuid="536e51a9-525a-4bb8-a290-da9bb995a176"/>
+      <field name="type" description="h:head quarters, o: office, b:branch, d: distributor, l:dealer" type="string" size="1" default="h" uuid="fe52ecde-a31d-4e66-98fc-c7e902dc8d83"/>
       <index name="idx_u_office_id" unique="true">
         <index-field name="id"/>
       </index>
@@ -27,16 +28,16 @@
         <attribute name="export-file-name">Office.php</attribute>
       </orm-attributes>
     </entity>
-    <association from="Office" to="City" caption="idx_f_office_city" inverse-alias="city" uuid="08660ec2-086a-4c23-861e-9ce3c9937582">
+    <association from="Office" to="City" caption="idx_f_office_city" inverse-alias="city" many-owner="true" many-inverse="false" parent-required="true" uuid="08660ec2-086a-4c23-861e-9ce3c9937582">
       <association-field from="city" to="id"/>
     </association>
-    <association from="Office" to="State" caption="idx_f_office_state" inverse-alias="state" uuid="2b667d9c-593c-4e1b-9cd7-4ba01789fdde">
+    <association from="Office" to="State" caption="idx_f_office_state" inverse-alias="state" many-owner="true" many-inverse="false" uuid="2b667d9c-593c-4e1b-9cd7-4ba01789fdde">
       <association-field from="state" to="id"/>
     </association>
-    <association from="Office" to="Country" caption="idx_f_office_country" inverse-alias="country" uuid="72ac99ea-7436-414c-a288-0b17aaabfb4a">
+    <association from="Office" to="Country" caption="idx_f_office_country" inverse-alias="country" many-owner="true" many-inverse="false" parent-required="true" uuid="72ac99ea-7436-414c-a288-0b17aaabfb4a">
       <association-field from="country" to="id"/>
     </association>
-    <association from="Office" to="Site" caption="idx_f_office_site" inverse-alias="site" uuid="78171fae-020e-4e19-b965-b04f4eb85c76">
+    <association from="Office" to="Site" caption="idx_f_office_site" inverse-alias="site" many-owner="true" many-inverse="false" uuid="78171fae-020e-4e19-b965-b04f4eb85c76">
       <association-field from="site" to="id"/>
       <orm-attributes>
         <attribute name="on-delete">CASCADE</attribute>
@@ -90,13 +91,13 @@
         <attribute name="export-file-name">CountryLocalization.php</attribute>
       </orm-attributes>
     </entity>
-    <association from="CountryLocalization" to="Language" caption="idx_f_country_localization_language" inverse-alias="language" uuid="49bba62e-cacd-41b0-94ed-1ce65f89d961">
+    <association from="CountryLocalization" to="Language" caption="idx_f_country_localization_language" inverse-alias="language" many-owner="true" many-inverse="false" uuid="49bba62e-cacd-41b0-94ed-1ce65f89d961">
       <association-field from="language" to="id"/>
       <orm-attributes>
         <attribute name="on-delete">CASCADE</attribute>
       </orm-attributes>
     </association>
-    <association from="CountryLocalization" to="Country" caption="idx_f_country_localization_country" owner-alias="localizations" inverse-alias="country" uuid="184a8a65-b565-41ec-be74-8c1a309682b4">
+    <association from="CountryLocalization" to="Country" caption="idx_f_country_localization_country" owner-alias="localizations" inverse-alias="country" many-owner="true" many-inverse="false" uuid="184a8a65-b565-41ec-be74-8c1a309682b4">
       <association-field from="country" to="id"/>
       <orm-attributes>
         <attribute name="on-delete">CASCADE</attribute>
@@ -122,7 +123,7 @@
         <attribute name="export-file-name">State.php</attribute>
       </orm-attributes>
     </entity>
-    <association from="State" to="Country" caption="idx_f_state_country" owner-alias="states" inverse-alias="country" uuid="2f81a417-cf2d-4522-9d43-3b4dcb9ff53f">
+    <association from="State" to="Country" caption="idx_f_state_country" owner-alias="states" inverse-alias="country" many-owner="true" many-inverse="false" uuid="2f81a417-cf2d-4522-9d43-3b4dcb9ff53f">
       <association-field from="country" to="id"/>
       <orm-attributes>
         <attribute name="on-delete">CASCADE</attribute>
@@ -157,13 +158,13 @@
         <attribute name="export-file-name">StateLocalization.php</attribute>
       </orm-attributes>
     </entity>
-    <association from="StateLocalization" to="State" caption="idx_f_state_localization_state" owner-alias="localizations" inverse-alias="state" uuid="46fee6f5-f1a9-4e3f-b9e5-96d1665cb877">
+    <association from="StateLocalization" to="State" caption="idx_f_state_localization_state" owner-alias="localizations" inverse-alias="state" many-owner="true" many-inverse="false" parent-required="true" uuid="46fee6f5-f1a9-4e3f-b9e5-96d1665cb877">
       <association-field from="state" to="id"/>
       <orm-attributes>
         <attribute name="on-delete">CASCADE</attribute>
       </orm-attributes>
     </association>
-    <association from="StateLocalization" to="Language" caption="idx_f_state_localization_language" inverse-alias="language" uuid="b63d331a-e072-429d-9953-3da901b68b90">
+    <association from="StateLocalization" to="Language" caption="idx_f_state_localization_language" inverse-alias="language" many-owner="true" many-inverse="false" parent-required="true" uuid="b63d331a-e072-429d-9953-3da901b68b90">
       <association-field from="language" to="id"/>
       <orm-attributes>
         <attribute name="on-delete">CASCADE</attribute>
@@ -192,13 +193,13 @@
         <attribute name="export-file-name">City.php</attribute>
       </orm-attributes>
     </entity>
-    <association from="City" to="Country" caption="idx_f_city_country" owner-alias="cities" inverse-alias="country" uuid="ed9d8b73-567a-4c72-b53d-e1e2df7ed7b4">
+    <association from="City" to="Country" caption="idx_f_city_country" owner-alias="cities" inverse-alias="country" many-owner="true" many-inverse="false" parent-required="true" uuid="ed9d8b73-567a-4c72-b53d-e1e2df7ed7b4">
       <association-field from="country" to="id"/>
       <orm-attributes>
         <attribute name="on-delete">CASCADE</attribute>
       </orm-attributes>
     </association>
-    <association from="City" to="State" caption="idx_f_city_state" owner-alias="cities" inverse-alias="state" uuid="3c94edba-45c5-469c-8399-530c323f97ad">
+    <association from="City" to="State" caption="idx_f_city_state" owner-alias="cities" inverse-alias="state" many-owner="true" many-inverse="false" uuid="3c94edba-45c5-469c-8399-530c323f97ad">
       <association-field from="state" to="id"/>
       <orm-attributes>
         <attribute name="on-delete">CASCADE</attribute>
@@ -233,13 +234,13 @@
         <attribute name="export-file-name">CityLocalization.php</attribute>
       </orm-attributes>
     </entity>
-    <association from="CityLocalization" to="Language" caption="idx_f_city_localization_language" inverse-alias="language" uuid="bbcd0ee0-7db3-4ab5-ba57-81efd9149996">
+    <association from="CityLocalization" to="Language" caption="idx_f_city_localization_language" inverse-alias="language" many-owner="true" many-inverse="false" parent-required="true" uuid="bbcd0ee0-7db3-4ab5-ba57-81efd9149996">
       <association-field from="language" to="id"/>
       <orm-attributes>
         <attribute name="on-delete">CASCADE</attribute>
       </orm-attributes>
     </association>
-    <association from="CityLocalization" to="City" caption="idx_f_city_localization_city" owner-alias="localizations" inverse-alias="city" uuid="f4b0d82d-96f6-49e4-b213-9292f3fa75bd">
+    <association from="CityLocalization" to="City" caption="idx_f_city_localization_city" owner-alias="localizations" inverse-alias="city" many-owner="true" many-inverse="false" parent-required="true" uuid="f4b0d82d-96f6-49e4-b213-9292f3fa75bd">
       <association-field from="city" to="id"/>
       <orm-attributes>
         <attribute name="on-delete">CASCADE</attribute>
@@ -247,7 +248,7 @@
     </association>
     <comment caption="LocationManagementBundle Pricing" description="city: 130 TL&#10;city_localization: 130 TL&#10;country: 40 TL&#10;country_localization: 130 TL&#10;office: 360 TL&#10;state: 85 TL&#10;state_localization: 130 TL&#10;&#10;toplam: 1005 TL" uuid="8df36609-2c22-47f5-b0ed-349e8665c036"/>
     <orm-attributes>
-      <attribute name="namespace">BiberLtd\Bundle\LocationManagementBundle\Entity</attribute>
+      <attribute name="namespace">BiberLtd\Core\Bundles\LocationManagementBundle\Entity</attribute>
       <attribute name="filename-format">entity-name-only</attribute>
       <attribute name="file-suffix">without-suffix</attribute>
     </orm-attributes>
@@ -256,7 +257,7 @@
     <entity uuid="049505c7-3acd-4136-b5ed-1647bdd2044a" bg-color="4294967295" hdr-color="4292006610" position-x="229" position-y="140" size-x="0" size-x2="110" size-y="0" size-y2="59"/>
     <entity uuid="08d2afb5-f4dd-4e24-82bb-1e5f529f940d" bg-color="4294967295" hdr-color="4292006610" position-x="80" position-y="225" size-x="0" size-x2="111" size-y="0" size-y2="199"/>
     <entity uuid="0bdf95d0-6dd8-4200-9fda-73f5bff5d4b5" bg-color="4294967295" hdr-color="4292006610" position-x="519" position-y="290" size-x="0" size-x2="110" size-y="0" size-y2="73"/>
-    <module uuid="116d2750-ee5f-4537-84d5-7d45771499d3" bg-color="4291231744" size-x="20" size-x2="729" size-y="10" size-y2="440"/>
+    <module uuid="116d2750-ee5f-4537-84d5-7d45771499d3" bg-color="4291231744" size-x="20" size-x2="729" size-y="10" size-y2="534"/>
     <entity uuid="4491fd31-1d20-4753-9166-184196ae6040" bg-color="4294967295" hdr-color="4292006610" position-x="429" position-y="47" size-x="0" size-x2="110" size-y="0" size-y2="73"/>
     <comment uuid="8df36609-2c22-47f5-b0ed-349e8665c036" bg-color="4294941056" position-x="-20" position-y="12" size-x="0" size-x2="173" size-y="0" size-y2="128" txt-color="4278190080"/>
     <entity uuid="9b3e403e-b5ab-4cce-ba8b-89f148856874" bg-color="4294967295" hdr-color="4292006610" position-x="329" position-y="240" size-x="0" size-x2="110" size-y="0" size-y2="73"/>
