@@ -1,11 +1,7 @@
 <?php
 
 /**
- * LocationManagementModel Class
- *
- * This class acts as a database proxy model for ProductManagementBundle functionalities.
- *
- * @package	    Core\Bundles\LocationManagementBundle
+ * @package	    LocationManagementBundle
  * @subpackage	Services
  * @name	    LocationManagementModel
  *
@@ -14,33 +10,10 @@
  *
  * @copyright   Biber Ltd. (www.biberltd.com)
  *
- * @version     1.0.5
+ * @version     1.0.6
  *
- * @date        17.04.2015
+ * @date        22.06.2015
  *
- * =============================================================================================================
- * !! INSTRUCTIONS ON IMPORTANT ASPECTS OF MODEL METHODS !!!
- *
- * Each model function must return a $response ARRAY.
- * The array must contain the following keys and corresponding values.
- *
- * $response = array(
- *              'result'    =>   An array that contains the following keys:
- *                               'set'         Actual result set returned from ORM or null
- *                               'total_rows'  0 or number of total rows
- *                               'last_insert_id' The id of the item that is added last (if insert action)
- *              'error'     =>   true if there is an error; false if there is none.
- *              'code'      =>   null or a semantic and short English string that defines the error concanated
- *                               with dots, prefixed with err and the initials of the name of model class.
- *                               EXAMPLE: err.amm.action.not.found success messages have a prefix called scc..
- *
- *                               NOTE: DO NOT FORGET TO ADD AN ENTRY FOR ERROR CODE IN BUNDLE'S
- *                               RESOURCES/TRANSLATIONS FOLDER FOR EACH LANGUAGE.
- * =============================================================================================================
- * TODOs:
- *
- * NOTE that this set of entities do have a strict pattern; therefore you can write wrap-up methods such as
- * list_locations etc. and all the below functions may work by calling those wrap-up methods.
  */
 
 namespace BiberLtd\Bundle\LocationManagementBundle\Services;
@@ -48,6 +21,7 @@ namespace BiberLtd\Bundle\LocationManagementBundle\Services;
 /** Extends CoreModel */
 use BiberLtd\Bundle\CoreBundle\CoreModel;
 /** Entities to be used */
+use BiberLtd\Bundle\CoreBundle\Responses\ModelResponse;
 use BiberLtd\Bundle\LocationManagementBundle\Entity as BundleEntity;
 /** Helper Models */
 use BiberLtd\Bundle\SiteManagementBundle\Services as SMMService;
@@ -58,12 +32,11 @@ use BiberLtd\Bundle\CoreBundle\Services as CoreServices;
 class LocationManagementModel extends CoreModel {
     /**
      * @name            _Construct()
-     *                  Constructor.
      *
      * @author          Said İmamoğlu
      *
      * @since           1.0.0
-     * @version         1.0.0
+     * @version         1.0.6
      *
      * @param           object          $kernel
      * @param           string          $dbConnection  Database connection key as set in app/config.yml
@@ -75,28 +48,18 @@ class LocationManagementModel extends CoreModel {
          * Register entity names for easy reference.
          */
         $this->entity = array(
-            'city' => array('name' => 'LocationManagementBundle:City', 'alias' => 'c'),
-            'city_localization' => array('name' => 'LocationManagementBundle:CityLocalization', 'alias' => 'cl'),
-            'country' => array('name' => 'LocationManagementBundle:Country', 'alias' => 'u'),
-            'country_localization' => array('name' => 'LocationManagementBundle:CountryLocalization', 'alias' => 'ul'),
-            'office' => array('name' => 'LocationManagementBundle:Office', 'alias' => 'o'),
-            'state' => array('name' => 'LocationManagementBundle:State', 'alias' => 's'),
-            'state_localization' => array('name' => 'LocationManagementBundle:StateLocalization', 'alias' => 'sl'),
+            'c' 	=> array('name' => 'LocationManagementBundle:City', 'alias' => 'c'),
+            'cl' 	=> array('name' => 'LocationManagementBundle:CityLocalization', 'alias' => 'cl'),
+            'o' 	=> array('name' => 'LocationManagementBundle:Office', 'alias' => 'o'),
+            's' 	=> array('name' => 'LocationManagementBundle:State', 'alias' => 's'),
+            'sl' 	=> array('name' => 'LocationManagementBundle:StateLocalization', 'alias' => 'sl'),
+            'u' 	=> array('name' => 'LocationManagementBundle:Country', 'alias' => 'u'),
+            'ul' 	=> array('name' => 'LocationManagementBundle:CountryLocalization', 'alias' => 'ul'),
         );
-        $mlsModel = $this->kernel->getContainer()->get('multilanguagesupport.model');
-        $response = $mlsModel->listAllLanguages();
-        if(!$response['error']){
-            $this->languages = $response['result']['set'];
-        }
-        unset($mlsModel);
     }
-
-    /** @var $by_opitons handles by options */
-    public $by_opts = array('entity', 'id', 'code', 'url_key', 'post');
 
     /**
      * @name            __destruct()
-     *                  Destructor.
      *
      * @author          Said İmamoğlu
      *
@@ -112,297 +75,212 @@ class LocationManagementModel extends CoreModel {
 
     /**
      * @name            deleteCity()
-     *                  Deletes single city
      * 
      * @since           1.0.0
-     * @version         1.0.0
+     * @version         1.0.6
+	 *
+     * @author          Can Berkol
      * @author          Said İmamoğlu
-     * 
+     *
      * @use             $this->createException()
      * 
-     * @param           mixed   $collection     Entity or post data
+     * @param           mixed   $city
      * 
      * @return          array   $response
      * 
      */
-    public function deleteCity($data) {
-        return $this->deleteCities(array($data));
+    public function deleteCity($city) {
+        return $this->deleteCities(array($city));
     }
-    /**
-     * @name            deleteCities()
-     *                  Deletes single or multiple cities of given post data or entity
-     * 
-     * @since           1.0.0
-     * @version         1.0.3
-     * @author          Said İmamoğlu
-     * 
-     * @use             $this->createException()
-     * @use             $this->doesCityExist()
-     * 
-     * @throw           InvalidParameterException
-     * @throw           InvalidByOptionException
-     * 
-     * @param           mixed   $collection     Entity or post data
-     * 
-     * @return          array   $response
-     * 
-     */
-    public function deleteCities($collection) {
-        $this->resetResponse();
-        /** Parameter must be an array */
-        if (!is_array($collection)) {
-            return $this->createException('InvalidParameterValue', 'Array', 'err.invalid.parameter.collection');
-        }
-        $countDeleted = 0;
-        foreach ($collection as $entry) {
-            if ($entry instanceof BundleEntity\City) {
-                $this->em->remove($entry);
-                $countDeleted++;
-            } else {
-                switch ($entry) {
-                    case is_numeric($entry):
-                        $response = $this->getCity($entry, 'id');
-                        break;
-                }
-                if ($response['error']) {
-                    $this->createException('EntryDoesNotExist', $entry, 'err.invalid.entry');
-                }
-                $entry = $response['result']['set'];
-                $this->em->remove($entry);
-                unset($response);
-                $countDeleted++;
-            }
-        }
-        if ($countDeleted < 0) {
-            $this->response['error'] = true;
-            $this->response['code'] = 'err.db.fail.delete';
-
-            return $this->response;
-        }
-        $this->em->flush();
-        $this->response = array(
-            'rowCount' => 0,
-            'result' => array(
-                'set' => null,
-                'total_rows' => $countDeleted,
-                'last_insert_id' => null,
-            ),
-            'error' => false,
-            'code' => 'scc.db.deleted',
-        );
-        return $this->response;
-    }
+	/**
+	 * @name            deleteCities()
+	 *
+	 * @since           1.0.0
+	 * @version         1.0.6
+	 *
+	 * @use             $this->createException()
+	 *
+	 * @param           array 			$collection
+	 *
+	 * @return          \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
+	 */
+	public function deleteCities($collection){
+		$timeStamp = time();
+		if (!is_array($collection)) {
+			return $this->createException('InvalidParameterValueException', 'Invalid parameter value. Parameter must be an array collection', 'E:S:001');
+		}
+		$countDeleted = 0;
+		foreach($collection as $entry){
+			if($entry instanceof BundleEntity\City){
+				$this->em->remove($entry);
+				$countDeleted++;
+			}
+			else{
+				$response = $this->getCity($entry);
+				if(!$response->error->exists){
+					$this->em->remove($response->result->set);
+					$countDeleted++;
+				}
+			}
+		}
+		if($countDeleted < 0){
+			return new ModelResponse(null, 0, 0, null, true, 'E:E:001', 'Unable to delete all or some of the selected entries.', $timeStamp, time());
+		}
+		$this->em->flush();
+		return new ModelResponse(null, 0, 0, null, false, 'S:D:001', 'Selected entries have been successfully removed from database.', $timeStamp, time());
+	}
 
     /**
      * @name            doesCityExist()
-     * Checks if city exist
      * 
      * @since           1.0.0
      * @version         1.0.0
+	 *
+     * @author          Can Berkol
      * @author          Said İmamoğlu
-     * 
+     *
      * @use             $this->getCity()
      * 
-     * @param           mixed   $collection     Entity or post data
-     * @param           string  $by             entity or post
+     * @param           mixed   $city
+     * @param           bool    $bypass
      * 
      * @return          array   $response
      * 
      */
-    public function doesCityExist($collection, $by = 'entity') {
-        $this->resetResponse();
-        $exist = false;
-        $code = 'err.db.record.notfound';
-        $error = false;
+	public function doesCityExist($city, $bypass = false){
+		$response = $this->getCity($city);
+		$exist = true;
+		if($response->error->exist){
+			$exist = false;
+			$response->result->set = false;
+		}
+		if($bypass){
+			return $exist;
+		}
+		return $response;
+	}
 
-        $response = $this->getCity($collection, $by);
+	/**
+	 * @name            getCity()
+	 *
+	 * @since           1.0.0
+	 * @version         1.0.6
+	 *
+	 * @author          Can Berkol
+	 * @author          Said İmamoğlu
+	 *
+	 * @use             $this->createException()
+	 *
+	 * @param           mixed           $city
+	 *
+	 * @return          \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
+	 */
+	public function getCity($city){
+		$timeStamp = time();
+		if($city instanceof BundleEntity\City){
+			return new ModelResponse($city, 1, 0, null, false, 'S:D:002', 'Entries successfully fetched from database.', $timeStamp, time());
+		}
+		$result = null;
+		switch($city){
+			case is_numeric($city):
+				$result = $this->em->getRepository($this->entity['c']['name'])->findOneBy(array('id' => $city));
+				break;
+			case is_string($city):
+				$result = $this->em->getRepository($this->entity['c']['name'])->findOneBy(array('code' => $city));
+				if(is_null($result)){
+					$response = $this->getCityByUrlKey($city);
+					if(!$response->error->exist){
+						$result = $response->result->set;
+					}
+				}
+				unset($response);
+				break;
+		}
+		if(is_null($result)){
+			return new ModelResponse($result, 0, 0, null, true, 'E:D:002', 'Unable to find request entry in database.', $timeStamp, time());
+		}
 
-        if (!$response['error']) {
-            $exist = true;
-            $code = 'scc.db.record.found';
-        } else {
-            $error = true;
-        }
-        /**
-         * Prepare & Return Response
-         */
-        $this->response = array(
-            'rowCount' => $this->response['rowCount'],
-            'result' => array(
-                'set' => $exist,
-                'total_rows' => $response['result']['total_rows'],
-                'last_insert_id' => null,
-            ),
-            'error' => $error,
-            'code' => $code,
-        );
-        return $this->response;
-    }
+		return new ModelResponse($result, 1, 0, null, false, 'S:D:002', 'Entries successfully fetched from database.', $timeStamp, time());
+	}
+	/**
+	 * @name            getCityByUrlKey()
+	 *
+	 * @since           1.0.6
+	 * @version         1.0.6
+	 *
+	 * @author          Can Berkol
+	 *
+	 * @param           mixed 			$urlKey
+	 * @param			mixed			$language
+	 *
+	 * @return          \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
+	 */
+	public function getCityByUrlKey($urlKey, $language = null){
+		$timeStamp = time();
+		if(!is_string($urlKey)){
+			return $this->createException('InvalidParameterValueException', '$urlKey must be a string.', 'E:S:007');
+		}
+		$filter[] = array(
+			'glue' => 'and',
+			'condition' => array(
+				array(
+					'glue' => 'and',
+					'condition' => array('column' => $this->entity['cl']['alias'].'.url_key', 'comparison' => '=', 'value' => $urlKey),
+				)
+			)
+		);
+		if(!is_null($language)){
+			$mModel = $this->kernel->getContainer()->get('multilanguagesupport.model');
+			$response = $mModel->getLanguage($language);
+			if(!$response->error->exists){
+				$filter[] = array(
+					'glue' => 'and',
+					'condition' => array(
+						array(
+							'glue' => 'and',
+							'condition' => array('column' => $this->entity['cl']['alias'].'.language', 'comparison' => '=', 'value' => $response->result->set->getId()),
+						)
+					)
+				);
+			}
+		}
+		$response = $this->listCities($filter, null, array('start' => 0, 'count' => 1));
 
-    /**
-     * @name            getCity()
-     * Returns details of given city.
-     * 
-     * @since           1.0.0
-     * @version         1.0.0
-     * @author          Said İmamoğlu
-     * 
-     * @use             $this->createException()
-     * @use             $this->listCities()
-     * 
-     * @throw           InvalidByOptionException
-     * @throw           InvalidParameterException
-     * @throw           InvalidEntityException
-     * 
-     * 
-     * @param           mixed   $collection     Entity or post data
-     * @param           string  $by             entity or post
-     * 
-     * @return          array   $response
-     * 
-     */
-    public function getCity($city, $by = 'id') {
-        $this->resetResponse();
-        if (!in_array($by, $this->by_opts)) {
-            return $this->createException('InvalidByOptionException', implode(',', $this->by_opts), 'err.invalid.parameter.by');
-        }
+		$response->stats->execution->start = $timeStamp;
+		$response->stats->execution->end = time();
 
-        if (!is_object($city) && !is_numeric($city) && !is_string($city)) {
-            return $this->createException('InvalidParameterException', 'object,numeric or string', 'err.invalid.parameter.file');
-        }
-        if ($by == 'entity') {
-            if (is_object($city)) {
-                if (!$city instanceof BundleEntity\City) {
-                    return $this->createException('InvalidEntityException', 'BundleEntity\City', 'err.invalid.parameter.file');
-                }
-                /**
-                 * Prepare and Return Response
-                 */
-                $this->response = array(
-                    'rowCount' => $this->response['rowCount'],
-                    'result' => array(
-                        'set' => $city,
-                        'total_rows' => 1,
-                        'last_insert_id' => null,
-                    ),
-                    'error' => false,
-                    'code' => 'scc.entity.found'
-                );
-            } else {
-                return $this->createException('InvalidParameterException', 'object,numeric or string', 'err.invalid.parameter.file');
-            }
-        } elseif ($by == 'id') {
-            $filter[] = array(
-                'glue' => '',
-                'condition' => array('column' => $this->entity['city']['alias'] . '.' . $by, 'comparison' => '=', 'value' => $city)
-            );
-            $response = $this->listCities($filter, null, array('start' => 0, 'count' => 1));
-            if ($response['error']) {
-                return $response;
-            }
-
-            $city = $response['result']['set'];
-
-            /**
-             * Prepare and Return Response
-             */
-            $this->response = array(
-                'rowCount' => $this->response['rowCount'],
-                'result' => array(
-                    'set' => $city[0],
-                    'total_rows' => count($city),
-                    'last_insert_id' => null,
-                ),
-                'error' => false,
-                'code' => 'scc.entity.found',
-            );
-        }
-
-        return $this->response;
-    }
-
-    /**
-     * @name 		getProductLocalization()
-     * Gets a specific city's localization values from database.
-     *
-     * @since		1.0.0
-     * @version         1.0.0
-     * @author          Said İmamoğlu
-     *
-     * @use             $this->createException()
-     *
-     * @param           BundleEntity\Product           $product
-     * @param           MLSEntity\Language             $language
-     *
-     * @return          array           $response
-     */
-    public function getCityLocalization($city, $language) {
-        $this->resetResponse();
-        if (!$city instanceof BundleEntity\Product) {
-            return $this->createException('InvalidParameterException', 'City', 'err.invalid.parameter.product');
-        }
-        /** Parameter must be an array */
-        if (!$language instanceof MLSEntity\Language) {
-            return $this->createException('InvalidParameterException', 'Language', 'err.invalid.parameter.language');
-        }
-        $q_str = 'SELECT ' . $this->entity['city_localization']['alias'] . ' FROM ' . $this->entity['city_localization']['name'] . ' ' . $this->entity['city_localization']['alias']
-                . ' WHERE ' . $this->entity['city_localization']['alias'] . '.city = ' . $city->getId()
-                . ' AND ' . $this->entity['city_localization']['alias'] . '.language = ' . $language->getId();
-
-        $query = $this->em->createQuery($q_str);
-        /**
-         * 6. Run query
-         */
-        $result = $query->getResult();
-        /**
-         * Prepare & Return Response
-         */
-        $total_rows = count($result);
-
-        $this->response = array(
-            'rowCount' => $this->response['rowCount'],
-            'result' => array(
-                'set' => $result,
-                'total_rows' => $total_rows,
-                'last_insert_id' => null,
-            ),
-            'error' => false,
-            'code' => 'scc.db.entry.exist.',
-        );
-        return $this->response;
-    }
+		return $response;
+	}
 
     /**
      * @name            insertCity()
-     *                  Inserts one city into database
      * 
      * @since           1.0.0
-     * @version         1.0.3
+     * @version         1.0.6
      * @author          Can Berkol
      * @author          Said İmamoğlu
      * 
      * @use             $this->insertCities()
      * 
-     * @param           mixed   $collection     Entity or post data
+     * @param           mixed   $city
      * 
      * @return          array   $response
      * 
      */
-    public function insertCity($data) {
-        return $this->insertCities(array($data));
+    public function insertCity($city) {
+        return $this->insertCities(array($city));
     }
 
     /**
      * @name            insertCityLocalizations ()
-     *                  Inserts one or more city localizations into database.
      *
      * @since           1.0.3
-     * @version         1.0.3
+     * @version         1.0.6
      * @author          Can Berkol
      *
      * @use             $this->createException()
      *
-     * @param           array $collection Collection of entities or post data.
+     * @param           array 			$collection
      *
      * @return          array           $response
      */
@@ -413,7 +291,10 @@ class LocationManagementModel extends CoreModel {
             return $this->createException('InvalidParameter', 'Array', 'err.invalid.parameter.collection');
         }
         $countInserts = 0;
+        $countLocalizations = 0;
         $insertedItems = array();
+        $localizations = array();
+		$now = new \DateTime('now', new \DateTimeZone($this->kernel->getContainer()->getParameter('app_timezone')));
         foreach ($collection as $item) {
             if ($item instanceof BundleEntity\CityLocalization) {
                 $entity = $item;
@@ -459,18 +340,16 @@ class LocationManagementModel extends CoreModel {
 
     /**
      * @name            insertCities()
-     *                  Inserts one or more cities into database
      * 
      * @since           1.0.0
-     * @version         1.0.3
+     * @version         1.0.6
      *
      * @author          Can Berkol
      * @author          Said İmamoğlu
      * 
      * @use             $this->createException()
      * 
-     * @param           mixed   $collection     Entity or post data
-     * @param           string  $by             entity or post
+     * @param           array   $collection
      * 
      * @return          array   $response
      * 
@@ -481,10 +360,12 @@ class LocationManagementModel extends CoreModel {
         if (!is_array($collection)) {
             return $this->createException('InvalidParameter', 'Array', 'err.invalid.parameter.collection');
         }
-        $countInserts = 0;
-        $countLocalizations = 0;
-        $insertedItems = array();
-        foreach ($collection as $data) {
+		$countInserts = 0;
+		$countLocalizations = 0;
+		$insertedItems = array();
+		$localizations = array();
+		$now = new \DateTime('now', new \DateTimeZone($this->kernel->getContainer()->getParameter('app_timezone')));
+		foreach ($collection as $data) {
             if ($data instanceof BundleEntity\City) {
                 $entity = $data;
                 $this->em->persist($entity);
@@ -507,13 +388,10 @@ class LocationManagementModel extends CoreModel {
                         case 'state':
                             $get = 'get'.$this->translateColumnName($column);
                             $response = $this->$get($value, 'id');
-                            if (!$response['error']) {
-                                $entity->$set($response['result']['set']);
-                            }
-                            else {
-                                new CoreExceptions\EntityDoesNotExistException($this->kernel, $value);
-                            }
-                            unset($response);
+                            if($response->error->exist){
+								return $response;
+							}
+							$entity->$set($response->result->set);
                             break;
                         default:
                             if(property_exists($entity, $column)){
@@ -529,40 +407,24 @@ class LocationManagementModel extends CoreModel {
                 $insertedItems[] = $entity;
                 $countInserts++;
             }
-            else {
-                new CoreExceptions\InvalidDataException($this->kernel);
-            }
         }
-        if ($countInserts > 0) {
-            $this->em->flush();
-        }
+
         /** Now handle localizations */
         if ($countInserts > 0 && $countLocalizations > 0) {
             $this->insertCityLocalizations($localizations);
         }
-        /**
-         * Prepare & Return Response
-         */
-        $this->response = array(
-            'rowCount' => $this->response['rowCount'],
-            'result' => array(
-                'set' => $insertedItems,
-                'total_rows' => $countInserts,
-                'last_insert_id' => $entity->getId(),
-            ),
-            'error' => false,
-            'code' => 'scc.db.insert.done',
-        );
-        return $this->response;
-    }
+		if($countInserts > 0){
+			$this->em->flush();
+			return new ModelResponse($insertedItems, $countInserts, 0, null, false, 'S:D:003', 'Selected entries have been successfully inserted into database.', $timeStamp, time());
+		}
+		return new ModelResponse(null, 0, 0, null, true, 'E:D:003', 'One or more entities cannot be inserted into database.', $timeStamp, time());
+	}
 
     /**
      * @name            listCities()
-     * List cities from database
      * 
      * @since           1.0.0
-     * @version         1.0.2
-     *
+     * @version         1.0.6
      *
      * @author          Can Berkol
      * @author          Said İmamoğlu
@@ -570,248 +432,171 @@ class LocationManagementModel extends CoreModel {
      * @use             $this->createException()
      * 
      * @param           array   $filter         Multi dimensional array
-     * @param           array   $sortorder      'coloumn' => 'asc|desc'
+     * @param           array   $sortOrder      'coloumn' => 'asc|desc'
      * @param           array   $limit          start,count
-     * @param           string  $query_str      If a custom query string needs to be defined.
-     * @param           bool    $returnLocal    if set to true returns localization object alongside with entity.
-     * 
-     * @return          array   $response
+      *
+     * @return          \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
      * 
      */
+    public function listCities($filter = null, $sortOrder = null, $limit = null, $query_str = null, $returnLocal = false) {
+		$timeStamp = time();
+		if(!is_array($sortOrder) && !is_null($sortOrder)){
+			return $this->createException('InvalidSortOrderException', '$sortOrder must be an array with key => value pairs where value can only be "asc" or "desc".', 'E:S:002');
+		}
+		$oStr = $wStr = $gStr = $fStr = '';
 
-    public function listCities($filter = null, $sortorder = null, $limit = null, $query_str = null, $returnLocal = false) {
-        $this->resetResponse();
-        if (!is_array($sortorder) && !is_null($sortorder)) {
-            return $this->createException('InvalidSortOrder', '', 'err.invalid.parameter.sortorder');
-        }
+		$qStr = 'SELECT '. $this->entity['cl']['alias']. ', '.$this->entity['cl']['alias']
+                . ' FROM '.$this->entity['cl']['name'].' '.$this->entity['cl']['alias']
+                . ' JOIN '.$this->entity['cl']['alias'].'.city ' .$this->entity['city']['alias'];
 
-        /**
-         * Add filter check to below to set join_needed to true
-         */
-        $order_str = '';
-        $where_str = '';
-        $group_str = '';
-        $filter_str = '';
-
-        /**
-         * Start creating the query
-         *
-         * Note that if no custom select query is provided we will use the below query as a start
-         */
-        if (is_null($query_str)) {
-            $query_str = 'SELECT '. $this->entity['city_localization']['alias']. ', '.$this->entity['city_localization']['alias']
-                . ' FROM '.$this->entity['city_localization']['name'].' '.$this->entity['city_localization']['alias']
-                . ' JOIN '.$this->entity['city_localization']['alias'].'.city ' .$this->entity['city']['alias'];
-        }
-        /**
-         * Prepare ORDER BY section of query
-         */
-        if (!is_null($sortorder)) {
-            foreach ($sortorder as $column => $direction) {
+        if (!is_null($sortOrder)) {
+            foreach ($sortOrder as $column => $direction) {
                 switch ($column) {
                     case 'id':
                     case 'country':
                     case 'state':
                     case 'code':
-                        $column = $this->entity['city']['alias'] . '.' . $column;
+                        $column = $this->entity['c']['alias'] . '.' . $column;
                         break;
                     case 'language':
                     case 'city':
                     case 'name':
                     case 'url_key':
-                        $column = $this->entity['city_localization']['alias'] . '.' . $column;
+                        $column = $this->entity['cl']['alias'] . '.' . $column;
                         break;
                 }
-                $order_str .= ' ' . $column . ' ' . strtoupper($direction) . ', ';
-            }
-            $order_str = rtrim($order_str, ', ');
-            $order_str = ' ORDER BY ' . $order_str . ' ';
+				$oStr .= ' '.$column.' '.strtoupper($direction).', ';
+			}
+			$oStr = rtrim($oStr, ', ');
+			$oStr = ' ORDER BY '.$oStr.' ';
         }
 
-        /**
-         * Prepare WHERE section of query
-         */
         if (!is_null($filter)) {
-            $filter_str = $this->prepareWhere($filter);
-            $where_str = ' WHERE ' . $filter_str;
+			$fStr = $this->prepareWhere($filter);
+			$wStr .= ' WHERE '.$fStr;
         }
 
-        $query_str .= $where_str . $group_str . $order_str;
+		$qStr .= $wStr.$gStr.$oStr;
+		$q = $this->em->createQuery($qStr);
+		$q = $this->addLimit($q, $limit);
 
-        $query = $this->em->createQuery($query_str);
-
-        /**
-         * Prepare LIMIT section of query
-         */
-        if (!is_null($limit)) {
-            $query = $this->addLimit($query, $limit);
-        }
-        $result = $query->getResult();
+		$result = $q->getResult();
         $cities = array();
         $unique = array();
-        if($returnLocal){
-            $allLangCodes = array();
-            foreach($this->languages as $language){
-                $allLangCodes[] = $language->getIsoCode();
-            }
-            foreach ($result as $entry) {
-                $id = $entry->getCity()->getId();
-                $cities[$id]['entity'] = $entry->getCity();
-                $cities[$id]['localization'][$entry->getLanguage()->getIsoCode()] = $entry;
-            }
-            foreach ($cities as $detail) {
-                $entityLangCodes = array_keys($detail['localization']);
-                $missingLangCodes = array_diff($allLangCodes, $entityLangCodes);
-                foreach($missingLangCodes as $langCode){
-                    if(!isset($detail['localization'][$langCode])){
-                        $iCount = 0;
-                        foreach($detail['localization'] as $localization){
-                            if($iCount > 0){
-                                break;
-                            }
-                            $cities[$detail['entity']->getId()]['localization'][$langCode] = $localization;
-                            $iCount++;
-                        }
-                    }
-                }
-            }
-            $total_rows = count($cities);
-        }
-        else{
-            foreach ($result as $entry) {
-                $id = $entry->getCity()->getId();
-                if (!isset($unique[$id])) {
-                    $cities[] = $entry->getCity();
-                    $unique[$id] = $entry->getCity();
-                }
-            }
-            $total_rows = count($cities);
-        }
-        unset($unique);
 
-        if ($total_rows < 1) {
-            $this->response['code'] = 'err.db.entry.notexist';
-            return $this->response;
-        }
+		$entities = array();
+		foreach($result as $entry){
+			$id = $entry->getCity()->getId();
+			if(!isset($unique[$id])){
+				$entities[] = $entry->getCity();
+			}
+		}
+		$totalRows = count($entities);
+		if ($totalRows < 1) {
+			return new ModelResponse(null, 0, 0, null, true, 'E:D:002', 'No entries found in database that matches to your criterion.', $timeStamp, time());
+		}
+		return new ModelResponse($entities, $totalRows, 0, null, false, 'S:D:002', 'Entries successfully fetched from database.', $timeStamp, time());
 
-        $this->response = array(
-            'rowCount' => $this->response['rowCount'],
-            'result' => array(
-                'set' => $cities,
-                'total_rows' => $total_rows,
-                'last_insert_id' => null,
-            ),
-            'error' => false,
-            'code' => 'scc.db.entry.exist',
-        );
-
-        return $this->response;
-    }
+	}
 
     /**
      * @name            listCitiesOfCountry()
-     *                  Lists cities of country
      * 
      * @since           1.0.0
-     * @version         1.0.0
+     * @version         1.0.6
+	 *
+     * @author          Can Berkol
      * @author          Said İmamoğlu
-     * 
+     *
      * @use             $this->createException()
      * @use             $this->listCities()
      * 
-     * @param           array   $filter         Multi dimensional array
-     * @param           array   $sortorder      'coloumn' => 'asc|desc'
-     * @param           array   $limit          start,count
-     * @param           string  $query_str      If a custom query string needs to be defined.
-     * @param           bool    $returnLocal    If set to true returns localized values.
+     * @param           mixed	$country
+     * @param           array   $ortOrder
+     * @param           array   $limit
      * 
      * @return          array   $response
      * 
      */
-
-    public function listCitiesOfCountry($country, $sortorder = null, $limit = null, $query_str = null, $returnLocal = false) {
-        if ($country instanceof BundleEntity\Country) {
-            $country = $country->getId();
-        }
-        $filter = array();
+    public function listCitiesOfCountry($country, $ortOrder = null, $limit = null) {
+        $response = $this->getCountry($country);
+		if($response->error->exist){
+			return $response;
+		}
+		$country = $response->result->set;
+		unset($response);
         $filter[] = array(
             'glue' => 'and',
             'condition' => array(
                 array(
                     'glue' => 'and',
                     'condition' => array(
-                        'column' => $this->entity['city']['alias'] . '.country',
-                        'comparison' => '=', 'value' => $country),
+                        'column' => $this->entity['c']['alias'] . '.country',
+                        'comparison' => '=', 'value' => $country->getId()),
                 )
             )
         );
-
-        return $this->listCities($filter, $sortorder, $limit, $query_str, $returnLocal);
+        return $this->listCities($filter, $ortOrder, $limit);
     }
 
-    /**
-     * @name            listCitiesOfState()
-     *                  Lists cities of state
-     * 
-     * @since           1.0.0
-     * @version         1.0.4
-     *
-     * @author          Can Berkol
-     * @author          Said İmamoğlu
-     * 
-     * @use             $this->createException()
-     * @use             $this->listCities()
-     * 
-     * @throw           InvalidIdException
-     * 
-     * @param           mixed   $state          id or entity
-     * @param           array   $sortorder      'coloumn' => 'asc|desc'
-     * @param           array   $limit          start,count
-     * @param           string  $query_str      If a custom query string needs to be defined.
-     * 
-     * @return          array   $response
-     * 
-     */
-
-    public function listCitiesOfState($state, $sortorder = null, $limit = null, $query_str = null) {
-        if ($state instanceof BundleEntity\State){
-            $state = $state->getId();
-        }
-        else{
-            $state = (int) $state;
-        }
-        $filter[] = array(
-            'glue' => ' and',
-            'condition' => array(
-                'column' => $this->entity['city']['alias'] . '.state',
-                'comparison' => '=',
-                'value' => $state
-            )
-        );
-
-        return $this->listCities($filter, $sortorder, $limit, $query_str);
-    }
+	/**
+	 * @name            listCitiesOfState()
+	 *
+	 * @since           1.0.0
+	 * @version         1.0.6
+	 *
+	 * @author          Can Berkol
+	 * @author          Said İmamoğlu
+	 *
+	 * @use             $this->createException()
+	 * @use             $this->listCities()
+	 *
+	 * @param           mixed	$state
+	 * @param           array   $ortOrder
+	 * @param           array   $limit
+	 *
+	 * @return          array   $response
+	 *
+	 */
+	public function listCitiesOfState($state, $ortOrder = null, $limit = null) {
+		$response = $this->getState($state);
+		if($response->error->exist){
+			return $response;
+		}
+		$state = $response->result->set;
+		unset($response);
+		$filter[] = array(
+			'glue' => 'and',
+			'condition' => array(
+				array(
+					'glue' => 'and',
+					'condition' => array(
+						'column' => $this->entity['c']['alias'] . '.state',
+						'comparison' => '=', 'value' => $state->getId()),
+				)
+			)
+		);
+		return $this->listCities($filter, $ortOrder, $limit);
+	}
 
     /**
      * @name            updateCity()
-     * Updates single city of given post data or entity
      * 
      * @since           1.0.0
-     * @version         1.0.3
+     * @version         1.0.6
+	 *
      * @author          Can Berkol
      * @author          Said İmamoğlu
      * 
      * @use             $this->updateCities()
      * 
-     * @param           mixed   $data           Entity or post data
-     * @param           string  $by             entity or post
+     * @param           mixed   $city
      * 
      * @return          array   $response
      * 
      */
-
-    public function updateCity($data) {
-        return $this->updateCities(array($data));
+    public function updateCity($city) {
+        return $this->updateCities(array($city));
     }
     /**
      * @name            updateCities()
@@ -831,13 +616,13 @@ class LocationManagementModel extends CoreModel {
      *
      */
     public function updateCities($collection) {
-        $this->resetResponse();
-        /** Parameter must be an array */
-        if (!is_array($collection)) {
-            return $this->createException('InvalidParameter', 'Array', 'err.invalid.parameter.collection');
-        }
-        $countUpdates = 0;
-        $updatedItems = array();
+		$timeStamp = time();
+		if (!is_array($collection)) {
+			return $this->createException('InvalidParameterValueException', 'Invalid parameter value. Parameter must be an array collection', 'E:S:001');
+		}
+		$countUpdates = 0;
+		$updatedItems = array();
+		$localizations = array();
         foreach ($collection as $data) {
             if ($data instanceof BundleEntity\City) {
                 $entity = $data;
@@ -846,14 +631,14 @@ class LocationManagementModel extends CoreModel {
                 $countUpdates++;
             }
             else if (is_object($data)) {
-                if (!property_exists($data, 'id') || !is_numeric($data->id)) {
-                    return $this->createException('InvalidParameter', 'Each data must contain a valid identifier id, integer', 'err.invalid.parameter.collection');
-                }
+				if(!property_exists($data, 'id') || !is_numeric($data->id)){
+					return $this->createException('InvalidParameterException', 'Parameter must be an object with the "id" property and id property ​must have an integer value.', 'E:S:003');
+				}
                 $response = $this->getCity($data->id, 'id');
-                if ($response['error']) {
-                    return $this->createException('EntityDoesNotExist', 'City with id ' . $data->id, 'err.invalid.entity');
+                if ($response->error->exist){
+                    return $response;
                 }
-                $oldEntity = $response['result']['set'];
+                $oldEntity = $response->result->set;
                 foreach ($data as $column => $value) {
                     $set = 'set' . $this->translateColumnName($column);
                     switch ($column) {
@@ -889,11 +674,10 @@ class LocationManagementModel extends CoreModel {
                             }
                             $get = 'get'.$this->translateColumnName($column);
                             $response = $this->$get($value, 'id');
-                            if (!$response['error']) {
-                                $oldEntity->$set($response['result']['set']);
-                            } else {
-                                new CoreExceptions\EntityDoesNotExistException($this->kernel, $value);
+                            if ($response->error->exist){
+								return $response;
                             }
+							$oldEntity->$set($response->result->set);
                             unset($response, $fModel);
                             break;
                         case 'id':
@@ -908,73 +692,41 @@ class LocationManagementModel extends CoreModel {
                         $updatedItems[] = $oldEntity;
                     }
                 }
-            } else {
-                new CoreExceptions\InvalidDataException($this->kernel);
             }
         }
-        if ($countUpdates > 0) {
-            $this->em->flush();
-        }
-        /**
-         * Prepare & Return Response
-         */
-        $this->response = array(
-            'rowCount' => $this->response['rowCount'],
-            'result' => array(
-                'set' => $updatedItems,
-                'total_rows' => $countUpdates,
-                'last_insert_id' => null,
-            ),
-            'error' => false,
-            'code' => 'scc.db.update.done',
-        );
-        return $this->response;
-    }
+		if($countUpdates > 0){
+			$this->em->flush();
+			return new ModelResponse($updatedItems, $countUpdates, 0, null, false, 'S:D:004', 'Selected entries have been successfully updated within database.', $timeStamp, time());
+		}
+		return new ModelResponse(null, 0, 0, null, true, 'E:D:004', 'One or more entities cannot be updated within database.', $timeStamp, time());
+	}
 
     /**
      * @name            deleteCountry()
-     *                  Updates single folder of given post data or entity
      * 
      * @since           1.0.0
-     * @version         1.0.0
+     * @version         1.0.6
+	 *
+     * @author          Can Berkol
      * @author          Said İmamoğlu
-     * 
+     *
      * @use             $this->createException()
      * 
-     * @param           mixed   $collection     Entity or post data
-     * @param           string  $by             entity or post
+     * @param           mixed   $country
      * 
      * @return          array   $response
      * 
      */
 
-    public function deleteCountry($collection) {
-        return $this->deleteCountries($collection);
+    public function deleteCountry($country) {
+        return $this->deleteCountries(array($country));
     }
 
     /**
-     * @name            deleteCountries()
-     *                  Updates single folder of given post data or entity
-     * 
-     * @since           1.0.0
-     * @version         1.0.0
-     * @author          Said İmamoğlu
-     * 
-     * @use             $this->createException()
-     * 
-     * @param           mixed   $collection     Entity or post data
-     * @param           string  $by             entity or post
-     * 
-     * @return          array   $response
-     * 
-     */
-
-    /**
      * @name            deleteCities()
-     *                  Deletes single or multiple cities of given post data or entity
      *
      * @since           1.0.0
-     * @version         1.0.3
+     * @version         1.0.6
      * @author          Said İmamoğlu
      *
      * @use             $this->createException()
@@ -1036,178 +788,125 @@ class LocationManagementModel extends CoreModel {
 
     /**
      * @name            doesCountryExist()
-     *                  Updates single folder of given post data or entity
      * 
      * @since           1.0.0
-     * @version         1.0.0
+     * @version         1.0.6
+	 *
+     * @author          Can Berkol
      * @author          Said İmamoğlu
-     * 
+     *
      * @use             $this->createException()
      * 
-     * @param           mixed   $collection     Entity or post data
-     * @param           string  $by             entity or post
+     * @param           mixed   $country
+     * @param           bool 	$bypass
      * 
      * @return          array   $response
      * 
      */
-
-    public function doesCountryExist($collection, $by = 'entity') {
-        $this->resetResponse();
-        $exist = false;
-        $code = 'err.db.record.notfound';
-        $error = false;
-
-        $response = $this->getCountry($collection, $by);
-
-        if (!$response['error']) {
-            $exist = true;
-            $code = 'scc.db.record.found';
-        } else {
-            $error = true;
-        }
-        /**
-         * Prepare & Return Response
-         */
-        $this->response = array(
-            'rowCount' => $this->response['rowCount'],
-            'result' => array(
-                'set' => $exist,
-                'total_rows' => $response['result']['total_rows'],
-                'last_insert_id' => null,
-            ),
-            'error' => $error,
-            'code' => $code,
-        );
-        return $this->response;
+    public function doesCountryExist($country, $bypass = false) {
+		$response = $this->getCountry($country);
+		$exist = true;
+		if($response->error->exist){
+			$exist = false;
+			$response->result->set = false;
+		}
+		if($bypass){
+			return $exist;
+		}
+		return $response;
     }
 
-    /**
-     * @name            getCountry()
-     *                  Updates single folder of given post data or entity
-     * 
-     * @since           1.0.0
-     * @version         1.0.0
-     * @author          Said İmamoğlu
-     * 
-     * @use             $this->createException()
-     * 
-     * @param           mixed   $collection     Entity or post data
-     * @param           string  $by             entity or post
-     * 
-     * @return          array   $response
-     * 
-     */
+	/**
+	 * @name            getCountry()
+	 *
+	 * @since           1.0.0
+	 * @version         1.0.6
+	 *
+	 * @author          Can Berkol
+	 * @author          Said İmamoğlu
+	 *
+	 * @use             $this->createException()
+	 *
+	 * @param           mixed           $country
+	 *
+	 * @return          \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
+	 */
+	public function getCountry($country){
+		$timeStamp = time();
+		if($city instanceof BundleEntity\Country){
+			return new ModelResponse($city, 1, 0, null, false, 'S:D:002', 'Entries successfully fetched from database.', $timeStamp, time());
+		}
+		$result = null;
+		switch($country){
+			case is_numeric($country):
+				$result = $this->em->getRepository($this->entity['u']['name'])->findOneBy(array('id' => $city));
+				break;
+			case is_string($city):
+				$result = $this->em->getRepository($this->entity['u']['name'])->findOneBy(array('code' => $city));
+				if(is_null($result)){
+					$response = $this->getCountryByUrlKey($country);
+					if(!$response->error->exist){
+						$result = $response->result->set;
+					}
+				}
+				unset($response);
+				break;
+		}
+		if(is_null($result)){
+			return new ModelResponse($result, 0, 0, null, true, 'E:D:002', 'Unable to find request entry in database.', $timeStamp, time());
+		}
 
-    public function getCountry($country, $by = 'id') {
-        $this->resetResponse();
-        $this->by_opts[] = 'code_iso';
-        if (!in_array($by, $this->by_opts)) {
-            return $this->createException('InvalidByOptionException', implode(',', $this->by_opts), 'err.invalid.parameter.by');
-        }
-        if (!is_object($country) && !is_numeric($country) && !is_string($country)) {
-            return $this->createException('InvalidParameterException', 'object,numeric or string', 'err.invalid.parameter.file');
-        }
-        if ($by == 'entity') {
-            if (is_object($country)) {
-                if (!$country instanceof BundleEntity\Country) {
-                    return $this->createException('InvalidEntityException', 'BundleEntity\Country', 'err.invalid.parameter.file');
-                }
-                /**
-                 * Prepare and Return Response
-                 */
-                $this->response = array(
-                    'rowCount' => $this->response['rowCount'],
-                    'result' => array(
-                        'set' => $country,
-                        'total_rows' => 1,
-                        'last_insert_id' => null,
-                    ),
-                    'error' => false,
-                    'code' => 'scc.entity.found'
-                );
-            } else {
-                return $this->createException('InvalidParameterException', 'object,numeric or string', 'err.invalid.parameter.file');
-            }
-        } else {
-            $filter[] = array(
-                'glue' => '',
-                'condition' => array('column' => $this->entity['country']['alias'] . '.' . $by, 'comparison' => '=', 'value' => $country)
-            );
-            $response = $this->listCountries($filter, null, array('start' => 0, 'count' => 1));
-            if ($response['error']) {
-                return $response;
-            }
+		return new ModelResponse($result, 1, 0, null, false, 'S:D:002', 'Entries successfully fetched from database.', $timeStamp, time());
+	}
+	/**
+	 * @name            getCountryByUrlKey()
+	 *
+	 * @since           1.0.6
+	 * @version         1.0.6
+	 *
+	 * @author          Can Berkol
+	 *
+	 * @param           mixed 			$urlKey
+	 * @param			mixed			$language
+	 *
+	 * @return          \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
+	 */
+	public function getCountryByUrlKey($urlKey, $language = null){
+		$timeStamp = time();
+		if(!is_string($urlKey)){
+			return $this->createException('InvalidParameterValueException', '$urlKey must be a string.', 'E:S:007');
+		}
+		$filter[] = array(
+			'glue' => 'and',
+			'condition' => array(
+				array(
+					'glue' => 'and',
+					'condition' => array('column' => $this->entity['ul']['alias'].'.url_key', 'comparison' => '=', 'value' => $urlKey),
+				)
+			)
+		);
+		if(!is_null($language)){
+			$mModel = $this->kernel->getContainer()->get('multilanguagesupport.model');
+			$response = $mModel->getLanguage($language);
+			if(!$response->error->exists){
+				$filter[] = array(
+					'glue' => 'and',
+					'condition' => array(
+						array(
+							'glue' => 'and',
+							'condition' => array('column' => $this->entity['ul']['alias'].'.language', 'comparison' => '=', 'value' => $response->result->set->getId()),
+						)
+					)
+				);
+			}
+		}
+		$response = $this->listCities($filter, null, array('start' => 0, 'count' => 1));
 
-            $country = $response['result']['set'];
+		$response->stats->execution->start = $timeStamp;
+		$response->stats->execution->end = time();
 
-            /**
-             * Prepare and Return Response
-             */
-            $this->response = array(
-                'rowCount' => $this->response['rowCount'],
-                'result' => array(
-                    'set' => $country[0],
-                    'total_rows' => count($country),
-                    'last_insert_id' => null,
-                ),
-                'error' => false,
-                'code' => 'scc.entity.found',
-            );
-        }
-
-        return $this->response;
-    }
-
-    /**
-     * @name 		getCountryLocalization()
-     * Gets a specific country's localization values from database.
-     *
-     * @since		1.0.0
-     * @version         1.0.0
-     * @author          Said İmamoğlu
-     *
-     * @use             $this->createException()
-     *
-     * @param           BundleEntity\Product           $product
-     * @param           MLSEntity\Language             $language
-     *
-     * @return          array           $response
-     */
-    public function getCountryLocalization($country, $language) {
-        $this->resetResponse();
-        if (!$country instanceof BundleEntity\Product) {
-            return $this->createException('InvalidParameterException', 'Country', 'err.invalid.parameter.product');
-        }
-        /** Parameter must be an array */
-        if (!$language instanceof MLSEntity\Language) {
-            return $this->createException('InvalidParameterException', 'Language', 'err.invalid.parameter.language');
-        }
-        $q_str = 'SELECT ' . $this->entity['country_localization']['alias'] . ' FROM ' . $this->entity['country_localization']['name'] . ' ' . $this->entity['country_localization']['alias']
-                . ' WHERE ' . $this->entity['country_localization']['alias'] . '.country = ' . $country->getId()
-                . ' AND ' . $this->entity['country_localization']['alias'] . '.language = ' . $language->getId();
-
-        $query = $this->em->createQuery($q_str);
-        /**
-         * 6. Run query
-         */
-        $result = $query->getResult();
-        /**
-         * Prepare & Return Response
-         */
-        $total_rows = count($result);
-
-        $this->response = array(
-            'rowCount' => $this->response['rowCount'],
-            'result' => array(
-                'set' => $result,
-                'total_rows' => $total_rows,
-                'last_insert_id' => null,
-            ),
-            'error' => false,
-            'code' => 'scc.db.entry.exist.',
-        );
-        return $this->response;
-    }
+		return $response;
+	}
 
     /**
      * @name            insertCountry()
@@ -1753,51 +1452,35 @@ class LocationManagementModel extends CoreModel {
         return $this->response;
     }
 
-    /**
-     * @name            doesStateExist()
-     * Checks if state exist in database
-     * 
-     * @since           1.0.0
-     * @version         1.0.0
-     * @author          Said İmamoğlu
-     * 
-     * @use             $this->getState()
-     * 
-     * @param           mixed   $collection     Entity or post data
-     * @param           string  $by             entity or post
-     * 
-     * @return          array   $response
-     * 
-     */
-    public function doesStateExist($collection, $by = 'entity') {
-        $this->resetResponse();
-        $exist = false;
-        $code = 'err.db.record.notfound';
-        $error = false;
-
-        $response = $this->getState($collection, $by);
-
-        if (!$response['error']) {
-            $exist = true;
-            $code = 'scc.db.record.found';
-        } else {
-            $error = true;
-        }
-        /**
-         * Prepare & Return Response
-         */
-        $this->response = array(
-            'rowCount' => $this->response['rowCount'],
-            'result' => array(
-                'set' => $exist,
-                'total_rows' => $response['result']['total_rows'],
-                'last_insert_id' => null,
-            ),
-            'error' => $error,
-            'code' => $code,
-        );
-        return $this->response;
-    }
+	/**
+	 * @name            doesStateExist()
+	 *
+	 * @since           1.0.0
+	 * @version         1.0.6
+	 *
+	 * @author          Can Berkol
+	 * @author          Said İmamoğlu
+	 *
+	 * @use             $this->createException()
+	 *
+	 * @param           mixed   $state
+	 * @param           bool 	$bypass
+	 *
+	 * @return          array   $response
+	 *
+	 */
+	public function doesStateExist($state, $bypass = false) {
+		$response = $this->getState($state);
+		$exist = true;
+		if($response->error->exist){
+			$exist = false;
+			$response->result->set = false;
+		}
+		if($bypass){
+			return $exist;
+		}
+		return $response;
+	}
 
     /**
      * @name            getState()
