@@ -99,6 +99,10 @@ class Office extends CoreEntity
      * @ORM\JoinColumn(name="site", referencedColumnName="id", onDelete="CASCADE")
      */
     private $site;
+    /**
+     * @ORM\Column(type="string", length=45, nullable=true)
+     */
+    private $extra_info;
     /******************************************************************
      * PUBLIC SET AND GET FUNCTIONS                                   *
      ******************************************************************/
@@ -584,9 +588,52 @@ class Office extends CoreEntity
     public function getUrlKey() {
         return $this->url_key;
     }
+
+    /**
+     * @name        getExtraInfo ()
+     *
+     * @author      Said İmamoğlu
+     *
+     * @since       1.0.0
+     * @version     1.0.0
+     *
+     * @return      mixed
+     */
+    public function getExtraInfo()
+    {
+        return $this->extra_info;
+    }
+
+    /**
+     * @name        setExtraInfo ()
+     *
+     * @author      Said İmamoğlu
+     *
+     * @since       1.0.0
+     * @version     1.0.0
+     *
+     * @param       mixed $extra_info
+     *
+     * @return      $this
+     */
+    public function setExtraInfo($extra_info)
+    {
+        if (!$this->setModifiled('extra_info', $extra_info)->isModified()) {
+            return $this;
+        }
+        $this->extra_info = $extra_info;
+        return $this;
+    }
+
 }
 /**
  * Change Log:
+ * **************************************
+ * v1.0.2                      Said İmamoğlu
+ * 10.07.2015
+ * **************************************
+ * A getExtraInfo()
+ * A setExtraInfo()
  * **************************************
  * v1.0.1                      Can Berkol
  * 04.03.2013
