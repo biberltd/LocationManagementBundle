@@ -2357,7 +2357,7 @@ class LocationManagementModel extends CoreModel {
 					'condition' => array(
 						'column'     => $this->entity['o']['alias'] . '.country',
 						'comparison' => '=',
-						'value'      => $country
+						'value'      => $country->getId()
 					)
 				)
 			)
