@@ -13,7 +13,6 @@
  * @version     1.0.7
  *
  * @date        15.07.2015
- *
  */
 
 namespace BiberLtd\Bundle\LocationManagementBundle\Services;
@@ -31,7 +30,7 @@ use BiberLtd\Bundle\CoreBundle\Services as CoreServices;
 
 class LocationManagementModel extends CoreModel {
 	/**
-	 * @name                   _Construct    ()
+	 * @name             __construct    ()
 	 *
 	 * @author          Said İmamoğlu
 	 *
@@ -2156,7 +2155,7 @@ class LocationManagementModel extends CoreModel {
 	}
 
 	/**
-	 * @name                    listOfficesByCoordinates ()
+	 * @name            listOfficesByCoordinates ()
 	 *
 	 * @since           1.0.0
 	 * @version         1.0.6
@@ -2234,7 +2233,56 @@ class LocationManagementModel extends CoreModel {
 	}
 
 	/**
-	 * @name                  listOfficesInCity ()
+	 * @name            listOfficesInCities()
+	 *
+	 * @since           1.0.7
+	 * @version         1.0.7
+	 *
+	 * @author          Can Berkol
+	 *
+	 * @use             $this->listOffices()
+	 *
+	 *
+	 * @param           array $cities
+	 * @param           array $sortOrder
+	 * @param           array $limit
+	 *
+	 * @return          array       $response
+	 *
+	 */
+	public function listOfficesInCities(array $cities, $sortOrder = null, $limit = null) {
+		$timeStamp = time();
+		$in = array();
+		foreach($cities as $city){
+			$response = $this->getCity($city);
+			if(!$response->error->exist){
+				$city = $response->result->set;
+				$in[] = $city->getId();
+			}
+		}
+		unset($response);
+		if(count($in) < 1){
+			return new ModelResponse(null, 0, 0, null, true, 'E:D:002', 'No entries found in database that matches to your criterion.', $timeStamp, time());
+		}
+
+		$filter[] = array(
+			'glue'      => ' and',
+			'condition' => array(
+				array(
+					'glue'      => 'and',
+					'condition' => array(
+						'column'     => $this->entity['o']['alias'] . '.city',
+						'comparison' => 'in',
+						'value'      => $in
+					)
+				)
+			)
+		);
+
+		return $this->listOffices($filter, $sortOrder, $limit);
+	}
+	/**
+	 * @name            listOfficesInCity ()
 	 *
 	 * @since           1.0.0
 	 * @version         1.0.6
@@ -2251,7 +2299,6 @@ class LocationManagementModel extends CoreModel {
 	 * @return          array       $response
 	 *
 	 */
-
 	public function listOfficesInCity($city, $sortOrder = null, $limit = null) {
 		$response = $this->getCity($city);
 		if ($response->error->exist) {
@@ -2277,8 +2324,8 @@ class LocationManagementModel extends CoreModel {
 	}
 
 	/**
-	 * @name                  listOfficesInCCountry ()
-	 *                                              Lists offices located in a country.
+	 * @name            listOfficesInCCountry ()
+	 *
 	 *
 	 * @since           1.0.0
 	 * @version         1.0.4
@@ -2486,6 +2533,7 @@ class LocationManagementModel extends CoreModel {
  * **************************************
  * BF :: listStates() was trying to return country object. Fixed.
  * BF :: listCities() "city" changed to "c".
+ * FR :: listOfficesInCities().
  *
  * **************************************
  * v1.0.6                      23.06.2015
