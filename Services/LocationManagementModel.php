@@ -10,9 +10,9 @@
  *
  * @copyright   Biber Ltd. (www.biberltd.com)
  *
- * @version     1.0.6
+ * @version     1.0.7
  *
- * @date        22.06.2015
+ * @date        15.07.2015
  *
  */
 
@@ -429,10 +429,10 @@ class LocationManagementModel extends CoreModel {
 	}
 
 	/**
-	 * @name                  listCities ()
+	 * @name            listCities ()
 	 *
 	 * @since           1.0.0
-	 * @version         1.0.6
+	 * @version         1.0.7
 	 *
 	 * @author          Can Berkol
 	 * @author          Said İmamoğlu
@@ -455,7 +455,7 @@ class LocationManagementModel extends CoreModel {
 
 		$qStr = 'SELECT ' . $this->entity['cl']['alias'] . ', ' . $this->entity['cl']['alias']
 			. ' FROM ' . $this->entity['cl']['name'] . ' ' . $this->entity['cl']['alias']
-			. ' JOIN ' . $this->entity['cl']['alias'] . '.city ' . $this->entity['city']['alias'];
+			. ' JOIN ' . $this->entity['cl']['alias'] . '.city ' . $this->entity['c']['alias'];
 
 		if (!is_null($sortOrder)) {
 			foreach ($sortOrder as $column => $direction) {
@@ -508,7 +508,7 @@ class LocationManagementModel extends CoreModel {
 	}
 
 	/**
-	 * @name                  listCitiesOfCountry ()
+	 * @name            listCitiesOfCountry ()
 	 *
 	 * @since           1.0.0
 	 * @version         1.0.6
@@ -1610,7 +1610,7 @@ class LocationManagementModel extends CoreModel {
 	 * @name                  listStates ()
 	 *
 	 * @since           1.0.0
-	 * @version         1.0.6
+	 * @version         1.0.7
 	 *
 	 * @author          Can Berkol
 	 * @author          Said İmamoğlu
@@ -1665,9 +1665,9 @@ class LocationManagementModel extends CoreModel {
 
 		$entities = array();
 		foreach ($result as $entry) {
-			$id = $entry->getCountry()->getId();
+			$id = $entry->getState()->getId();
 			if (!isset($unique[$id])) {
-				$entities[] = $entry->getCountry();
+				$entities[] = $entry->getState();
 			}
 		}
 		$totalRows = count($entities);
@@ -2480,6 +2480,13 @@ class LocationManagementModel extends CoreModel {
 
 /**
  * Change Log
+ * **************************************
+ * v1.0.7                      15.07.2015
+ * Can Berkol
+ * **************************************
+ * BF :: listStates() was trying to return country object. Fixed.
+ * BF :: listCities() "city" changed to "c".
+ *
  * **************************************
  * v1.0.6                      23.06.2015
  * Can Berkol
