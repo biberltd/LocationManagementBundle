@@ -1102,7 +1102,7 @@ class LocationManagementModel extends CoreModel {
 						break;
 					case 'name':
 					case 'url_key':
-						$column = $this->entity['uk']['alias'] . '.' . $column;
+						$column = $this->entity['ul']['alias'] . '.' . $column;
 						break;
 					default:
 						break;
