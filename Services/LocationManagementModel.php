@@ -2355,7 +2355,7 @@ class LocationManagementModel extends CoreModel {
 				array(
 					'glue'      => 'and',
 					'condition' => array(
-						'column'     => $this->entity['office']['alias'] . '.country',
+						'column'     => $this->entity['o']['alias'] . '.country',
 						'comparison' => '=',
 						'value'      => $country
 					)
@@ -2398,7 +2398,7 @@ class LocationManagementModel extends CoreModel {
 				array(
 					'glue'      => 'and',
 					'condition' => array(
-						'column'     => $this->entity['office']['alias'] . '.state',
+						'column'     => $this->entity['o']['alias'] . '.state',
 						'comparison' => '=',
 						'value'      => $state
 					)
