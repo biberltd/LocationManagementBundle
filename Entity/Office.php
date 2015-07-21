@@ -618,7 +618,7 @@ class Office extends CoreEntity
      */
     public function setExtraInfo($extra_info)
     {
-        if (!$this->setModifiled('extra_info', $extra_info)->isModified()) {
+        if (!$this->setModified('extra_info', $extra_info)->isModified()) {
             return $this;
         }
         $this->extra_info = $extra_info;
