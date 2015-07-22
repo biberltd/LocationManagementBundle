@@ -10,9 +10,9 @@
  *
  * @copyright   Biber Ltd. (www.biberltd.com)
  *
- * @version     1.0.7
+ * @version     1.0.8
  *
- * @date        15.07.2015
+ * @date        22.07.2015
  */
 
 namespace BiberLtd\Bundle\LocationManagementBundle\Services;
@@ -495,8 +495,10 @@ class LocationManagementModel extends CoreModel {
 			$id = $entry->getCity()->getId();
 			if (!isset($unique[$id])) {
 				$entities[] = $entry->getCity();
+				$unique[$id] = '';
 			}
 		}
+		unset($unique);
 		$totalRows = count($entities);
 		if ($totalRows < 1) {
 			return new ModelResponse(null, 0, 0, null, true, 'E:D:002', 'No entries found in database that matches to your criterion.', $timeStamp, time());
@@ -1128,8 +1130,10 @@ class LocationManagementModel extends CoreModel {
 			$id = $entry->getCountry()->getId();
 			if (!isset($unique[$id])) {
 				$entities[] = $entry->getCountry();
+				$unique[$id] = '';
 			}
 		}
+		unset($unique);
 		$totalRows = count($entities);
 		if ($totalRows < 1) {
 			return new ModelResponse(null, 0, 0, null, true, 'E:D:002', 'No entries found in database that matches to your criterion.', $timeStamp, time());
@@ -1667,8 +1671,10 @@ class LocationManagementModel extends CoreModel {
 			$id = $entry->getState()->getId();
 			if (!isset($unique[$id])) {
 				$entities[] = $entry->getState();
+				$unique[$id] = '';
 			}
 		}
+		unset($unique);
 		$totalRows = count($entities);
 		if ($totalRows < 1) {
 			return new ModelResponse(null, 0, 0, null, true, 'E:D:002', 'No entries found in database that matches to your criterion.', $timeStamp, time());
@@ -2527,6 +2533,12 @@ class LocationManagementModel extends CoreModel {
 
 /**
  * Change Log
+ * **************************************
+ * v1.0.8                      22.07.2015
+ * Can Berkol
+ * **************************************
+ * BF :: list functions now return unique values.
+ *
  * **************************************
  * v1.0.7                      15.07.2015
  * Can Berkol
