@@ -10,9 +10,9 @@
  *
  * @copyright   Biber Ltd. (www.biberltd.com)
  *
- * @version     1.0.8
+ * @version     1.0.9
  *
- * @date        22.07.2015
+ * @date        23.07.2015
  */
 
 namespace BiberLtd\Bundle\LocationManagementBundle\Services;
@@ -1610,10 +1610,10 @@ class LocationManagementModel extends CoreModel {
 	}
 
 	/**
-	 * @name                  listStates ()
+	 * @name            listStates ()
 	 *
 	 * @since           1.0.0
-	 * @version         1.0.7
+	 * @version         1.0.9
 	 *
 	 * @author          Can Berkol
 	 * @author          Said İmamoğlu
@@ -1625,14 +1625,13 @@ class LocationManagementModel extends CoreModel {
 	 * @return          array   $response
 	 *
 	 */
-
 	public function listStates($filter = null, $sortOrder = null, $limit = null) {
 		$timeStamp = time();
 		if (!is_array($sortOrder) && !is_null($sortOrder)) {
 			return $this->createException('InvalidSortOrderException', '$sortOrder must be an array with key => value pairs where value can only be "asc" or "desc".', 'E:S:002');
 		}
 		$oStr = $wStr = $gStr = $fStr = '';
-		$qStr = 'SELECT ' . $this->entity['sl']['alias'] . ', ' . $this->entity['s']['alias']
+		$qStr = 'SELECT ' . $this->entity['sl']['alias']
 			. ' FROM ' . $this->entity['sl']['name'] . ' ' . $this->entity['sl']['alias']
 			. ' JOIN ' . $this->entity['sl']['alias'] . '.state ' . $this->entity['s']['alias'];
 
@@ -1661,7 +1660,7 @@ class LocationManagementModel extends CoreModel {
 			$fStr = $this->prepareWhere($filter);
 			$wStr .= ' WHERE ' . $fStr;
 		}
-
+		$qStr .= $wStr.$oStr;
 		$q = $this->em->createQuery($qStr);
 		$q = $this->addLimit($q, $limit);
 		$result = $q->getResult();
@@ -2534,6 +2533,12 @@ class LocationManagementModel extends CoreModel {
 /**
  * Change Log
  * **************************************
+ * v1.0.9                      23.07.2015
+ * Can Berkol
+ * **************************************
+ * BF :: listStates function was not handling WHERE and ORDER BY correctly. Fixed.
+ *
+ * **************************************
  * v1.0.8                      22.07.2015
  * Can Berkol
  * **************************************
@@ -2599,60 +2604,5 @@ class LocationManagementModel extends CoreModel {
  * U listStates
  * U updateOffice()
  * U updateOffices()
- *
- * **************************************
- * v1.0.0                     Said İmamoğlu
- * 27.10.2013
- * **************************************
- * A deleteCities()
- * A deleteCity()
- * A deleteCountries()
- * A deleteCountry()
- * A deleteOffice()
- * A deleteOffices()
- * A deleteState()
- * A deleteStates()
- * A doesCityExist()
- * A doesCountryExist()
- * A doesOfficeExist()
- * A doesStateExist()
- * A getCity()
- * A getCityLocalization()
- * A getCountry()
- * A getCountryLocalization()
- * A getOffice()
- * A getState()
- * A getStateLocalization()
- * A insertCities()
- * A insertCity()
- * A insertCountries()
- * A insertCountry()
- * A insertOffices()
- * A insertOffice()
- * A insertStates()
- * A insertState()
- * A listCities()
- * A listCitiesOfCountry()
- * A listCitiesOfState()
- * A listCountries()
- * A listOffices()
- * A listOfficesOfSite()
- * A listOfficesByCoordinates()
- * A listStates()
- * A updateCities()
- * A updateCity()
- * A updateCountries()
- * A updateCountry()
- * A updateOffices()
- * A updateOffice()
- * A updateStates()
- * A updateState()
- *
- * **************************************
- * v1.0.0                     Can Berkol
- * 20.10.2013
- * **************************************
- * Initial setup of class has been added.
- *
  *
  */
