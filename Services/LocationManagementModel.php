@@ -2021,7 +2021,7 @@ class LocationManagementModel extends CoreModel {
 		$countInserts = 0;
 		$insertedItems = array();
 		foreach ($collection as $data) {
-			if ($data instanceof BundleEntity\State) {
+			if ($data instanceof BundleEntity\Office) {
 				$entity = $data;
 				$this->em->persist($entity);
 				$insertedItems[] = $entity;
@@ -2029,7 +2029,7 @@ class LocationManagementModel extends CoreModel {
 			}
 			else if (is_object($data)) {
 				$localizations = array();
-				$entity = new BundleEntity\State;
+				$entity = new BundleEntity\Office;
 				foreach ($data as $column => $value) {
 					$localeSet = false;
 					$set = 'set' . $this->translateColumnName($column);
@@ -2537,6 +2537,7 @@ class LocationManagementModel extends CoreModel {
  * Can Berkol
  * **************************************
  * BF :: listStates function was not handling WHERE and ORDER BY correctly. Fixed.
+ * BF :: insertOffices() copy paste errors fixed.
  *
  * **************************************
  * v1.0.8                      22.07.2015
