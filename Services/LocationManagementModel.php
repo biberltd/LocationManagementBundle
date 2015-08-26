@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @package	    LocationManagementBundle
  * @subpackage	Services
@@ -10,9 +9,9 @@
  *
  * @copyright   Biber Ltd. (www.biberltd.com)
  *
- * @version     1.0.9
+ * @version     1.1.0
  *
- * @date        23.07.2015
+ * @date        26.08.2015
  */
 
 namespace BiberLtd\Bundle\LocationManagementBundle\Services;
@@ -2116,7 +2115,6 @@ class LocationManagementModel extends CoreModel {
 
 		$qStr = 'SELECT ' . $this->entity['o']['alias']
 			. ' FROM ' . $this->entity['o']['name'] . ' ' . $this->entity['o']['alias'];
-
 		if (!is_null($sortOrder)) {
 			foreach ($sortOrder as $column => $direction) {
 				switch ($column) {
@@ -2144,8 +2142,8 @@ class LocationManagementModel extends CoreModel {
 		if (!is_null($filter)) {
 			$fStr = $this->prepareWhere($filter);
 			$wStr .= ' WHERE ' . $fStr;
+			$qStr .= $wStr;
 		}
-
 		$q = $this->em->createQuery($qStr);
 		$q = $this->addLimit($q, $limit);
 		$result = $q->getResult();
@@ -2324,7 +2322,6 @@ class LocationManagementModel extends CoreModel {
 				)
 			)
 		);
-
 		return $this->listOffices($filter, $sortOrder, $limit);
 	}
 
@@ -2532,6 +2529,12 @@ class LocationManagementModel extends CoreModel {
 
 /**
  * Change Log
+ * **************************************
+ * v1.1.0                      26.08.2015
+ * Can Berkol
+ * **************************************
+ * BF :: filter relatedproblems fixed.
+ *
  * **************************************
  * v1.0.9                      23.07.2015
  * Can Berkol
