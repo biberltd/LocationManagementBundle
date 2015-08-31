@@ -55,10 +55,7 @@ class State extends CoreLocalizableEntity
     private $cities;
 
     /**
-     * @ORM\ManyToOne(
-     *     targetEntity="BiberLtd\Bundle\LocationManagementBundle\Entity\Country",
-     *     inversedBy="states"
-     * )
+     * @ORM\ManyToOne(targetEntity="BiberLtd\Bundle\LocationManagementBundle\Entity\Country", inversedBy="states")
      * @ORM\JoinColumn(name="country", referencedColumnName="id", onDelete="CASCADE")
      */
     private $country;

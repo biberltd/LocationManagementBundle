@@ -43,18 +43,12 @@ class City extends CoreLocalizableEntity
     private $code;
 
     /** 
-     * @ORM\OneToMany(
-     *     targetEntity="BiberLtd\Bundle\LocationManagementBundle\Entity\CityLocalization",
-     *     mappedBy="city"
-     * )
+     * @ORM\OneToMany(targetEntity="BiberLtd\Bundle\LocationManagementBundle\Entity\CityLocalization", mappedBy="city")
      */
     protected $localizations;
 
     /** 
-     * @ORM\ManyToOne(
-     *     targetEntity="BiberLtd\Bundle\LocationManagementBundle\Entity\Country",
-     *     inversedBy="cities"
-     * )
+     * @ORM\ManyToOne(targetEntity="BiberLtd\Bundle\LocationManagementBundle\Entity\Country", inversedBy="cities")
      * @ORM\JoinColumn(name="country", referencedColumnName="id", nullable=false, onDelete="CASCADE")
      */
     private $country;

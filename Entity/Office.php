@@ -76,6 +76,21 @@ class Office extends CoreEntity
      */
     private $email;
 
+    /**
+     * @ORM\Column(type="datetime", nullable=false)
+     */
+    private $date_added;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=false)
+     */
+    private $date_updated;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $date_removed;
+
     /** 
      * @ORM\ManyToOne(targetEntity="BiberLtd\Bundle\LocationManagementBundle\Entity\City")
      * @ORM\JoinColumn(name="city", referencedColumnName="id", nullable=false)
@@ -100,7 +115,7 @@ class Office extends CoreEntity
      */
     private $site;
     /**
-     * @ORM\Column(type="string", length=45, nullable=true)
+     * 
      */
     private $extra_info;
     /******************************************************************

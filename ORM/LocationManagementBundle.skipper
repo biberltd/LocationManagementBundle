@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<skipper version="3.2.3.1247" mvc="Symfony2" orm="Doctrine2" name="LocationManagementBundle" uuid="348da294-b833-442d-b018-8c79a4607403">
+  <external-module storage-path="../../site-management-bundle/ORM/SiteManagement.module.xml"/>
+  <external-module storage-path="../../multilanguage-support-bundle/ORM/MultiLanguageSupport.module.xml"/>
+  <external-module storage-path="LocationManagement.module.xml"/>
+  <visual-data>
+    <association uuid="08660ec2-086a-4c23-861e-9ce3c9937582" color="#969696"/>
+    <association uuid="184a8a65-b565-41ec-be74-8c1a309682b4" color="#969696"/>
+    <association uuid="2b667d9c-593c-4e1b-9cd7-4ba01789fdde" color="#969696"/>
+    <association uuid="2f81a417-cf2d-4522-9d43-3b4dcb9ff53f" color="#969696"/>
+    <association uuid="3c94edba-45c5-469c-8399-530c323f97ad" color="#969696"/>
+    <association uuid="45c125cd-0ba3-4a9c-973e-92bbcfb91a59" color="#969696"/>
+    <association uuid="46fee6f5-f1a9-4e3f-b9e5-96d1665cb877" color="#969696"/>
+    <association uuid="49bba62e-cacd-41b0-94ed-1ce65f89d961" color="#969696"/>
+    <association uuid="4a21a97e-810e-4e2d-a330-69d23cf801c7" color="#969696"/>
+    <association uuid="691cd89a-3534-4a4c-bf70-544fa15a4c35" color="#969696"/>
+    <association uuid="71f15a54-6bc9-4510-84b1-2b2817781440" color="#969696"/>
+    <association uuid="72ac99ea-7436-414c-a288-0b17aaabfb4a" color="#969696"/>
+    <association uuid="78171fae-020e-4e19-b965-b04f4eb85c76" color="#969696"/>
+    <association uuid="b63d331a-e072-429d-9953-3da901b68b90" color="#969696"/>
+    <association uuid="bbcd0ee0-7db3-4ab5-ba57-81efd9149996" color="#969696"/>
+    <association uuid="dcbf1caf-6474-4dfe-90be-7b58aa71c5c7" color="#969696"/>
+    <association uuid="ed9d8b73-567a-4c72-b53d-e1e2df7ed7b4" color="#969696"/>
+    <association uuid="f4b0d82d-96f6-49e4-b213-9292f3fa75bd" color="#969696"/>
+    <module uuid="116d2750-ee5f-4537-84d5-7d45771499d3" position-x="220" position-y="560"/>
+    <module uuid="264804cf-5ddd-4089-aaa2-d7c0f129a5ed" position-x="750" position-y="106"/>
+    <module uuid="860bb986-ef71-4cef-9da2-f560e58c2569" position-x="50" position-y="50"/>
+    <project uuid="348da294-b833-442d-b018-8c79a4607403" size-x="0" size-x2="2570" size-y="0" size-y2="1144"/>
+  </visual-data>
+</skipper>
