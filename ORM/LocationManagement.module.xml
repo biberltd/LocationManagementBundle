@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<skipper version="3.2.3.1247" mvc="Symfony2" orm="Doctrine2">
+<skipper version="3.2.4.1256" mvc="Symfony2" orm="Doctrine2">
   <module name="\LocationManagementBundle" local-name="LocationManagementBundle" namespace="\BiberLtd\Bundle\LocationManagementBundle\Entity" local-namespace="BiberLtd\Bundle\LocationManagementBundle\Entity" export-format="Doctrine2Php" export-path="../Entity" uuid="116d2750-ee5f-4537-84d5-7d45771499d3">
     <entity name="\BiberLtd\Bundle\LocationManagementBundle\Entity\Office" local-name="Office" namespace="\BiberLtd\Bundle\LocationManagementBundle\Entity" description="Stores locations of offices that belong to the web site owner." uuid="08d2afb5-f4dd-4e24-82bb-1e5f529f940d">
       <field name="id" description="System given id." type="integer" size="10" required="true" unique="true" primary="true" auto-increment="true" uuid="11beb035-59e1-4804-bfda-7ddcb6703c2f"/>
@@ -30,16 +30,22 @@
         <attribute name="export-file-name">Office.php</attribute>
       </orm-attributes>
     </entity>
-    <association from="\BiberLtd\Bundle\LocationManagementBundle\Entity\Office" to="\BiberLtd\Bundle\LocationManagementBundle\Entity\City" caption="idx_f_office_city" inverse-alias="city" many-owner="true" many-inverse="false" parent-required="true" uuid="08660ec2-086a-4c23-861e-9ce3c9937582">
+    <association from="\BiberLtd\Bundle\LocationManagementBundle\Entity\Office" to="\BiberLtd\Bundle\LocationManagementBundle\Entity\City" caption="idxFCitOfCity" inverse-alias="city" many-owner="true" many-inverse="false" parent-required="true" uuid="08660ec2-086a-4c23-861e-9ce3c9937582">
       <association-field from="city" to="id"/>
     </association>
-    <association from="\BiberLtd\Bundle\LocationManagementBundle\Entity\Office" to="\BiberLtd\Bundle\LocationManagementBundle\Entity\State" caption="idx_f_office_state" inverse-alias="state" many-owner="true" many-inverse="false" uuid="2b667d9c-593c-4e1b-9cd7-4ba01789fdde">
+    <association from="\BiberLtd\Bundle\LocationManagementBundle\Entity\Office" to="\BiberLtd\Bundle\LocationManagementBundle\Entity\State" caption="idxFStateOFOffice" inverse-alias="state" many-owner="true" many-inverse="false" uuid="2b667d9c-593c-4e1b-9cd7-4ba01789fdde">
       <association-field from="state" to="id"/>
+      <orm-attributes>
+        <attribute name="on-delete">CASCADE</attribute>
+      </orm-attributes>
     </association>
-    <association from="\BiberLtd\Bundle\LocationManagementBundle\Entity\Office" to="\BiberLtd\Bundle\LocationManagementBundle\Entity\Country" caption="idx_f_office_country" inverse-alias="country" many-owner="true" many-inverse="false" parent-required="true" uuid="72ac99ea-7436-414c-a288-0b17aaabfb4a">
+    <association from="\BiberLtd\Bundle\LocationManagementBundle\Entity\Office" to="\BiberLtd\Bundle\LocationManagementBundle\Entity\Country" caption="idxFCountryOfOffice" inverse-alias="country" many-owner="true" many-inverse="false" parent-required="true" uuid="72ac99ea-7436-414c-a288-0b17aaabfb4a">
       <association-field from="country" to="id"/>
+      <orm-attributes>
+        <attribute name="on-delete">CASCADE</attribute>
+      </orm-attributes>
     </association>
-    <association from="\BiberLtd\Bundle\LocationManagementBundle\Entity\Office" to="\BiberLtd\Bundle\SiteManagementBundle\Entity\Site" caption="idx_f_office_site" inverse-alias="site" many-owner="true" many-inverse="false" uuid="78171fae-020e-4e19-b965-b04f4eb85c76">
+    <association from="\BiberLtd\Bundle\LocationManagementBundle\Entity\Office" to="\BiberLtd\Bundle\SiteManagementBundle\Entity\Site" caption="idxFSiteOfOffice" inverse-alias="site" many-owner="true" many-inverse="false" uuid="78171fae-020e-4e19-b965-b04f4eb85c76">
       <association-field from="site" to="id"/>
       <orm-attributes>
         <attribute name="on-delete">CASCADE</attribute>
@@ -93,13 +99,13 @@
         <attribute name="export-file-name">CountryLocalization.php</attribute>
       </orm-attributes>
     </entity>
-    <association from="\BiberLtd\Bundle\LocationManagementBundle\Entity\CountryLocalization" to="\BiberLtd\Bundle\MultiLanguageSupportBundle\Entity\Language" caption="idx_f_country_localization_language" inverse-alias="language" many-owner="true" many-inverse="false" uuid="49bba62e-cacd-41b0-94ed-1ce65f89d961">
+    <association from="\BiberLtd\Bundle\LocationManagementBundle\Entity\CountryLocalization" to="\BiberLtd\Bundle\MultiLanguageSupportBundle\Entity\Language" caption="idxfCountryLocalizationLanguage" inverse-alias="language" many-owner="true" many-inverse="false" uuid="49bba62e-cacd-41b0-94ed-1ce65f89d961">
       <association-field from="language" to="id"/>
       <orm-attributes>
         <attribute name="on-delete">CASCADE</attribute>
       </orm-attributes>
     </association>
-    <association from="\BiberLtd\Bundle\LocationManagementBundle\Entity\CountryLocalization" to="\BiberLtd\Bundle\LocationManagementBundle\Entity\Country" caption="idx_f_country_localization_country" owner-alias="localizations" inverse-alias="country" many-owner="true" many-inverse="false" uuid="184a8a65-b565-41ec-be74-8c1a309682b4">
+    <association from="\BiberLtd\Bundle\LocationManagementBundle\Entity\CountryLocalization" to="\BiberLtd\Bundle\LocationManagementBundle\Entity\Country" caption="idxFCountryLocalization" owner-alias="localizations" inverse-alias="country" many-owner="true" many-inverse="false" uuid="184a8a65-b565-41ec-be74-8c1a309682b4">
       <association-field from="country" to="id"/>
       <orm-attributes>
         <attribute name="on-delete">CASCADE</attribute>
@@ -125,7 +131,7 @@
         <attribute name="export-file-name">State.php</attribute>
       </orm-attributes>
     </entity>
-    <association from="\BiberLtd\Bundle\LocationManagementBundle\Entity\State" to="\BiberLtd\Bundle\LocationManagementBundle\Entity\Country" caption="idx_f_state_country" owner-alias="states" inverse-alias="country" many-owner="true" many-inverse="false" uuid="2f81a417-cf2d-4522-9d43-3b4dcb9ff53f">
+    <association from="\BiberLtd\Bundle\LocationManagementBundle\Entity\State" to="\BiberLtd\Bundle\LocationManagementBundle\Entity\Country" caption="idxFCountryOfState" owner-alias="states" inverse-alias="country" many-owner="true" many-inverse="false" uuid="2f81a417-cf2d-4522-9d43-3b4dcb9ff53f">
       <association-field from="country" to="id"/>
       <orm-attributes>
         <attribute name="on-delete">CASCADE</attribute>
@@ -160,13 +166,13 @@
         <attribute name="export-file-name">StateLocalization.php</attribute>
       </orm-attributes>
     </entity>
-    <association from="\BiberLtd\Bundle\LocationManagementBundle\Entity\StateLocalization" to="\BiberLtd\Bundle\LocationManagementBundle\Entity\State" caption="idx_f_state_localization_state" owner-alias="localizations" inverse-alias="state" many-owner="true" many-inverse="false" parent-required="true" uuid="46fee6f5-f1a9-4e3f-b9e5-96d1665cb877">
+    <association from="\BiberLtd\Bundle\LocationManagementBundle\Entity\StateLocalization" to="\BiberLtd\Bundle\LocationManagementBundle\Entity\State" caption="idxFStateLocalization" owner-alias="localizations" inverse-alias="state" many-owner="true" many-inverse="false" parent-required="true" uuid="46fee6f5-f1a9-4e3f-b9e5-96d1665cb877">
       <association-field from="state" to="id"/>
       <orm-attributes>
         <attribute name="on-delete">CASCADE</attribute>
       </orm-attributes>
     </association>
-    <association from="\BiberLtd\Bundle\LocationManagementBundle\Entity\StateLocalization" to="\BiberLtd\Bundle\MultiLanguageSupportBundle\Entity\Language" caption="idx_f_state_localization_language" inverse-alias="language" many-owner="true" many-inverse="false" parent-required="true" uuid="b63d331a-e072-429d-9953-3da901b68b90">
+    <association from="\BiberLtd\Bundle\LocationManagementBundle\Entity\StateLocalization" to="\BiberLtd\Bundle\MultiLanguageSupportBundle\Entity\Language" caption="idxFStateLocalizationLanguage" inverse-alias="language" many-owner="true" many-inverse="false" parent-required="true" uuid="b63d331a-e072-429d-9953-3da901b68b90">
       <association-field from="language" to="id"/>
       <orm-attributes>
         <attribute name="on-delete">CASCADE</attribute>
@@ -195,13 +201,13 @@
         <attribute name="export-file-name">City.php</attribute>
       </orm-attributes>
     </entity>
-    <association from="\BiberLtd\Bundle\LocationManagementBundle\Entity\City" to="\BiberLtd\Bundle\LocationManagementBundle\Entity\Country" caption="idx_f_city_country" owner-alias="cities" inverse-alias="country" many-owner="true" many-inverse="false" parent-required="true" uuid="ed9d8b73-567a-4c72-b53d-e1e2df7ed7b4">
+    <association from="\BiberLtd\Bundle\LocationManagementBundle\Entity\City" to="\BiberLtd\Bundle\LocationManagementBundle\Entity\Country" caption="idxFCountryOfCity" owner-alias="cities" inverse-alias="country" many-owner="true" many-inverse="false" parent-required="true" uuid="ed9d8b73-567a-4c72-b53d-e1e2df7ed7b4">
       <association-field from="country" to="id"/>
       <orm-attributes>
         <attribute name="on-delete">CASCADE</attribute>
       </orm-attributes>
     </association>
-    <association from="\BiberLtd\Bundle\LocationManagementBundle\Entity\City" to="\BiberLtd\Bundle\LocationManagementBundle\Entity\State" caption="idx_f_city_state" owner-alias="cities" inverse-alias="state" many-owner="true" many-inverse="false" uuid="3c94edba-45c5-469c-8399-530c323f97ad">
+    <association from="\BiberLtd\Bundle\LocationManagementBundle\Entity\City" to="\BiberLtd\Bundle\LocationManagementBundle\Entity\State" caption="idxFStateOfCity" owner-alias="cities" inverse-alias="state" many-owner="true" many-inverse="false" uuid="3c94edba-45c5-469c-8399-530c323f97ad">
       <association-field from="state" to="id"/>
       <orm-attributes>
         <attribute name="on-delete">CASCADE</attribute>
@@ -236,14 +242,59 @@
         <attribute name="export-file-name">CityLocalization.php</attribute>
       </orm-attributes>
     </entity>
-    <association from="\BiberLtd\Bundle\LocationManagementBundle\Entity\CityLocalization" to="\BiberLtd\Bundle\MultiLanguageSupportBundle\Entity\Language" caption="idx_f_city_localization_language" inverse-alias="language" many-owner="true" many-inverse="false" parent-required="true" uuid="bbcd0ee0-7db3-4ab5-ba57-81efd9149996">
+    <association from="\BiberLtd\Bundle\LocationManagementBundle\Entity\CityLocalization" to="\BiberLtd\Bundle\MultiLanguageSupportBundle\Entity\Language" caption="idxFCityLocalizationLanguage" inverse-alias="language" many-owner="true" many-inverse="false" parent-required="true" uuid="bbcd0ee0-7db3-4ab5-ba57-81efd9149996">
       <association-field from="language" to="id"/>
       <orm-attributes>
         <attribute name="on-delete">CASCADE</attribute>
       </orm-attributes>
     </association>
-    <association from="\BiberLtd\Bundle\LocationManagementBundle\Entity\CityLocalization" to="\BiberLtd\Bundle\LocationManagementBundle\Entity\City" caption="idx_f_city_localization_city" owner-alias="localizations" inverse-alias="city" many-owner="true" many-inverse="false" parent-required="true" uuid="f4b0d82d-96f6-49e4-b213-9292f3fa75bd">
+    <association from="\BiberLtd\Bundle\LocationManagementBundle\Entity\CityLocalization" to="\BiberLtd\Bundle\LocationManagementBundle\Entity\City" caption="idxFCityLocalizationLanguage" owner-alias="localizations" inverse-alias="city" many-owner="true" many-inverse="false" parent-required="true" uuid="f4b0d82d-96f6-49e4-b213-9292f3fa75bd">
       <association-field from="city" to="id"/>
+      <orm-attributes>
+        <attribute name="on-delete">CASCADE</attribute>
+      </orm-attributes>
+    </association>
+    <entity name="\BiberLtd\Bundle\LocationManagementBundle\Entity\CheckinLogs" local-name="CheckinLogs" namespace="\BiberLtd\Bundle\LocationManagementBundle\Entity" description="Logs checkin and checkouts by members to the offices." uuid="4da3d5f1-bc44-46ce-9405-c08218f83507">
+      <field name="id" description="System given id." type="integer" required="true" unique="true" primary="true" auto-increment="true" uuid="fad6da92-8b27-45b5-ac41-6ab0a11d8977"/>
+      <field name="date_checkin" description="Checkin time stamp." type="datetime" required="true" uuid="a9564291-f3c5-42d3-a32a-a9ef6b61b04f"/>
+      <field name="date_checkout" description="Checkin time stamp if exists." type="datetime" uuid="c9beac29-07e4-4d71-afdb-e83477ed98e0"/>
+      <field name="lat_checkin" description="Chekin latitude." type="decimal" uuid="deefd6de-0c9f-435b-a90e-12a07d38d3a4"/>
+      <field name="lon_checkin" description="Checkin longitude." type="decimal" uuid="df7f6f45-81e1-4131-a086-3773b028c616"/>
+      <field name="lat_checkout" description="Checkout latitude." type="decimal" uuid="5c4c1be9-3992-4372-8cf7-5bc2844585a4"/>
+      <field name="lon_checkout" description="Checkout longitude." type="decimal" uuid="480e98a0-6d33-4253-a608-51d9070ccd3a"/>
+      <field name="office" description="Checked in office." type="integer" size="10" required="true" uuid="f1b592e6-9e9e-4d85-a947-a663acb9928e"/>
+      <field name="member" description="Checked in member." type="integer" size="10" required="true" uuid="69ec17f8-6e14-466d-ab0b-30ca60c0cd27"/>
+      <field name="date_added" description="Date when the entry is first added." type="datetime" required="true" uuid="b80e35bd-94e5-43cc-8f8b-18bd19f32659"/>
+      <field name="date_updated" description="Date when the entry is last updated." type="datetime" required="true" uuid="04e4242d-98f6-47be-acb9-f6cf9807a6ce"/>
+      <field name="date_removed" description="Date when the entry is marked as removed." type="datetime" uuid="75853d51-8865-4789-9e48-9db72600ca2d"/>
+      <field name="checkoutType" description="s:system,u:user" type="string" default="s" uuid="952b9dc0-13c7-4cb2-9145-122e07afb184"/>
+      <index name="idxUMemberCheckins" unique="true">
+        <index-field name="date_checkin"/>
+        <index-field name="date_checkout"/>
+        <index-field name="office"/>
+        <index-field name="member"/>
+      </index>
+      <index name="idxUCheckinID" unique="true">
+        <index-field name="id"/>
+      </index>
+      <orm-attributes>
+        <attribute name="export-file-name">CheckinLogs.php</attribute>
+        <attribute name="table">checkin_logs</attribute>
+        <attribute name="options">
+          <attribute name="charset">utf8</attribute>
+          <attribute name="collate">utf8_turkish_ci</attribute>
+          <attribute name="engine">innodb</attribute>
+        </attribute>
+      </orm-attributes>
+    </entity>
+    <association from="\BiberLtd\Bundle\LocationManagementBundle\Entity\CheckinLogs" to="\BiberLtd\Bundle\LocationManagementBundle\Entity\Office" caption="idxFCheckedInOffice" inverse-alias="office" many-owner="true" many-inverse="false" parent-required="true" uuid="cc54842f-aa78-4971-ba9d-17a33e2488ba">
+      <association-field from="office" to="id"/>
+      <orm-attributes>
+        <attribute name="on-delete">CASCADE</attribute>
+      </orm-attributes>
+    </association>
+    <association from="\BiberLtd\Bundle\LocationManagementBundle\Entity\CheckinLogs" to="\BiberLtd\Bundle\MemberManagementBundle\Entity\Member" caption="idxFCheckedinMember" inverse-alias="member" many-owner="true" many-inverse="false" parent-required="true" uuid="136c704a-5d08-4070-9a33-2ecaafacce0d">
+      <association-field from="member" to="id"/>
       <orm-attributes>
         <attribute name="on-delete">CASCADE</attribute>
       </orm-attributes>
@@ -259,9 +310,10 @@
     <entity uuid="08d2afb5-f4dd-4e24-82bb-1e5f529f940d" bg-color="#FFFFFF" hdr-color="#D2D2D2" position-x="30" position-y="240" size-x="0" size-x2="130" size-y="0" size-y2="241"/>
     <entity uuid="0bdf95d0-6dd8-4200-9fda-73f5bff5d4b5" bg-color="4294967295" hdr-color="4292006610" position-x="519" position-y="290" size-x="0" size-x2="110" size-y="0" size-y2="73"/>
     <entity uuid="4491fd31-1d20-4753-9166-184196ae6040" bg-color="4294967295" hdr-color="4292006610" position-x="429" position-y="47" size-x="0" size-x2="110" size-y="0" size-y2="73"/>
+    <entity uuid="4da3d5f1-bc44-46ce-9405-c08218f83507" bg-color="#FFFFFF" hdr-color="#D2D2D2" position-x="730" position-y="40" size-x="0" size-x2="131" size-y="0" size-y2="143"/>
     <entity uuid="9b3e403e-b5ab-4cce-ba8b-89f148856874" bg-color="4294967295" hdr-color="4292006610" position-x="329" position-y="240" size-x="0" size-x2="110" size-y="0" size-y2="73"/>
     <entity uuid="bd6f61b6-36df-4553-9758-fefbe894e2f5" bg-color="4294967295" hdr-color="4292006610" position-x="519" position-y="190" size-x="0" size-x2="110" size-y="0" size-y2="73"/>
     <entity uuid="de18dab0-920f-417b-be06-295fafcfa738" bg-color="4294967295" hdr-color="4292006610" position-x="229" position-y="65" size-x="0" size-x2="110" size-y="0" size-y2="45"/>
-    <module uuid="116d2750-ee5f-4537-84d5-7d45771499d3" bg-color="#C70000" size-x="20" size-x2="729" size-y="10" size-y2="534"/>
+    <module uuid="116d2750-ee5f-4537-84d5-7d45771499d3" bg-color="#C70000" size-x="20" size-x2="980" size-y="10" size-y2="534"/>
   </visual-data>
 </skipper>

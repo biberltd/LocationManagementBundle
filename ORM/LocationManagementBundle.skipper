@@ -1,30 +1,54 @@
 <?xml version="1.0"?>
-<skipper version="3.2.3.1247" mvc="Symfony2" orm="Doctrine2" name="LocationManagementBundle" uuid="348da294-b833-442d-b018-8c79a4607403">
+<skipper version="3.2.4.1256" mvc="Symfony2" orm="Doctrine2" name="LocationManagementBundle" uuid="348da294-b833-442d-b018-8c79a4607403">
   <external-module storage-path="../../site-management-bundle/ORM/SiteManagement.module.xml"/>
   <external-module storage-path="../../multilanguage-support-bundle/ORM/MultiLanguageSupport.module.xml"/>
   <external-module storage-path="LocationManagement.module.xml"/>
+  <external-module storage-path="../../file-management-bundle/ORM/FileManagement.module.xml"/>
+  <external-module storage-path="../../member-management-bundle/ORM/MemberManagement.module.xml"/>
   <visual-data>
+    <association uuid="0132b5a4-c206-4f06-bcf7-08bf61d249f3" color="#969696"/>
+    <association uuid="02e3ef16-39f8-42b5-891d-96224803b169" color="#969696"/>
     <association uuid="08660ec2-086a-4c23-861e-9ce3c9937582" color="#969696"/>
+    <association uuid="136c704a-5d08-4070-9a33-2ecaafacce0d" color="#969696"/>
     <association uuid="184a8a65-b565-41ec-be74-8c1a309682b4" color="#969696"/>
-    <association uuid="2b667d9c-593c-4e1b-9cd7-4ba01789fdde" color="#969696"/>
+    <association uuid="1bc49ece-cade-4d01-b739-aa1d5fe2d1e9" color="#969696"/>
+    <association uuid="2b667d9c-593c-4e1b-9cd7-4ba01789fdde" caption1-position-x="-7" caption1-position-y="14" center-position-x="0" center-position-y="0" color="#969696"/>
     <association uuid="2f81a417-cf2d-4522-9d43-3b4dcb9ff53f" color="#969696"/>
     <association uuid="3c94edba-45c5-469c-8399-530c323f97ad" color="#969696"/>
     <association uuid="45c125cd-0ba3-4a9c-973e-92bbcfb91a59" color="#969696"/>
     <association uuid="46fee6f5-f1a9-4e3f-b9e5-96d1665cb877" color="#969696"/>
     <association uuid="49bba62e-cacd-41b0-94ed-1ce65f89d961" color="#969696"/>
     <association uuid="4a21a97e-810e-4e2d-a330-69d23cf801c7" color="#969696"/>
+    <association uuid="5c053399-bdfe-4fd2-b79b-2eebb1c870ef" color="#969696"/>
+    <association uuid="5d9fbbab-e6e7-446b-b35a-5a92b2665907" color="#969696"/>
     <association uuid="691cd89a-3534-4a4c-bf70-544fa15a4c35" color="#969696"/>
     <association uuid="71f15a54-6bc9-4510-84b1-2b2817781440" color="#969696"/>
     <association uuid="72ac99ea-7436-414c-a288-0b17aaabfb4a" color="#969696"/>
     <association uuid="78171fae-020e-4e19-b965-b04f4eb85c76" color="#969696"/>
+    <association uuid="804845fb-f53d-4ae3-923e-e8d8a46ebef1" color="#969696"/>
+    <association uuid="93fd6dcc-590e-4490-ad0f-03a9b480fa94" color="#969696"/>
+    <association uuid="98d48d17-f488-4b18-833f-1671af44d614" color="#969696"/>
+    <association uuid="9aa319f9-0057-4338-9baa-01096d251a53" color="#969696"/>
+    <association uuid="a50bcd82-290b-4009-b270-6e47a63148cc" color="#969696"/>
+    <association uuid="ae4257ec-40ad-4a53-95bc-43688e025441" color="#969696"/>
+    <association uuid="b1bb0d0b-841e-42dd-9eb4-9e33e559358b" color="#969696"/>
+    <association uuid="b210e152-462a-45f8-b840-75b0217b73c5" color="#969696"/>
     <association uuid="b63d331a-e072-429d-9953-3da901b68b90" color="#969696"/>
+    <association uuid="b9e4d241-2e4f-4fbf-a78c-0414234947d6" color="#969696"/>
     <association uuid="bbcd0ee0-7db3-4ab5-ba57-81efd9149996" color="#969696"/>
+    <association uuid="cc54842f-aa78-4971-ba9d-17a33e2488ba" color="#969696"/>
+    <association uuid="d0a6295c-5f68-40e3-bfb4-da2ca6e40fb6" color="#969696"/>
+    <association uuid="d120204e-3d7c-47ea-bfe6-c33110876e00" color="#969696"/>
     <association uuid="dcbf1caf-6474-4dfe-90be-7b58aa71c5c7" color="#969696"/>
+    <association uuid="e615dfba-7f2b-4dac-a61b-519c9538e9f0" color="#969696"/>
+    <association uuid="e759f273-144f-4e29-817a-0fe9f39c4187" color="#969696"/>
     <association uuid="ed9d8b73-567a-4c72-b53d-e1e2df7ed7b4" color="#969696"/>
     <association uuid="f4b0d82d-96f6-49e4-b213-9292f3fa75bd" color="#969696"/>
     <module uuid="116d2750-ee5f-4537-84d5-7d45771499d3" position-x="220" position-y="560"/>
     <module uuid="264804cf-5ddd-4089-aaa2-d7c0f129a5ed" position-x="750" position-y="106"/>
     <module uuid="860bb986-ef71-4cef-9da2-f560e58c2569" position-x="50" position-y="50"/>
-    <project uuid="348da294-b833-442d-b018-8c79a4607403" size-x="0" size-x2="2570" size-y="0" size-y2="1144"/>
+    <module uuid="9d574194-22af-4673-a2ee-bb67ec7d212e" position-x="1576" position-y="51"/>
+    <module uuid="d40aa0eb-3691-4818-880c-0a9ad1dd9833" position-x="1550" position-y="649"/>
+    <project uuid="348da294-b833-442d-b018-8c79a4607403" size-x="0" size-x2="3221" size-y="0" size-y2="1258"/>
   </visual-data>
 </skipper>

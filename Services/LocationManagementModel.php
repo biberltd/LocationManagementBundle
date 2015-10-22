@@ -9,9 +9,9 @@
  *
  * @copyright   Biber Ltd. (www.biberltd.com)
  *
- * @version     1.1.0
+ * @version     1.1.1
  *
- * @date        26.08.2015
+ * @date        21.10.2015
  */
 
 namespace BiberLtd\Bundle\LocationManagementBundle\Services;
@@ -22,6 +22,7 @@ use BiberLtd\Bundle\CoreBundle\CoreModel;
 use BiberLtd\Bundle\CoreBundle\Responses\ModelResponse;
 use BiberLtd\Bundle\LocationManagementBundle\Entity as BundleEntity;
 /** Helper Models */
+use BiberLtd\Bundle\PhpOrientBundle\Odm\Types\DateTime;
 use BiberLtd\Bundle\SiteManagementBundle\Services as SMMService;
 use BiberLtd\Bundle\MultiLanguageSupportBundle\Entity as MLSEntity;
 /** Core Service */
@@ -47,6 +48,7 @@ class LocationManagementModel extends CoreModel {
 		 */
 		$this->entity = array(
 			'c'  => array('name' => 'LocationManagementBundle:City', 'alias' => 'c'),
+			'cil'=> array('name' => 'LocationManagementBundle:CheckinLogs', 'alias' => 'cil'),
 			'cl' => array('name' => 'LocationManagementBundle:CityLocalization', 'alias' => 'cl'),
 			'o'  => array('name' => 'LocationManagementBundle:Office', 'alias' => 'o'),
 			's'  => array('name' => 'LocationManagementBundle:State', 'alias' => 's'),
@@ -72,7 +74,64 @@ class LocationManagementModel extends CoreModel {
 	}
 
 	/**
-	 * @name                  deleteCity ()
+	 * @name            deleteCheckinLog()
+	 *
+	 * @since           1.1.1
+	 * @version         1.1.1
+	 *
+	 * @author          Can Berkol
+	 *
+	 * @use             $this->createException()
+	 *
+	 * @param           mixed   $cLog
+	 *
+	 * @return          array   $response
+	 *
+	 */
+	public function deleteCheckinLog($cLog) {
+		return $this->deleteCheckinLogs(array($cLog));
+	}
+
+	/**
+	 * @name            deleteCheckinLogs()
+	 *
+	 * @since           1.1.1
+	 * @version         1.1.1
+	 *
+	 * @use             $this->createException()
+	 *
+	 * @param           array       $collection
+	 *
+	 * @return          \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
+	 */
+	public function deleteCheckinLogs($collection) {
+		$timeStamp = time();
+		if (!is_array($collection)) {
+			return $this->createException('InvalidParameterValueException', 'Invalid parameter value. Parameter must be an array collection', 'E:S:001');
+		}
+		$countDeleted = 0;
+		foreach ($collection as $entry) {
+			if ($entry instanceof BundleEntity\CheckinLogs) {
+				$this->em->remove($entry);
+				$countDeleted++;
+			}
+			else {
+				$response = $this->getCheckinLog($entry);
+				if (!$response->error->exists) {
+					$this->em->remove($response->result->set);
+					$countDeleted++;
+				}
+			}
+		}
+		if ($countDeleted < 0) {
+			return new ModelResponse(null, 0, 0, null, true, 'E:E:001', 'Unable to delete all or some of the selected entries.', $timeStamp, time());
+		}
+		$this->em->flush();
+
+		return new ModelResponse(null, 0, 0, null, false, 'S:D:001', 'Selected entries have been successfully removed from database.', $timeStamp, time());
+	}
+	/**
+	 * @name            deleteCity ()
 	 *
 	 * @since           1.0.0
 	 * @version         1.0.6
@@ -160,9 +219,40 @@ class LocationManagementModel extends CoreModel {
 
 		return $response;
 	}
+	/**
+	 * @name            getCheckinLog()
+	 *
+	 * @since           1.1.1
+	 * @version         1.1.1
+	 *
+	 * @author          Can Berkol
+	 *
+	 * @use             $this->createException()
+	 *
+	 * @param           mixed       $cLog
+	 *
+	 * @return          \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
+	 */
+	public function getCheckinLog($cLog) {
+		$timeStamp = time();
+		if ($cLog instanceof BundleEntity\CheckinLogs) {
+			return new ModelResponse(CheckinLogs, 1, 0, null, false, 'S:D:002', 'Entries successfully fetched from database.', $timeStamp, time());
+		}
+		$result = null;
+		switch (CheckinLogs) {
+			case is_numeric($cLog):
+				$result = $this->em->getRepository($this->entity['cil']['name'])->findOneBy(array('id' => $cLog));
+				break;
+		}
+		if (is_null($result)) {
+			return new ModelResponse($result, 0, 0, null, true, 'E:D:002', 'Unable to find request entry in database.', $timeStamp, time());
+		}
+
+		return new ModelResponse($result, 1, 0, null, false, 'S:D:002', 'Entries successfully fetched from database.', $timeStamp, time());
+	}
 
 	/**
-	 * @name                  getCity ()
+	 * @name            getCity ()
 	 *
 	 * @since           1.0.0
 	 * @version         1.0.6
@@ -1607,7 +1697,812 @@ class LocationManagementModel extends CoreModel {
 
 		return new ModelResponse(null, 0, 0, null, true, 'E:D:003', 'One or more entities cannot be inserted into database.', $timeStamp, time());
 	}
+	/**
+	 * @name            listCheckinLogs()
+	 *
+	 * @since           1.1.1
+	 * @version         1.1.1
+	 *
+	 * @author          Can Berkol
+	 *
+	 * @param           array   $filter
+	 * @param           array   $sortOrder
+	 * @param           array   $limit
+	 *
+	 * @return          array   $response
+	 *
+	 */
+	public function listCheckinLogs($filter = null, $sortOrder = null, $limit = null) {
+		$timeStamp = time();
+		if (!is_array($sortOrder) && !is_null($sortOrder)) {
+			return $this->createException('InvalidSortOrderException', '$sortOrder must be an array with key => value pairs where value can only be "asc" or "desc".', 'E:S:002');
+		}
+		$oStr = $wStr = $gStr = $fStr = '';
+		$qStr = 'SELECT ' . $this->entity['cil']['alias']
+			. ' FROM ' . $this->entity['cil']['name'] . ' ' . $this->entity['cil']['alias'];
 
+		if (!is_null($sortOrder)) {
+			foreach ($sortOrder as $column => $direction) {
+				switch ($column) {
+					case 'id':
+					case 'date_checkin':
+					case 'date_checkout':
+					case 'lat_checkin':
+					case 'lon_checkin':
+					case 'lat_checkout':
+					case 'lon_checkout':
+					case 'date_added':
+					case 'date_updated':
+					case 'date_removed':
+						$column = $this->entity['cil']['alias'] . '.' . $column;
+						break;
+					default:
+						break;
+				}
+				$oStr .= ' ' . $column . ' ' . strtoupper($direction) . ', ';
+			}
+			$oStr = rtrim($oStr, ', ');
+			$oStr = ' ORDER BY ' . $oStr . ' ';
+		}
+
+		if (!is_null($filter)) {
+			$fStr = $this->prepareWhere($filter);
+			$wStr .= ' WHERE ' . $fStr;
+		}
+		$qStr .= $wStr.$oStr;
+		$q = $this->em->createQuery($qStr);
+		$q = $this->addLimit($q, $limit);
+		$result = $q->getResult();
+
+		unset($unique);
+		$totalRows = count($result);
+		if ($totalRows < 1) {
+			return new ModelResponse(null, 0, 0, null, true, 'E:D:002', 'No entries found in database that matches to your criterion.', $timeStamp, time());
+		}
+
+		return new ModelResponse($result, $totalRows, 0, null, false, 'S:D:002', 'Entries successfully fetched from database.', $timeStamp, time());
+	}
+	/**
+	 * @name            listCheckinLogsByCheckinCoordinates ()
+	 *
+	 * @since           1.1.1
+	 * @version         1.1.1
+	 *
+	 * @author          Can Berkol
+	 *
+	 * @use             $this->listCheckinLogs()
+	 *
+	 * @param           decimal $lat                     X Coordinate
+	 * @param           decimal $lon                     Y Coordinate
+	 * @param           mixed   $sortOrder
+	 * @param           mixed   $limit
+	 *
+	 * @return          array   $response
+	 *
+	 */
+	public function listCheckinLogsByCheckinCoordinates($lat, $lon, $sortOrder = null, $limit = null) {
+		$filter[] = array(
+			'glue'      => ' and',
+			'condition' => array(
+				array(
+					'glue'      => 'and',
+					'condition' => array(
+						'column'     => $this->entity['cil']['alias'] . '.lat_checkin',
+						'comparison' => '=',
+						'value'      => $lat
+					)
+				),
+				array(
+					'glue'      => 'and',
+					'condition' => array(
+						'column'     => $this->entity['cil']['alias'] . '.lon_checkin',
+						'comparison' => '=',
+						'value'      => $lon
+					)
+				)
+			)
+		);
+
+		return $this->listCheckinLogs($filter, $sortOrder, $limit);
+	}
+	/**
+	 * @name            listCheckinLogsByCheckoutCoordinates ()
+	 *
+	 * @since           1.1.1
+	 * @version         1.1.1
+	 *
+	 * @author          Can Berkol
+	 *
+	 * @use             $this->listCheckinLogs()
+	 *
+	 * @param           decimal $lat                     X Coordinate
+	 * @param           decimal $lon                     Y Coordinate
+	 * @param           mixed   $sortOrder
+	 * @param           mixed   $limit
+	 *
+	 * @return          array   $response
+	 *
+	 */
+	public function listCheckinLogsByCheckoutCoordinates ($lat, $lon, $sortOrder = null, $limit = null) {
+		$filter[] = array(
+			'glue'      => ' and',
+			'condition' => array(
+				array(
+					'glue'      => 'and',
+					'condition' => array(
+						'column'     => $this->entity['cil']['alias'] . '.lat_checkout',
+						'comparison' => '=',
+						'value'      => $lat
+					)
+				),
+				array(
+					'glue'      => 'and',
+					'condition' => array(
+						'column'     => $this->entity['cil']['alias'] . '.lon_checkout',
+						'comparison' => '=',
+						'value'      => $lon
+					)
+				)
+			)
+		);
+
+		return $this->listCheckinLogs($filter, $sortOrder, $limit);
+	}
+	/**
+	 * @name            listCheckinLogsOfMemberByOffice ()
+	 *
+	 * @since           1.1.1
+	 * @version         1.1.1
+	 *
+	 * @author          Can Berkol
+	 *
+	 * @use             $this->listCheckinLogs()
+	 *
+	 * @param           mixed   $member
+	 * @param           mixed   $office
+	 * @param           mixed   $sortOrder
+	 * @param           mixed   $limit
+	 *
+	 * @return          array   $response
+	 *
+	 */
+	public function listCheckinLogsOfMemberByOffice ($member, $office, $sortOrder = null, $limit = null) {
+		$response = $this->getOffice($office);
+		if($response->error->exist){
+			return $response;
+		}
+		$mModel = $this->kernel->getContainer()->get('membermanagement.model');
+		$response = $mModel->getMember($member, 'id');
+		if($response->error->exist){
+			return $response;
+		}
+		$filter[] = array(
+			'glue'      => ' and',
+			'condition' => array(
+				array(
+					'glue'      => 'and',
+					'condition' => array(
+						'column'     => $this->entity['cil']['alias'] . '.member',
+						'comparison' => '=',
+						'value'      => $member->getId()
+					)
+				),
+				array(
+					'glue'      => 'and',
+					'condition' => array(
+						'column'     => $this->entity['cil']['alias'] . '.office',
+						'comparison' => '=',
+						'value'      => $office->getId()
+					)
+				)
+			)
+		);
+
+		return $this->listCheckinLogs($filter, $sortOrder, $limit);
+	}
+	/**
+	 * @name            listCheckinLogsOfOfficeByMember ()
+	 *
+	 * @since           1.1.1
+	 * @version         1.1.1
+	 *
+	 * @author          Can Berkol
+	 *
+	 * @use             $this->listCheckinLogs()
+	 *
+	 * @param           mixed   $office
+	 * @param           mixed   $member
+	 * @param           mixed   $sortOrder
+	 * @param           mixed   $limit
+	 *
+	 * @return          array   $response
+	 *
+	 */
+	public function listCheckinLogsOfOfficeByMember ($office, $member, $sortOrder = null, $limit = null) {
+		return $this->listCheckinLogsOfMemberByOffice($member, $office, $sortOrder, $limit);
+	}
+	/**
+	 * @name            listCheckinLogsOfOfficeByMemberCheckedInDuring ()
+	 *
+	 * @since           1.1.1
+	 * @version         1.1.1
+	 *
+	 * @author          Can Berkol
+	 *
+	 * @use             $this->listCheckinLogs()
+	 *
+	 * @param           mixed   $member
+	 * @param           mixed   $office
+	 * @param           array   $dateRange
+	 * @param           mixed   $sortOrder
+	 * @param           mixed   $limit
+	 *
+	 * @return          array   $response
+	 *
+	 */
+	public function listCheckinLogsOfOfficeByMemberCheckedInDuring ($member, $office, array $dateRange = array(), $sortOrder = null, $limit = null) {
+		$timeStamp = microtime();
+		$response = $this->getOffice($office);
+		if($response->error->exist){
+			return $response;
+		}
+		$mModel = $this->kernel->getContainer()->get('membermanagement.model');
+		$response = $mModel->getMember($member, 'id');
+		if($response->error->exist){
+			return $response;
+		}
+		foreach($dateRange as $dateTimeObj){
+			if(!$dateTimeObj instanceof \DateTime){
+				return new ModelResponse(null, 0, 0, null, true, 'E:T:001', 'DateTime object is exptected.', $timeStamp, microtime());
+			}
+		}
+		$now = new \DateTime('now', new \DateTimeZone($this->kernel->getContainer()->getParameter('app_timezone')));
+		switch(count($dateRange)){
+			case 0:
+				$dateEnd = $now;
+				$dateStart = $now->modify('-1 month');
+				break;
+			case 1:
+				$dateEnd = $dateRange[0];
+				$dateStart = $dateRange[0]->modify('-1 month');
+				break;
+			case 2:
+				$dateStart = $dateRange[0];
+				$dateEnd = $dateRange[1];
+				break;
+			default:
+				return new ModelResponse(null, 0, 0, null, true, 'E:T:002', 'DateTime object is exptected.', $timeStamp, microtime());
+				break;
+		}
+		$filter[] = array(
+			'glue'      => ' and',
+			'condition' => array(
+				array(
+					'glue'      => 'and',
+					'condition' => array(
+						'column'     => $this->entity['cil']['alias'] . '.member',
+						'comparison' => '=',
+						'value'      => $member->getId()
+					)
+				),
+				array(
+					'glue'      => 'and',
+					'condition' => array(
+						'column'     => $this->entity['cil']['alias'] . '.office',
+						'comparison' => '=',
+						'value'      => $office->getId()
+					)
+				),
+				array(
+					'glue'      => 'and',
+					'condition' => array(
+						'column'     => $this->entity['cil']['alias'] . '.date_checkin',
+						'comparison' => '>=',
+						'value'      => $dateStart
+					)
+				),
+				array(
+					'glue'      => 'and',
+					'condition' => array(
+						'column'     => $this->entity['cil']['alias'] . '.date_checkin',
+						'comparison' => '<=',
+						'value'      => $dateEnd
+					)
+				)
+			)
+		);
+
+		return $this->listCheckinLogs($filter, $sortOrder, $limit);
+	}
+	/**
+	 * @name            listCheckinLogsOfOfficeByMemberCheckedInDuring ()
+	 *
+	 * @since           1.1.1
+	 * @version         1.1.1
+	 *
+	 * @author          Can Berkol
+	 *
+	 * @use             $this->listCheckinLogs()
+	 *
+	 * @param           mixed   $member
+	 * @param           mixed   $office
+	 * @param           array   $dateRange
+	 * @param           mixed   $sortOrder
+	 * @param           mixed   $limit
+	 *
+	 * @return          array   $response
+	 *
+	 */
+	public function listCheckinLogsOfOfficeByMemberCheckedOutDuring ($member, $office, array $dateRange = array(), $sortOrder = null, $limit = null) {
+		$timeStamp = microtime();
+		$response = $this->getOffice($office);
+		if($response->error->exist){
+			return $response;
+		}
+		$mModel = $this->kernel->getContainer()->get('membermanagement.model');
+		$response = $mModel->getMember($member, 'id');
+		if($response->error->exist){
+			return $response;
+		}
+		foreach($dateRange as $dateTimeObj){
+			if(!$dateTimeObj instanceof \DateTime){
+				return new ModelResponse(null, 0, 0, null, true, 'E:T:001', 'DateTime object is exptected.', $timeStamp, microtime());
+			}
+		}
+		$now = new \DateTime('now', new \DateTimeZone($this->kernel->getContainer()->getParameter('app_timezone')));
+		switch(count($dateRange)){
+			case 0:
+				$dateEnd = $now;
+				$dateStart = $now->modify('-1 month');
+				break;
+			case 1:
+				$dateEnd = $dateRange[0];
+				$dateStart = $dateRange[0]->modify('-1 month');
+				break;
+			case 2:
+				$dateStart = $dateRange[0];
+				$dateEnd = $dateRange[1];
+				break;
+			default:
+				return new ModelResponse(null, 0, 0, null, true, 'E:T:002', 'DateTime object is exptected.', $timeStamp, microtime());
+				break;
+		}
+		$filter[] = array(
+			'glue'      => ' and',
+			'condition' => array(
+				array(
+					'glue'      => 'and',
+					'condition' => array(
+						'column'     => $this->entity['cil']['alias'] . '.member',
+						'comparison' => '=',
+						'value'      => $member->getId()
+					)
+				),
+				array(
+					'glue'      => 'and',
+					'condition' => array(
+						'column'     => $this->entity['cil']['alias'] . '.office',
+						'comparison' => '=',
+						'value'      => $office->getId()
+					)
+				),
+				array(
+					'glue'      => 'and',
+					'condition' => array(
+						'column'     => $this->entity['cil']['alias'] . '.date_checkout',
+						'comparison' => '>=',
+						'value'      => $dateStart
+					)
+				),
+				array(
+					'glue'      => 'and',
+					'condition' => array(
+						'column'     => $this->entity['cil']['alias'] . '.date_checkout',
+						'comparison' => '<=',
+						'value'      => $dateEnd
+					)
+				)
+			)
+		);
+
+		return $this->listCheckinLogs($filter, $sortOrder, $limit);
+	}
+	/**
+	 * @name            listCheckinLogsOfOfficeCheckedInDuring ()
+	 *
+	 * @since           1.1.1
+	 * @version         1.1.1
+	 *
+	 * @author          Can Berkol
+	 *
+	 * @use             $this->listCheckinLogs()
+	 *
+	 * @param           mixed   $office
+	 * @param           array   $dateRange
+	 * @param           mixed   $sortOrder
+	 * @param           mixed   $limit
+	 *
+	 * @return          array   $response
+	 *
+	 */
+	public function listCheckinLogsOfOfficeCheckedInDuring($office, array $dateRange = array(), $sortOrder = null, $limit = null) {
+		$timeStamp = microtime();
+		$response = $this->getOffice($office);
+		if($response->error->exist){
+			return $response;
+		}
+		foreach($dateRange as $dateTimeObj){
+			if(!$dateTimeObj instanceof \DateTime){
+				return new ModelResponse(null, 0, 0, null, true, 'E:T:001', 'DateTime object is exptected.', $timeStamp, microtime());
+			}
+		}
+		$now = new \DateTime('now', new \DateTimeZone($this->kernel->getContainer()->getParameter('app_timezone')));
+		switch(count($dateRange)){
+			case 0:
+				$dateEnd = $now;
+				$dateStart = $now->modify('-1 month');
+				break;
+			case 1:
+				$dateEnd = $dateRange[0];
+				$dateStart = $dateRange[0]->modify('-1 month');
+				break;
+			case 2:
+				$dateStart = $dateRange[0];
+				$dateEnd = $dateRange[1];
+				break;
+			default:
+				return new ModelResponse(null, 0, 0, null, true, 'E:T:002', 'DateTime object is exptected.', $timeStamp, microtime());
+				break;
+		}
+		$filter[] = array(
+			'glue'      => ' and',
+			'condition' => array(
+				array(
+					'glue'      => 'and',
+					'condition' => array(
+						'column'     => $this->entity['cil']['alias'] . '.office',
+						'comparison' => '=',
+						'value'      => $office->getId()
+					)
+				),
+				array(
+					'glue'      => 'and',
+					'condition' => array(
+						'column'     => $this->entity['cil']['alias'] . '.date_checkin',
+						'comparison' => '>=',
+						'value'      => $dateStart
+					)
+				),
+				array(
+					'glue'      => 'and',
+					'condition' => array(
+						'column'     => $this->entity['cil']['alias'] . '.date_checkin',
+						'comparison' => '<=',
+						'value'      => $dateEnd
+					)
+				)
+			)
+		);
+
+		return $this->listCheckinLogs($filter, $sortOrder, $limit);
+	}
+	/**
+	 * @name            listCheckinLogsOfMemberCheckedInDuring ()
+	 *
+	 * @since           1.1.1
+	 * @version         1.1.1
+	 *
+	 * @author          Can Berkol
+	 *
+	 * @use             $this->listCheckinLogs()
+	 *
+	 * @param           mixed   $member
+	 * @param           array   $dateRange
+	 * @param           mixed   $sortOrder
+	 * @param           mixed   $limit
+	 *
+	 * @return          array   $response
+	 *
+	 */
+	public function listCheckinLogsOfMemberCheckedOutDuring ($member, array $dateRange = array(), $sortOrder = null, $limit = null) {
+		$timeStamp = microtime();
+		$mModel = $this->kernel->getContainer()->get('membermanagement.model');
+		$response = $mModel->getMember($member, 'id');
+		if($response->error->exist){
+			return $response;
+		}
+		foreach($dateRange as $dateTimeObj){
+			if(!$dateTimeObj instanceof \DateTime){
+				return new ModelResponse(null, 0, 0, null, true, 'E:T:001', 'DateTime object is exptected.', $timeStamp, microtime());
+			}
+		}
+		$now = new \DateTime('now', new \DateTimeZone($this->kernel->getContainer()->getParameter('app_timezone')));
+		switch(count($dateRange)){
+			case 0:
+				$dateEnd = $now;
+				$dateStart = $now->modify('-1 month');
+				break;
+			case 1:
+				$dateEnd = $dateRange[0];
+				$dateStart = $dateRange[0]->modify('-1 month');
+				break;
+			case 2:
+				$dateStart = $dateRange[0];
+				$dateEnd = $dateRange[1];
+				break;
+			default:
+				return new ModelResponse(null, 0, 0, null, true, 'E:T:002', 'DateTime object is exptected.', $timeStamp, microtime());
+				break;
+		}
+		$filter[] = array(
+			'glue'      => ' and',
+			'condition' => array(
+				array(
+					'glue'      => 'and',
+					'condition' => array(
+						'column'     => $this->entity['cil']['alias'] . '.member',
+						'comparison' => '=',
+						'value'      => $member->getId()
+					)
+				),
+				array(
+					'glue'      => 'and',
+					'condition' => array(
+						'column'     => $this->entity['cil']['alias'] . '.date_checkout',
+						'comparison' => '>=',
+						'value'      => $dateStart
+					)
+				),
+				array(
+					'glue'      => 'and',
+					'condition' => array(
+						'column'     => $this->entity['cil']['alias'] . '.date_checkout',
+						'comparison' => '<=',
+						'value'      => $dateEnd
+					)
+				)
+			)
+		);
+
+		return $this->listCheckinLogs($filter, $sortOrder, $limit);
+	}
+	/**
+	 * @name            listCheckinLogsOfOfficeCheckedInDuring ()
+	 *
+	 * @since           1.1.1
+	 * @version         1.1.1
+	 *
+	 * @author          Can Berkol
+	 *
+	 * @use             $this->listCheckinLogs()
+	 *
+	 * @param           mixed   $office
+	 * @param           array   $dateRange
+	 * @param           mixed   $sortOrder
+	 * @param           mixed   $limit
+	 *
+	 * @return          array   $response
+	 *
+	 */
+	public function listCheckinLogsOfOfficeCheckedOutDuring($office, array $dateRange = array(), $sortOrder = null, $limit = null) {
+		$timeStamp = microtime();
+		$response = $this->getOffice($office);
+		if($response->error->exist){
+			return $response;
+		}
+		foreach($dateRange as $dateTimeObj){
+			if(!$dateTimeObj instanceof \DateTime){
+				return new ModelResponse(null, 0, 0, null, true, 'E:T:001', 'DateTime object is exptected.', $timeStamp, microtime());
+			}
+		}
+		$now = new \DateTime('now', new \DateTimeZone($this->kernel->getContainer()->getParameter('app_timezone')));
+		switch(count($dateRange)){
+			case 0:
+				$dateEnd = $now;
+				$dateStart = $now->modify('-1 month');
+				break;
+			case 1:
+				$dateEnd = $dateRange[0];
+				$dateStart = $dateRange[0]->modify('-1 month');
+				break;
+			case 2:
+				$dateStart = $dateRange[0];
+				$dateEnd = $dateRange[1];
+				break;
+			default:
+				return new ModelResponse(null, 0, 0, null, true, 'E:T:002', 'DateTime object is exptected.', $timeStamp, microtime());
+				break;
+		}
+		$filter[] = array(
+			'glue'      => ' and',
+			'condition' => array(
+				array(
+					'glue'      => 'and',
+					'condition' => array(
+						'column'     => $this->entity['cil']['alias'] . '.office',
+						'comparison' => '=',
+						'value'      => $office->getId()
+					)
+				),
+				array(
+					'glue'      => 'and',
+					'condition' => array(
+						'column'     => $this->entity['cil']['alias'] . '.date_checkout',
+						'comparison' => '>=',
+						'value'      => $dateStart
+					)
+				),
+				array(
+					'glue'      => 'and',
+					'condition' => array(
+						'column'     => $this->entity['cil']['alias'] . '.date_checkout',
+						'comparison' => '<=',
+						'value'      => $dateEnd
+					)
+				)
+			)
+		);
+
+		return $this->listCheckinLogs($filter, $sortOrder, $limit);
+	}
+	/**
+	 * @name            listCheckinLogsOfMemberCheckedInDuring ()
+	 *
+	 * @since           1.1.1
+	 * @version         1.1.1
+	 *
+	 * @author          Can Berkol
+	 *
+	 * @use             $this->listCheckinLogs()
+	 *
+	 * @param           mixed   $member
+	 * @param           array   $dateRange
+	 * @param           mixed   $sortOrder
+	 * @param           mixed   $limit
+	 *
+	 * @return          array   $response
+	 *
+	 */
+	public function listCheckinLogsOfMemberCheckedInDuring ($member, array $dateRange = array(), $sortOrder = null, $limit = null) {
+		$timeStamp = microtime();
+		$mModel = $this->kernel->getContainer()->get('membermanagement.model');
+		$response = $mModel->getMember($member, 'id');
+		if($response->error->exist){
+			return $response;
+		}
+		foreach($dateRange as $dateTimeObj){
+			if(!$dateTimeObj instanceof \DateTime){
+				return new ModelResponse(null, 0, 0, null, true, 'E:T:001', 'DateTime object is exptected.', $timeStamp, microtime());
+			}
+		}
+		$now = new \DateTime('now', new \DateTimeZone($this->kernel->getContainer()->getParameter('app_timezone')));
+		switch(count($dateRange)){
+			case 0:
+				$dateEnd = $now;
+				$dateStart = $now->modify('-1 month');
+				break;
+			case 1:
+				$dateEnd = $dateRange[0];
+				$dateStart = $dateRange[0]->modify('-1 month');
+				break;
+			case 2:
+				$dateStart = $dateRange[0];
+				$dateEnd = $dateRange[1];
+				break;
+			default:
+				return new ModelResponse(null, 0, 0, null, true, 'E:T:002', 'DateTime object is exptected.', $timeStamp, microtime());
+				break;
+		}
+		$filter[] = array(
+			'glue'      => ' and',
+			'condition' => array(
+				array(
+					'glue'      => 'and',
+					'condition' => array(
+						'column'     => $this->entity['cil']['alias'] . '.member',
+						'comparison' => '=',
+						'value'      => $member->getId()
+					)
+				),
+				array(
+					'glue'      => 'and',
+					'condition' => array(
+						'column'     => $this->entity['cil']['alias'] . '.date_checkout',
+						'comparison' => '>=',
+						'value'      => $dateStart
+					)
+				),
+				array(
+					'glue'      => 'and',
+					'condition' => array(
+						'column'     => $this->entity['cil']['alias'] . '.date_checkout',
+						'comparison' => '<=',
+						'value'      => $dateEnd
+					)
+				)
+			)
+		);
+
+		return $this->listCheckinLogs($filter, $sortOrder, $limit);
+	}
+	/**
+	 * @name            listCheckinLogsOfMemberByOffice ()
+	 *
+	 * @since           1.1.1
+	 * @version         1.1.1
+	 *
+	 * @author          Can Berkol
+	 *
+	 * @use             $this->listCheckinLogs()
+	 *
+	 * @param           mixed   $member
+	 * @param           mixed   $sortOrder
+	 * @param           mixed   $limit
+	 *
+	 * @return          array   $response
+	 *
+	 */
+	public function listCheckinLogsOfMember($member, $sortOrder = null, $limit = null) {
+		$mModel = $this->kernel->getContainer()->get('membermanagement.model');
+		$response = $mModel->getMember($member, 'id');
+		if($response->error->exist){
+			return $response;
+		}
+		$filter[] = array(
+			'glue'      => ' and',
+			'condition' => array(
+				array(
+					'glue'      => 'and',
+					'condition' => array(
+						'column'     => $this->entity['cil']['alias'] . '.member',
+						'comparison' => '=',
+						'value'      => $member->getId()
+					)
+				)
+			)
+		);
+
+		return $this->listCheckinLogs($filter, $sortOrder, $limit);
+	}
+	/**
+	 * @name            listCheckinLogsOfOffice ()
+	 *
+	 * @since           1.1.1
+	 * @version         1.1.1
+	 *
+	 * @author          Can Berkol
+	 *
+	 * @use             $this->listCheckinLogs()
+	 *
+	 * @param           mixed   $office
+	 * @param           mixed   $sortOrder
+	 * @param           mixed   $limit
+	 *
+	 * @return          array   $response
+	 *
+	 */
+	public function listCheckinLogsOfOffice($office, $sortOrder = null, $limit = null) {
+		$response = $this->getOffice($office);
+		if($response->error->exist){
+			return $response;
+		}
+
+		$filter[] = array(
+			'glue'      => ' and',
+			'condition' => array(
+				array(
+					'glue'      => 'and',
+					'condition' => array(
+						'column'     => $this->entity['cil']['alias'] . '.office',
+						'comparison' => '=',
+						'value'      => $office->getId()
+					)
+				)
+			)
+		);
+
+		return $this->listCheckinLogs($filter, $sortOrder, $limit);
+	}
 	/**
 	 * @name            listStates ()
 	 *
@@ -1720,9 +2615,113 @@ class LocationManagementModel extends CoreModel {
 
 		return $this->listStates($filter, $sortOrder, $limit);
 	}
+	/**
+	 * @name            updateCheckinLog()
+	 *
+	 * @since           1.1.1
+	 * @version         1.1.1
+	 *
+	 * @author          Can Berkol
+	 *
+	 * @use             $this->updateCheckinLogs()
+	 *
+	 * @param           mixed   $cLog
+	 *
+	 * @return          array   $response
+	 *
+	 */
+	public function updateCheckinLog($cLog) {
+		return $this->updateCheckinLogs(array($cLog));
+	}
 
 	/**
-	 * @name                  updateState ()
+	 * @name            updateCheckinLogs()
+	 *
+	 * @since           1.1.1
+	 * @version         1.1.1
+	 *
+	 * @author          Can Berkol
+	 *
+	 * @param           mixed   $collection
+	 *
+	 * @return          array   $response
+	 *
+	 */
+	public function updateCheckinLogs($collection) {
+		$timeStamp = time();
+		if (!is_array($collection)) {
+			return $this->createException('InvalidParameterValueException', 'Invalid parameter value. Parameter must be an array collection', 'E:S:001');
+		}
+		$countUpdates = 0;
+		$updatedItems = array();
+		foreach ($collection as $data) {
+			if ($data instanceof BundleEntity\CheckinLogs) {
+				$entity = $data;
+				$this->em->persist($entity);
+				$updatedItems[] = $entity;
+				$countUpdates++;
+			}
+			else if (is_object($data)) {
+				if (!property_exists($data, 'id') || !is_numeric($data->id)) {
+					return $this->createException('InvalidParameterException', 'Parameter must be an object with the "id" property and id property ​must have an integer value.', 'E:S:003');
+				}
+				if (!property_exists($data, 'date_updated')) {
+					$data->date_updated = new \DateTime('now', new \DateTimeZone($this->kernel->getContainer()->getParameter('app_timezone')));
+				}
+				if (property_exists($data, 'date_added')) {
+					unset($data->date_added);
+				}
+				$response = $this->getCheckinLog($data->id);
+				if ($response->error->exist) {
+					return $response;
+				}
+				$oldEntity = $response->result->set;
+				foreach ($data as $column => $value) {
+					$set = 'set' . $this->translateColumnName($column);
+					switch ($column) {
+						case 'member':
+							$mModel = $this->kernel->getContainer()->get('membermanagement.model');
+							$response = $mModel->getMember($value, 'id');
+							if (!$response->error->exist) {
+								return $response;
+							}
+							$oldEntity->$set($response->result->set);
+							unset($response, $sModel);
+							break;
+						case 'office':
+							$get = 'get' . $this->translateColumnName($column);
+							$response = $this->$get($value);
+							if (!$response->error->exist) {
+								return $response;
+							}
+							$oldEntity->$set($response->result->set);
+							unset($response, $sModel);
+							break;
+						case 'id':
+							break;
+						default:
+							$oldEntity->$set($value);
+							break;
+					}
+					if ($oldEntity->isModified()) {
+						$this->em->persist($oldEntity);
+						$countUpdates++;
+						$updatedItems[] = $oldEntity;
+					}
+				}
+			}
+		}
+		if ($countUpdates > 0) {
+			$this->em->flush();
+
+			return new ModelResponse($updatedItems, $countUpdates, 0, null, false, 'S:D:004', 'Selected entries have been successfully updated within database.', $timeStamp, time());
+		}
+
+		return new ModelResponse(null, 0, 0, null, true, 'E:D:004', 'One or more entities cannot be updated within database.', $timeStamp, time());
+	}
+
+	/**
+	 * @name            updateState ()
 	 *
 	 * @since           1.0.0
 	 * @version         1.0.6
@@ -1846,7 +2845,7 @@ class LocationManagementModel extends CoreModel {
 	}
 
 	/**
-	 * @name                  deleteOffice ()
+	 * @name            deleteOffice ()
 	 *
 	 * @since           1.0.0
 	 * @version         1.0.6
@@ -1978,12 +2977,105 @@ class LocationManagementModel extends CoreModel {
 	}
 
 	/**
-	 * @name                  insertOffice ()
+	 * @name            insertCheckinLog()
+	 *
+	 * @since           1.1.1
+	 * @version         1.1.1
+	 *
+	 * @author          Can Berkol
+	 *
+	 * @use             $this->insertCheckinLogs()
+	 *
+	 * @param           mixed   $cLog
+	 *
+	 * @return          array   $response
+	 *
+	 */
+
+	public function insertCheckinLog($cLog) {
+		return $this->insertCheckinLogs(array($cLog));
+	}
+
+	/**
+	 * @name            insertCheckinLogs()
+	 *
+	 * @since           1.1.1
+	 * @version         1.1.1
+	 *
+	 * @author          Can Berkol
+	 *
+	 * @param           mixed   $collection
+	 *
+	 * @return          array   $response
+	 *
+	 */
+	public function insertCheckinLogs($collection) {
+		$timeStamp = time();
+		if (!is_array($collection)) {
+			return $this->createException('InvalidParameterValueException', 'Invalid parameter value. Parameter must be an array collection', 'E:S:001');
+		}
+		$countInserts = 0;
+		$insertedItems = array();
+		foreach ($collection as $data) {
+			if ($data instanceof BundleEntity\CheckinLogs) {
+				$entity = $data;
+				$this->em->persist($entity);
+				$insertedItems[] = $entity;
+				$countInserts++;
+			}
+			else if (is_object($data)) {
+				$entity = new BundleEntity\CheckinLogs();
+				foreach ($data as $column => $value) {
+					$localeSet = false;
+					$set = 'set' . $this->translateColumnName($column);
+					switch ($column) {
+						case 'memner':
+							$mModel = $this->kernel->getContainer()->get('membermanagement.model');
+							$response = $mModel->getMember($value, 'id');
+							if ($response->error->exist) {
+								return $response;
+							}
+							$entity->$set($response->result->set);
+							/** Free up some memory */
+							unset($response, $SMModel);
+							break;
+						case 'office':
+							$response = $this->getOffice($value);
+							if ($response->error->exist) {
+								return $response;
+							}
+							$entity->$set($response->result->set);
+							unset($response, $SMModel);
+							break;
+						default:
+							$entity->$set($value);
+							break;
+					}
+					if ($localeSet) {
+						$localizations[$countInserts]['entity'] = $entity;
+					}
+				}
+				$this->em->persist($entity);
+				$insertedItems[] = $entity;
+				$countInserts++;
+			}
+		}
+		if ($countInserts > 0) {
+			$this->em->flush();
+
+			return new ModelResponse($insertedItems, $countInserts, 0, null, false, 'S:D:003', 'Selected entries have been successfully inserted into database.', $timeStamp, time());
+		}
+
+		return new ModelResponse(null, 0, 0, null, true, 'E:D:003', 'One or more entities cannot be inserted into database.', $timeStamp, time());
+	}
+
+	/**
+	 * @name            insertOffice ()
 	 *
 	 * @since           1.0.0
 	 * @version         1.0.6
 	 *
-	 * @author          Can Berlpş
+	 * @author          Can Berkol
 	 * @author          Said İmamoğlu
 	 *
 	 * @use             $this->insertOffices()
@@ -1999,7 +3091,7 @@ class LocationManagementModel extends CoreModel {
 	}
 
 	/**
-	 * @name                  insertOffices ()
+	 * @name            insertOffices ()
 	 *
 	 * @since           1.0.0
 	 * @version         1.0.6
@@ -2027,7 +3119,6 @@ class LocationManagementModel extends CoreModel {
 				$countInserts++;
 			}
 			else if (is_object($data)) {
-				$localizations = array();
 				$entity = new BundleEntity\Office;
 				foreach ($data as $column => $value) {
 					$localeSet = false;
@@ -2090,7 +3181,7 @@ class LocationManagementModel extends CoreModel {
 	}
 
 	/**
-	 * @name                  listOffices ()
+	 * @name            listOffices ()
 	 *
 	 * @since           1.0.0
 	 * @version         1.0.6
@@ -2174,7 +3265,6 @@ class LocationManagementModel extends CoreModel {
 	 * @return          array   $response
 	 *
 	 */
-
 	public function listOfficesByCoordinates($lat, $lon) {
 		$filter[] = array(
 			'glue'      => ' and',
@@ -2447,7 +3537,6 @@ class LocationManagementModel extends CoreModel {
 	 * @return          array   $response
 	 *
 	 */
-
 	public function updateOffices($collection) {
 		$timeStamp = time();
 		if (!is_array($collection)) {
@@ -2464,7 +3553,7 @@ class LocationManagementModel extends CoreModel {
 			}
 			else if (is_object($data)) {
 				if (!property_exists($data, 'id') || !is_numeric($data->id)) {
-					return $this->createException('InvalidParameter', 'Each data must contain a valid identifier id, integer', 'err.invalid.parameter.collection');
+					return $this->createException('InvalidParameterException', 'Parameter must be an object with the "id" property and id property ​must have an integer value.', 'E:S:003');
 				}
 				if (!property_exists($data, 'date_updated')) {
 					$data->date_updated = new \DateTime('now', new \DateTimeZone($this->kernel->getContainer()->getParameter('app_timezone')));
@@ -2476,8 +3565,8 @@ class LocationManagementModel extends CoreModel {
 					$data->site = 1;
 				}
 				$response = $this->getOffice($data->id);
-				if ($response['error']) {
-					return $this->createException('EntityDoesNotExist', 'Product with id ' . $data->id, 'err.invalid.entity');
+				if ($response->error->exist) {
+					return $response;
 				}
 				$oldEntity = $response->result->set;
 				foreach ($data as $column => $value) {

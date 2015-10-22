@@ -99,13 +99,13 @@ class Office extends CoreEntity
 
     /** 
      * @ORM\ManyToOne(targetEntity="BiberLtd\Bundle\LocationManagementBundle\Entity\State")
-     * @ORM\JoinColumn(name="state", referencedColumnName="id")
+     * @ORM\JoinColumn(name="state", referencedColumnName="id", onDelete="CASCADE")
      */
     private $state;
 
     /** 
      * @ORM\ManyToOne(targetEntity="BiberLtd\Bundle\LocationManagementBundle\Entity\Country")
-     * @ORM\JoinColumn(name="country", referencedColumnName="id", nullable=false)
+     * @ORM\JoinColumn(name="country", referencedColumnName="id", nullable=false, onDelete="CASCADE")
      */
     private $country;
 

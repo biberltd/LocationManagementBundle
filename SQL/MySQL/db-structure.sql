@@ -1,24 +1,48 @@
 /*
- Navicat Premium Data Transfer
+Navicat MariaDB Data Transfer
 
- Source Server         : localhost
- Source Server Type    : MySQL
- Source Server Version : 50622
- Source Host           : localhost
- Source Database       : bbr_digiturk
+Source Server         : localmariadb
+Source Server Version : 100108
+Source Host           : localhost:3306
+Source Database       : bod_core
 
- Target Server Type    : MySQL
- Target Server Version : 50622
- File Encoding         : utf-8
+Target Server Type    : MariaDB
+Target Server Version : 100108
+File Encoding         : 65001
 
- Date: 07/09/2015 18:46:53 PM
+Date: 2015-10-21 17:15:00
 */
 
-SET NAMES utf8;
-SET FOREIGN_KEY_CHECKS = 0;
+SET FOREIGN_KEY_CHECKS=0;
 
 -- ----------------------------
---  Table structure for `city`
+-- Table structure for checkin_logs
+-- ----------------------------
+DROP TABLE IF EXISTS `checkin_logs`;
+CREATE TABLE `checkin_logs` (
+  `id` int(10) unsigned NOT NULL COMMENT 'System given id.',
+  `date_checkin` datetime NOT NULL COMMENT 'Date when the member has checkedin.',
+  `date_checkout` datetime DEFAULT NULL COMMENT 'Date when the member has checkedout.',
+  `lat_checkin` decimal(10,0) unsigned DEFAULT NULL COMMENT 'Latitude of checkin.',
+  `lat_checkout` decimal(10,0) unsigned DEFAULT NULL COMMENT 'Latitiude of checkout.',
+  `lon_checkout` decimal(10,0) unsigned DEFAULT NULL COMMENT 'Longitude of checkout.',
+  `lon_checkin` decimal(10,0) unsigned DEFAULT NULL COMMENT 'Longitude of checkin.',
+  `office` int(10) unsigned NOT NULL COMMENT 'Checked in office.',
+  `member` int(15) unsigned NOT NULL COMMENT 'Checkedin member.',
+  `date_added` datetime NOT NULL,
+  `date_updated` datetime DEFAULT NULL,
+  `date_removed` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `idxUCheckinId` (`id`),
+  UNIQUE KEY `idxUMemberCheckins` (`date_checkin`,`date_checkout`,`office`,`member`),
+  KEY `idxFCheckedInMember` (`member`),
+  KEY `idxFCheckedInOffice` (`office`),
+  CONSTRAINT `idxFCheckedInMember` FOREIGN KEY (`member`) REFERENCES `member` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `idxFCheckedInOffice` FOREIGN KEY (`office`) REFERENCES `office` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_turkish_ci;
+
+-- ----------------------------
+-- Table structure for city
 -- ----------------------------
 DROP TABLE IF EXISTS `city`;
 CREATE TABLE `city` (
@@ -27,15 +51,15 @@ CREATE TABLE `city` (
   `state` int(10) unsigned DEFAULT NULL COMMENT 'State where city is located if there is any.',
   `code` varchar(45) COLLATE utf8_turkish_ci DEFAULT NULL COMMENT 'City code.',
   PRIMARY KEY (`id`),
-  UNIQUE KEY `idx_u_city_id` (`id`),
-  KEY `idx_f_city_state_idx` (`state`),
-  KEY `idx_f_city_country_idx` (`country`),
-  CONSTRAINT `city_ibfk_1` FOREIGN KEY (`country`) REFERENCES `country` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `city_ibfk_2` FOREIGN KEY (`state`) REFERENCES `state` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+  UNIQUE KEY `idxUCityId` (`id`) USING BTREE,
+  KEY `idxFStateOfCity` (`state`) USING BTREE,
+  KEY `idxFCountryOfCity` (`country`) USING BTREE,
+  CONSTRAINT `idxFCountryOfCity` FOREIGN KEY (`country`) REFERENCES `country` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `idxFStateOfCity` FOREIGN KEY (`state`) REFERENCES `state` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=1190 DEFAULT CHARSET=utf8 COLLATE=utf8_turkish_ci ROW_FORMAT=COMPACT;
 
 -- ----------------------------
---  Table structure for `city_localization`
+-- Table structure for city_localization
 -- ----------------------------
 DROP TABLE IF EXISTS `city_localization`;
 CREATE TABLE `city_localization` (
@@ -44,29 +68,29 @@ CREATE TABLE `city_localization` (
   `name` varchar(45) COLLATE utf8_turkish_ci NOT NULL COMMENT 'Localized name of city.',
   `url_key` varchar(155) COLLATE utf8_turkish_ci DEFAULT NULL COMMENT 'Localized url key of city.',
   PRIMARY KEY (`language`,`city`),
-  UNIQUE KEY `idx_u_city_localization` (`language`,`city`),
-  KEY `idx_f_city_localization_language` (`language`),
-  KEY `idx_f_city_localization_cit` (`city`),
-  KEY `idx_u_city_localization_name` (`name`,`language`,`city`),
-  KEY `idx_u_city_localization_url_key` (`url_key`,`language`,`city`),
-  CONSTRAINT `city_localization_ibfk_1` FOREIGN KEY (`city`) REFERENCES `city` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `city_localization_ibfk_2` FOREIGN KEY (`language`) REFERENCES `language` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+  UNIQUE KEY `idxUCityLocalization` (`language`,`city`) USING BTREE,
+  KEY `idxFCityLocalizationLanguage` (`language`) USING BTREE,
+  KEY `idxFLocalizedCity` (`city`) USING BTREE,
+  KEY `idxULocalizedCityName` (`name`,`language`,`city`) USING BTREE,
+  KEY `idxULocalizedCityUrlKey` (`url_key`,`language`,`city`) USING BTREE,
+  CONSTRAINT `idxFCityLocalizationLanguage` FOREIGN KEY (`language`) REFERENCES `language` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `idxFLocalizedCity` FOREIGN KEY (`city`) REFERENCES `city` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_turkish_ci ROW_FORMAT=COMPACT;
 
 -- ----------------------------
---  Table structure for `country`
+-- Table structure for country
 -- ----------------------------
 DROP TABLE IF EXISTS `country`;
 CREATE TABLE `country` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'System given id.',
   `code_iso` varchar(45) COLLATE utf8_turkish_ci NOT NULL COMMENT 'Iso code of countyr.',
   PRIMARY KEY (`id`),
-  UNIQUE KEY `idx_u_country_id` (`id`),
-  UNIQUE KEY `idx_u_country_code_iso` (`code_iso`)
+  UNIQUE KEY `idxUCountryId` (`id`) USING BTREE,
+  UNIQUE KEY `idxUCountryIsoCode` (`code_iso`) USING BTREE
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COLLATE=utf8_turkish_ci ROW_FORMAT=COMPACT;
 
 -- ----------------------------
---  Table structure for `country_localization`
+-- Table structure for country_localization
 -- ----------------------------
 DROP TABLE IF EXISTS `country_localization`;
 CREATE TABLE `country_localization` (
@@ -75,17 +99,17 @@ CREATE TABLE `country_localization` (
   `name` varchar(45) COLLATE utf8_turkish_ci DEFAULT NULL COMMENT 'Localized name of country.',
   `url_key` varchar(155) COLLATE utf8_turkish_ci DEFAULT NULL COMMENT 'Localized url key of country.',
   PRIMARY KEY (`country`,`language`),
-  UNIQUE KEY `idx_u_country_localization` (`country`,`language`),
-  UNIQUE KEY `idx_u_country_localization_url_key` (`country`,`language`,`url_key`),
-  KEY `idx_f_country_localization_language_idx` (`language`),
-  KEY `idx_f_country_localization_country_idx` (`country`),
-  KEY `idx_u_country_localization_name` (`country`,`language`,`name`),
-  CONSTRAINT `country_localization_ibfk_1` FOREIGN KEY (`country`) REFERENCES `country` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `country_localization_ibfk_2` FOREIGN KEY (`language`) REFERENCES `language` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+  UNIQUE KEY `idxUCountryLocalization` (`country`,`language`) USING BTREE,
+  UNIQUE KEY `idxULocalizedUrlKeyOfCountry` (`country`,`language`,`url_key`) USING BTREE,
+  KEY `idxFCountryLocalizationLanguage` (`language`) USING BTREE,
+  KEY `idxFLocalizedCountry` (`country`) USING BTREE,
+  KEY `idxULocalizedNameOfCountry` (`country`,`language`,`name`) USING BTREE,
+  CONSTRAINT `idxFCountryLocalizationLanguage` FOREIGN KEY (`country`) REFERENCES `country` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `idxFLocalizedCountry` FOREIGN KEY (`language`) REFERENCES `language` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_turkish_ci ROW_FORMAT=COMPACT;
 
 -- ----------------------------
---  Table structure for `office`
+-- Table structure for office
 -- ----------------------------
 DROP TABLE IF EXISTS `office`;
 CREATE TABLE `office` (
@@ -101,7 +125,10 @@ CREATE TABLE `office` (
   `phone` varchar(45) COLLATE utf8_turkish_ci DEFAULT NULL,
   `fax` varchar(45) COLLATE utf8_turkish_ci DEFAULT NULL,
   `email` varchar(255) COLLATE utf8_turkish_ci DEFAULT NULL,
-  `site` int(10) unsigned NOT NULL,
+  `site` int(10) unsigned NOT NULL COMMENT 'Associated site.',
+  `date_added` datetime NOT NULL COMMENT 'Date when the entry is first added.',
+  `date_update` datetime NOT NULL COMMENT 'Date when the entry is last updated.',
+  `date_removed` datetime DEFAULT NULL COMMENT 'Date when the entry is last removed.',
   PRIMARY KEY (`id`),
   UNIQUE KEY `idx_u_office_id` (`id`),
   KEY `idx_f_office_country_idx` (`country`),
@@ -109,14 +136,14 @@ CREATE TABLE `office` (
   KEY `idx_f_office_state_idx` (`state`),
   KEY `idx_f_office_site` (`site`),
   KEY `idx_u_office_url_key` (`url_key`,`site`),
-  CONSTRAINT `office_ibfk_1` FOREIGN KEY (`city`) REFERENCES `city` (`id`) ON UPDATE CASCADE,
-  CONSTRAINT `office_ibfk_2` FOREIGN KEY (`country`) REFERENCES `country` (`id`) ON UPDATE CASCADE,
-  CONSTRAINT `office_ibfk_3` FOREIGN KEY (`site`) REFERENCES `site` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `office_ibfk_4` FOREIGN KEY (`state`) REFERENCES `state` (`id`) ON UPDATE CASCADE
+  CONSTRAINT `idxFCityOfOffice` FOREIGN KEY (`city`) REFERENCES `city` (`id`) ON UPDATE CASCADE,
+  CONSTRAINT `idxFCountryOfOffice` FOREIGN KEY (`country`) REFERENCES `country` (`id`) ON UPDATE CASCADE,
+  CONSTRAINT `idxFSiteOfOffice` FOREIGN KEY (`site`) REFERENCES `site` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `idxFStateOfOffice` FOREIGN KEY (`state`) REFERENCES `state` (`id`) ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=110 DEFAULT CHARSET=utf8 COLLATE=utf8_turkish_ci ROW_FORMAT=COMPACT;
 
 -- ----------------------------
---  Table structure for `state`
+-- Table structure for state
 -- ----------------------------
 DROP TABLE IF EXISTS `state`;
 CREATE TABLE `state` (
@@ -131,7 +158,7 @@ CREATE TABLE `state` (
 ) ENGINE=InnoDB AUTO_INCREMENT=89 DEFAULT CHARSET=utf8 COLLATE=utf8_turkish_ci ROW_FORMAT=COMPACT;
 
 -- ----------------------------
---  Table structure for `state_localization`
+-- Table structure for state_localization
 -- ----------------------------
 DROP TABLE IF EXISTS `state_localization`;
 CREATE TABLE `state_localization` (
@@ -148,5 +175,3 @@ CREATE TABLE `state_localization` (
   CONSTRAINT `state_localization_ibfk_1` FOREIGN KEY (`language`) REFERENCES `language` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `state_localization_ibfk_2` FOREIGN KEY (`state`) REFERENCES `state` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_turkish_ci ROW_FORMAT=COMPACT;
-
-SET FOREIGN_KEY_CHECKS = 1;
