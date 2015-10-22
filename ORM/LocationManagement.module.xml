@@ -267,7 +267,7 @@
       <field name="date_added" description="Date when the entry is first added." type="datetime" required="true" uuid="b80e35bd-94e5-43cc-8f8b-18bd19f32659"/>
       <field name="date_updated" description="Date when the entry is last updated." type="datetime" required="true" uuid="04e4242d-98f6-47be-acb9-f6cf9807a6ce"/>
       <field name="date_removed" description="Date when the entry is marked as removed." type="datetime" uuid="75853d51-8865-4789-9e48-9db72600ca2d"/>
-      <field name="checkoutType" description="s:system,u:user" type="string" default="s" uuid="952b9dc0-13c7-4cb2-9145-122e07afb184"/>
+      <field name="checkout_type" description="s:system,u:user" type="string" default="s" uuid="952b9dc0-13c7-4cb2-9145-122e07afb184"/>
       <index name="idxUMemberCheckins" unique="true">
         <index-field name="date_checkin"/>
         <index-field name="date_checkout"/>

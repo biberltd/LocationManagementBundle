@@ -84,7 +84,7 @@ class CheckinLogs
     /**
      * @ORM\Column(type="string", nullable=true, options={"default":"s"})
      */
-    private $checkoutType;
+    private $checkout_type;
 
     /**
      * @ORM\ManyToOne(targetEntity="BiberLtd\Bundle\LocationManagementBundle\Entity\Office")
@@ -424,7 +424,7 @@ class CheckinLogs
      * @return      mixed
      */
     public function getCheckoutType(){
-        return $this->checkoutType;
+        return $this->checkout_type;
     }
 
     /**
@@ -443,7 +443,7 @@ class CheckinLogs
         if(!$this->setModified('checkoutType', $checkoutType)->isModified()){
             return $this;
         }
-        $this->checkoutType = $checkoutType;
+        $this->checkout_type = $checkoutType;
 
         return $this;
     }

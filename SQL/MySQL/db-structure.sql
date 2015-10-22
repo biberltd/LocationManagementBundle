@@ -10,7 +10,7 @@ Target Server Type    : MariaDB
 Target Server Version : 100108
 File Encoding         : 65001
 
-Date: 2015-10-22 12:40:13
+Date: 2015-10-22 15:33:13
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -32,7 +32,7 @@ CREATE TABLE `checkin_logs` (
   `date_added` datetime NOT NULL,
   `date_updated` datetime DEFAULT NULL,
   `date_removed` datetime DEFAULT NULL,
-  `checlin_type` char(1) COLLATE utf8_turkish_ci DEFAULT NULL COMMENT 's:system, u:user',
+  `checkout_type` char(1) COLLATE utf8_turkish_ci DEFAULT NULL COMMENT 's:system, u:user',
   PRIMARY KEY (`id`),
   UNIQUE KEY `idxUCheckinId` (`id`),
   UNIQUE KEY `idxUMemberCheckins` (`date_checkin`,`date_checkout`,`office`,`member`),
@@ -41,10 +41,6 @@ CREATE TABLE `checkin_logs` (
   CONSTRAINT `idxFCheckedInMember` FOREIGN KEY (`member`) REFERENCES `member` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `idxFCheckedInOffice` FOREIGN KEY (`office`) REFERENCES `office` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_turkish_ci;
-
--- ----------------------------
--- Records of checkin_logs
--- ----------------------------
 
 -- ----------------------------
 -- Table structure for city
@@ -62,10 +58,6 @@ CREATE TABLE `city` (
   CONSTRAINT `idxFCountryOfCity` FOREIGN KEY (`country`) REFERENCES `country` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `idxFStateOfCity` FOREIGN KEY (`state`) REFERENCES `state` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=1190 DEFAULT CHARSET=utf8 COLLATE=utf8_turkish_ci ROW_FORMAT=COMPACT;
-
--- ----------------------------
--- Records of city
--- ----------------------------
 
 -- ----------------------------
 -- Table structure for city_localization
@@ -87,10 +79,6 @@ CREATE TABLE `city_localization` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_turkish_ci ROW_FORMAT=COMPACT;
 
 -- ----------------------------
--- Records of city_localization
--- ----------------------------
-
--- ----------------------------
 -- Table structure for country
 -- ----------------------------
 DROP TABLE IF EXISTS `country`;
@@ -101,10 +89,6 @@ CREATE TABLE `country` (
   UNIQUE KEY `idxUCountryId` (`id`) USING BTREE,
   UNIQUE KEY `idxUCountryIsoCode` (`code_iso`) USING BTREE
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COLLATE=utf8_turkish_ci ROW_FORMAT=COMPACT;
-
--- ----------------------------
--- Records of country
--- ----------------------------
 
 -- ----------------------------
 -- Table structure for country_localization
@@ -124,10 +108,6 @@ CREATE TABLE `country_localization` (
   CONSTRAINT `idxFCountryLocalizationLanguage` FOREIGN KEY (`country`) REFERENCES `country` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `idxFLocalizedCountry` FOREIGN KEY (`language`) REFERENCES `language` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_turkish_ci ROW_FORMAT=COMPACT;
-
--- ----------------------------
--- Records of country_localization
--- ----------------------------
 
 -- ----------------------------
 -- Table structure for office
@@ -164,10 +144,6 @@ CREATE TABLE `office` (
 ) ENGINE=InnoDB AUTO_INCREMENT=110 DEFAULT CHARSET=utf8 COLLATE=utf8_turkish_ci ROW_FORMAT=COMPACT;
 
 -- ----------------------------
--- Records of office
--- ----------------------------
-
--- ----------------------------
 -- Table structure for state
 -- ----------------------------
 DROP TABLE IF EXISTS `state`;
@@ -181,10 +157,6 @@ CREATE TABLE `state` (
   KEY `idx_f_state_country_idx` (`country`),
   CONSTRAINT `state_ibfk_1` FOREIGN KEY (`country`) REFERENCES `country` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=89 DEFAULT CHARSET=utf8 COLLATE=utf8_turkish_ci ROW_FORMAT=COMPACT;
-
--- ----------------------------
--- Records of state
--- ----------------------------
 
 -- ----------------------------
 -- Table structure for state_localization
@@ -204,7 +176,3 @@ CREATE TABLE `state_localization` (
   CONSTRAINT `state_localization_ibfk_1` FOREIGN KEY (`language`) REFERENCES `language` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `state_localization_ibfk_2` FOREIGN KEY (`state`) REFERENCES `state` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_turkish_ci ROW_FORMAT=COMPACT;
-
--- ----------------------------
--- Records of state_localization
--- ----------------------------
