@@ -3238,7 +3238,6 @@ class LocationManagementModel extends CoreModel {
 		$q = $this->em->createQuery($qStr);
 		$q = $this->addLimit($q, $limit);
 		$result = $q->getResult();
-
 		$totalRows = count($result);
 		if ($totalRows < 1) {
 			return new ModelResponse(null, 0, 0, null, true, 'E:D:002', 'No entries found in database that matches to your criterion.', $timeStamp, time());
@@ -3292,6 +3291,53 @@ class LocationManagementModel extends CoreModel {
 	}
 
 	/**
+	 * @param $coordinateFrom
+	 * @param $coordinateTo
+	 * @return array
+	 */
+	public function listOfficesWithinCoordinates($coordinateFrom, $coordinateTo) {
+		$filter[] = array(
+			'glue'      => ' and',
+			'condition' => array(
+				array(
+					'glue'      => 'and',
+					'condition' => array(
+						'column'     => $this->entity['o']['alias'] . '.lat',
+						'comparison' => '<',
+						'value'      => $coordinateFrom->lat
+					)
+				),
+				array(
+					'glue'      => 'and',
+					'condition' => array(
+						'column'     => $this->entity['o']['alias'] . '.lon',
+						'comparison' => '>',
+						'value'      => $coordinateFrom->lon
+					)
+				),
+				array(
+					'glue'      => 'and',
+					'condition' => array(
+						'column'     => $this->entity['o']['alias'] . '.lat',
+						'comparison' => '>',
+						'value'      => $coordinateTo->lat
+					)
+				),
+				array(
+					'glue'      => 'and',
+					'condition' => array(
+						'column'     => $this->entity['o']['alias'] . '.lon',
+						'comparison' => '<',
+						'value'      => $coordinateTo->lon
+					)
+				)
+			)
+		);
+
+		return $this->listOffices($filter, null, array('start' => 0, 'count' => 20));
+	}
+
+	/**
 	 * @name                   listOfficesByType ()
 	 *
 	 * @since           1.0.5
@@ -3317,6 +3363,24 @@ class LocationManagementModel extends CoreModel {
 						'column'     => $this->entity['o']['alias'] . '.type',
 						'comparison' => '=',
 						'value'      => $type
+					)
+				)
+			)
+		);
+
+		return $this->listOffices($filter);
+	}
+
+	public function listOfficesByName($name) {
+		$filter[] = array(
+			'glue'      => ' and',
+			'condition' => array(
+				array(
+					'glue'      => 'and',
+					'condition' => array(
+						'column'     => $this->entity['o']['alias'] . '.name',
+						'comparison' => 'contains',
+						'value'      => $name
 					)
 				)
 			)
@@ -3492,7 +3556,7 @@ class LocationManagementModel extends CoreModel {
 					'condition' => array(
 						'column'     => $this->entity['o']['alias'] . '.state',
 						'comparison' => '=',
-						'value'      => $state
+						'value'      => $state->getId()
 					)
 				)
 			)
@@ -3615,6 +3679,7 @@ class LocationManagementModel extends CoreModel {
 		return new ModelResponse(null, 0, 0, null, true, 'E:D:004', 'One or more entities cannot be updated within database.', $timeStamp, time());
 	}
 }
+
 
 /**
  * Change Log
