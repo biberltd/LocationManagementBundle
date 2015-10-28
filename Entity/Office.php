@@ -79,17 +79,17 @@ class Office extends CoreEntity
     /**
      * @ORM\Column(type="datetime", nullable=false)
      */
-    private $date_added;
+    public $date_added;
 
     /**
      * @ORM\Column(type="datetime", nullable=false)
      */
-    private $date_updated;
+    public $date_updated;
 
     /**
      * @ORM\Column(type="datetime", nullable=true)
      */
-    private $date_removed;
+    public $date_removed;
 
     /** 
      * @ORM\ManyToOne(targetEntity="BiberLtd\Bundle\LocationManagementBundle\Entity\City")
