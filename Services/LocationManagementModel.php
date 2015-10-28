@@ -3291,11 +3291,19 @@ class LocationManagementModel extends CoreModel {
 	}
 
 	/**
-	 * @param $coordinateFrom
-	 * @param $coordinateTo
-	 * @return array
+	 * @param array $coordinates
+	 * @param null $sortOrder
+	 * @param null $limit
+	 * @return ModelResponse
 	 */
-	public function listOfficesWithinCoordinates($coordinateFrom, $coordinateTo) {
+	public function listOfficesWithinCoordinates(array $coordinates, $sortOrder = null, $limit = null) {
+		$timeStamp = time();
+		if(!isset($coordinates['from']) || !isset($coordinates['to'])){
+			return new ModelResponse(null, 0, 0, null, true, 'E:D:002', 'Invalid coordinate', $timeStamp, time());
+		}
+		$coordinateFrom = $coordinates['from'];
+		$coordinateTo = $coordinates['to'];
+		unset($coordinates);
 		$filter[] = array(
 			'glue'      => ' and',
 			'condition' => array(
@@ -3334,7 +3342,7 @@ class LocationManagementModel extends CoreModel {
 			)
 		);
 
-		return $this->listOffices($filter, null, array('start' => 0, 'count' => 20));
+		return $this->listOffices($filter, $sortOrder, $limit);
 	}
 
 	/**
