@@ -115,7 +115,7 @@ class Office extends CoreEntity
      */
     private $site;
     /**
-     * 
+     * @ORM\Column(type="text", nullable=true)
      */
     private $extra_info;
     /******************************************************************
