@@ -9,9 +9,9 @@
  *
  * @copyright   Biber Ltd. (www.biberltd.com)
  *
- * @version     1.1.1
+ * @version     1.1.2
  *
- * @date        21.10.2015
+ * @date        01.11.2015
  */
 
 namespace BiberLtd\Bundle\LocationManagementBundle\Services;
@@ -117,7 +117,7 @@ class LocationManagementModel extends CoreModel {
 			}
 			else {
 				$response = $this->getCheckinLog($entry);
-				if (!$response->error->exists) {
+				if (!$response->error->exist) {
 					$this->em->remove($response->result->set);
 					$countDeleted++;
 				}
@@ -175,7 +175,7 @@ class LocationManagementModel extends CoreModel {
 			}
 			else {
 				$response = $this->getCity($entry);
-				if (!$response->error->exists) {
+				if (!$response->error->exist) {
 					$this->em->remove($response->result->set);
 					$countDeleted++;
 				}
@@ -324,7 +324,7 @@ class LocationManagementModel extends CoreModel {
 		if (!is_null($language)) {
 			$mModel = $this->kernel->getContainer()->get('multilanguagesupport.model');
 			$response = $mModel->getLanguage($language);
-			if (!$response->error->exists) {
+			if (!$response->error->exist) {
 				$filter[] = array(
 					'glue'      => 'and',
 					'condition' => array(
@@ -851,7 +851,7 @@ class LocationManagementModel extends CoreModel {
 			}
 			else {
 				$response = $this->getCity($entry);
-				if (!$response->error->exists) {
+				if (!$response->error->exist) {
 					$this->em->remove($response->result->set);
 					$countDeleted++;
 				}
@@ -969,7 +969,7 @@ class LocationManagementModel extends CoreModel {
 		if (!is_null($language)) {
 			$mModel = $this->kernel->getContainer()->get('multilanguagesupport.model');
 			$response = $mModel->getLanguage($language);
-			if (!$response->error->exists) {
+			if (!$response->error->exist) {
 				$filter[] = array(
 					'glue'      => 'and',
 					'condition' => array(
@@ -1397,7 +1397,7 @@ class LocationManagementModel extends CoreModel {
 			}
 			else {
 				$response = $this->getState($entry);
-				if (!$response->error->exists) {
+				if (!$response->error->exist) {
 					$this->em->remove($response->result->set);
 					$countDeleted++;
 				}
@@ -1515,7 +1515,7 @@ class LocationManagementModel extends CoreModel {
 		if (!is_null($language)) {
 			$mModel = $this->kernel->getContainer()->get('multilanguagesupport.model');
 			$response = $mModel->getLanguage($language);
-			if (!$response->error->exists) {
+			if (!$response->error->exist) {
 				$filter[] = array(
 					'glue'      => 'and',
 					'condition' => array(
@@ -2894,7 +2894,7 @@ class LocationManagementModel extends CoreModel {
 			}
 			else {
 				$response = $this->getOffice($office);
-				if (!$response->error->exists) {
+				if (!$response->error->exist) {
 					$this->em->remove($response->result->set);
 					$countDeleted++;
 				}
@@ -3691,6 +3691,12 @@ class LocationManagementModel extends CoreModel {
 
 /**
  * Change Log
+ * **************************************
+ * v1.1.1                      04.11.2015
+ * Can Berkol
+ * **************************************
+ * BF :: ->exists replaced with ->exist
+ *
  * **************************************
  * v1.1.0                      26.08.2015
  * Can Berkol
