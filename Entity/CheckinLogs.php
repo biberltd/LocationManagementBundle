@@ -15,6 +15,7 @@
  *
  */
 namespace BiberLtd\Bundle\LocationManagementBundle\Entity;
+use BiberLtd\Bundle\CoreBundle\CoreEntity;
 use Doctrine\ORM\Mapping AS ORM;
 /**
  * @ORM\Entity
@@ -27,7 +28,7 @@ use Doctrine\ORM\Mapping AS ORM;
  *     }
  * )
  */
-class CheckinLogs
+class CheckinLogs extends CoreEntity
 {
     /**
      * @ORM\Id
