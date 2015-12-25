@@ -299,6 +299,110 @@
         <attribute name="on-delete">CASCADE</attribute>
       </orm-attributes>
     </association>
+    <entity name="\BiberLtd\Bundle\LocationManagementBundle\Entity\District" local-name="District" namespace="\BiberLtd\Bundle\LocationManagementBundle\Entity" description="Holds a list of districts " uuid="84376140-72df-4525-9c5a-138d8e99c617">
+      <field name="id" description="System given id." type="integer" required="true" unique="true" primary="true" unsigned="true" auto-increment="true" uuid="d89e146a-d24e-46f3-b953-8b4533fe225a"/>
+      <field name="zip" description="Zip or postal code if it exists." type="string" uuid="5c3ed5d9-06b5-4372-bbc5-6601a9d036fd"/>
+      <field name="city" type="integer" size="10" uuid="3c693efb-e1d7-487a-a24a-df58c4b6f5c2"/>
+      <index name="idxNDistrictZips">
+        <index-field name="zip"/>
+      </index>
+      <orm-attributes>
+        <attribute name="export-file-name">District.php</attribute>
+        <attribute name="table">district</attribute>
+        <attribute name="options">
+          <attribute name="charset">utf8</attribute>
+          <attribute name="collate">utf8_turkish_ci</attribute>
+          <attribute name="engine">innodb</attribute>
+        </attribute>
+      </orm-attributes>
+    </entity>
+    <association from="\BiberLtd\Bundle\LocationManagementBundle\Entity\District" to="\BiberLtd\Bundle\LocationManagementBundle\Entity\City" caption="idxFCityOfDistrict" inverse-alias="city" many-owner="true" many-inverse="false" uuid="ed461174-544a-42c2-8efd-020e92fd1032">
+      <association-field from="city" to="id"/>
+      <orm-attributes>
+        <attribute name="on-delete">CASCADE</attribute>
+      </orm-attributes>
+    </association>
+    <entity name="\BiberLtd\Bundle\LocationManagementBundle\Entity\Neighborhood" local-name="Neighborhood" namespace="\BiberLtd\Bundle\LocationManagementBundle\Entity" description="Holds a list of districts " uuid="85abe913-7943-4b7f-a507-02dc175bc1c9">
+      <field name="id" description="System given id." type="integer" required="true" unique="true" primary="true" unsigned="true" auto-increment="true" uuid="55e8da47-0d9b-41ec-b40c-5e97e727b11e"/>
+      <field name="zip" description="Zip or postal code if it exists." type="string" uuid="856053dd-e335-41a3-8367-b6764d6a3154"/>
+      <field name="district" type="integer" required="true" unsigned="true" uuid="eeec3b2f-7f61-438b-8b65-f07cb7368702"/>
+      <index name="idxNNeighborhoodZips">
+        <index-field name="zip"/>
+      </index>
+      <orm-attributes>
+        <attribute name="export-file-name">Neighborhood.php</attribute>
+        <attribute name="table">neighborhood</attribute>
+        <attribute name="options">
+          <attribute name="charset">utf8</attribute>
+          <attribute name="collate">utf8_turkish_ci</attribute>
+          <attribute name="engine">innodb</attribute>
+        </attribute>
+      </orm-attributes>
+    </entity>
+    <association from="\BiberLtd\Bundle\LocationManagementBundle\Entity\Neighborhood" to="\BiberLtd\Bundle\LocationManagementBundle\Entity\District" caption="idxFDistrictOfNeighborhood" owner-alias="neighborhood" inverse-alias="district" many-owner="true" many-inverse="false" parent-required="true" uuid="60d8fa3b-a697-476f-8953-2b33c1d3ec41">
+      <association-field from="district" to="id"/>
+      <orm-attributes>
+        <attribute name="on-delete">CASCADE</attribute>
+      </orm-attributes>
+    </association>
+    <entity name="\BiberLtd\Bundle\LocationManagementBundle\Entity\DistrictLocalization" local-name="DistrictLocalization" namespace="\BiberLtd\Bundle\LocationManagementBundle\Entity" description="Localized values of districts." uuid="259353e1-47fb-4ebd-995e-797ac1ebddcb">
+      <field name="name" description="Name of district." type="string" size="155" required="true" uuid="b550fd85-5b52-4ae4-94f9-e19087bcaae1"/>
+      <field name="url_key" description="url key of district." type="string" size="255" required="true" uuid="b8467ddd-c6b1-4af6-a64b-11d0c54c424a"/>
+      <field name="district" type="integer" required="true" primary="true" unsigned="true" uuid="6b08011e-fe31-49f7-9592-4cd8b4f8d70a"/>
+      <field name="language" type="integer" size="5" required="true" primary="true" unsigned="true" uuid="7345d39f-be13-40e8-b4fa-8ec0730a3adf"/>
+      <index name="idxUDistrictLocalization" unique="true">
+        <index-field name="district"/>
+        <index-field name="language"/>
+      </index>
+      <orm-attributes>
+        <attribute name="export-file-name">DistrictLocalization.php</attribute>
+        <attribute name="table">district_localization</attribute>
+        <attribute name="options">
+          <attribute name="charset">utf8</attribute>
+          <attribute name="collate">utf8_turkish_ci</attribute>
+          <attribute name="engine">innodb</attribute>
+        </attribute>
+      </orm-attributes>
+    </entity>
+    <association from="\BiberLtd\Bundle\LocationManagementBundle\Entity\DistrictLocalization" to="\BiberLtd\Bundle\LocationManagementBundle\Entity\District" caption="idxFLocalizedDistrict" owner-alias="localizations" inverse-alias="district" many-owner="true" many-inverse="false" parent-required="true" uuid="910e7e27-f291-427e-a1d4-1be1d30de7d9">
+      <association-field from="district" to="id"/>
+      <orm-attributes>
+        <attribute name="on-delete">CASCADE</attribute>
+      </orm-attributes>
+    </association>
+    <association from="\BiberLtd\Bundle\LocationManagementBundle\Entity\DistrictLocalization" to="\BiberLtd\Bundle\MultiLanguageSupportBundle\Entity\Language" caption="idxFDistrictLocalizationLanguage" inverse-alias="language" many-owner="true" many-inverse="false" parent-required="true" uuid="c646032a-c5bf-4ba5-b2af-6d579013b936">
+      <association-field from="language" to="id"/>
+      <orm-attributes>
+        <attribute name="on-delete">CASCADE</attribute>
+      </orm-attributes>
+    </association>
+    <entity name="\BiberLtd\Bundle\LocationManagementBundle\Entity\NeighborhoodLocalization" local-name="NeighborhoodLocalization" namespace="\BiberLtd\Bundle\LocationManagementBundle\Entity" description="Holds localization values of neighborhoods" uuid="959ca226-e9e3-420c-94ad-505e5edfdfed">
+      <field name="name" description="Name of neighborhood." type="string" size="155" required="true" uuid="c80a55c0-1931-4718-8c93-b11a239c00a2"/>
+      <field name="url_key" description="Url key of neighborhood." type="string" size="255" required="true" uuid="38adf66d-26f5-4d0d-aa65-fb17dcc5eb5b"/>
+      <field name="neighborhood" description="Localized neighborhood." type="integer" required="true" primary="true" unsigned="true" uuid="e2da87c6-4f54-4ba2-a245-94fbff7ee10d"/>
+      <field name="language" description="Localization language." type="integer" size="5" required="true" primary="true" uuid="104a034a-016b-4ead-9a99-b03e944f9d85"/>
+      <orm-attributes>
+        <attribute name="export-file-name">NeighborhoodLocalization.php</attribute>
+        <attribute name="table">neighborhood_localization</attribute>
+        <attribute name="options">
+          <attribute name="charset">utf8</attribute>
+          <attribute name="collate">utf8_turkish_ci</attribute>
+          <attribute name="engine">innodb</attribute>
+        </attribute>
+      </orm-attributes>
+    </entity>
+    <association from="\BiberLtd\Bundle\LocationManagementBundle\Entity\NeighborhoodLocalization" to="\BiberLtd\Bundle\LocationManagementBundle\Entity\Neighborhood" caption="idxFLocalizedNeighborhood" owner-alias="localizations" inverse-alias="neighborhood" many-owner="true" many-inverse="false" parent-required="true" uuid="0f3697ed-b306-4c55-97c7-0f899331e4f3">
+      <association-field from="neighborhood" to="id"/>
+      <orm-attributes>
+        <attribute name="on-delete">CASCADE</attribute>
+      </orm-attributes>
+    </association>
+    <association from="\BiberLtd\Bundle\LocationManagementBundle\Entity\NeighborhoodLocalization" to="\BiberLtd\Bundle\MultiLanguageSupportBundle\Entity\Language" caption="idxFNeighborhoodLocalizationLanguage" inverse-alias="language" many-owner="true" many-inverse="false" parent-required="true" uuid="02202d4e-2d98-49bd-8aa5-72ec7f7b2be8">
+      <association-field from="language" to="id"/>
+      <orm-attributes>
+        <attribute name="on-delete">CASCADE</attribute>
+      </orm-attributes>
+    </association>
     <orm-attributes>
       <attribute name="namespace">BiberLtd\Bundle\LocationManagementBundle\Entity</attribute>
       <attribute name="filename-format">entity-name-only</attribute>
@@ -309,11 +413,15 @@
     <entity uuid="049505c7-3acd-4136-b5ed-1647bdd2044a" bg-color="4294967295" hdr-color="4292006610" position-x="229" position-y="140" size-x="0" size-x2="110" size-y="0" size-y2="59"/>
     <entity uuid="08d2afb5-f4dd-4e24-82bb-1e5f529f940d" bg-color="#FFFFFF" hdr-color="#D2D2D2" position-x="30" position-y="240" size-x="0" size-x2="130" size-y="0" size-y2="241"/>
     <entity uuid="0bdf95d0-6dd8-4200-9fda-73f5bff5d4b5" bg-color="4294967295" hdr-color="4292006610" position-x="519" position-y="290" size-x="0" size-x2="110" size-y="0" size-y2="73"/>
+    <entity uuid="259353e1-47fb-4ebd-995e-797ac1ebddcb" bg-color="#FFFFFF" hdr-color="#D2D2D2" position-x="909" position-y="340" size-x="0" size-x2="20" size-y="0" size-y2="20"/>
     <entity uuid="4491fd31-1d20-4753-9166-184196ae6040" bg-color="4294967295" hdr-color="4292006610" position-x="429" position-y="47" size-x="0" size-x2="110" size-y="0" size-y2="73"/>
     <entity uuid="4da3d5f1-bc44-46ce-9405-c08218f83507" bg-color="#FFFFFF" hdr-color="#D2D2D2" position-x="730" position-y="40" size-x="0" size-x2="131" size-y="0" size-y2="143"/>
+    <entity uuid="84376140-72df-4525-9c5a-138d8e99c617" bg-color="#FFFFFF" hdr-color="#D2D2D2" position-x="730" position-y="290" size-x="0" size-x2="94" size-y="0" size-y2="59"/>
+    <entity uuid="85abe913-7943-4b7f-a507-02dc175bc1c9" bg-color="#FFFFFF" hdr-color="#D2D2D2" position-x="580" position-y="440" size-x="0" size-x2="94" size-y="0" size-y2="59"/>
+    <entity uuid="959ca226-e9e3-420c-94ad-505e5edfdfed" bg-color="#FFFFFF" hdr-color="#D2D2D2" position-x="754" position-y="417" size-x="0" size-x2="20" size-y="0" size-y2="20"/>
     <entity uuid="9b3e403e-b5ab-4cce-ba8b-89f148856874" bg-color="4294967295" hdr-color="4292006610" position-x="329" position-y="240" size-x="0" size-x2="110" size-y="0" size-y2="73"/>
     <entity uuid="bd6f61b6-36df-4553-9758-fefbe894e2f5" bg-color="4294967295" hdr-color="4292006610" position-x="519" position-y="190" size-x="0" size-x2="110" size-y="0" size-y2="73"/>
     <entity uuid="de18dab0-920f-417b-be06-295fafcfa738" bg-color="4294967295" hdr-color="4292006610" position-x="229" position-y="65" size-x="0" size-x2="110" size-y="0" size-y2="45"/>
-    <module uuid="116d2750-ee5f-4537-84d5-7d45771499d3" bg-color="#C70000" size-x="20" size-x2="980" size-y="10" size-y2="534"/>
+    <module uuid="116d2750-ee5f-4537-84d5-7d45771499d3" bg-color="#C70000" size-x="20" size-x2="1039" size-y="10" size-y2="609"/>
   </visual-data>
 </skipper>
