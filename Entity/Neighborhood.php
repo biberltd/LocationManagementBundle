@@ -25,7 +25,7 @@ class Neighborhood
     private $zip;
 
     /**
-     * @ORM\OneToMany(targetEntity="BiberLtd\Bundle\AddressManagementBundle\Entity\Address", mappedBy="neighborhood")
+     * 
      */
     private $address;
 
