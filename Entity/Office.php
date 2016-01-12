@@ -23,8 +23,8 @@ use BiberLtd\Bundle\CoreBundle\CoreEntity;
  * @ORM\Entity
  * @ORM\Table(
  *     name="office",
- *     indexes={@ORM\Index(name="idx_u_office_url_key", columns={"url_key","site"})},
- *     uniqueConstraints={@ORM\UniqueConstraint(name="idx_u_office_id", columns={"id"})}
+ *     indexes={@ORM\Index(name="idxUOfficeUrlKey", columns={"url_key","site"})},
+ *     uniqueConstraints={@ORM\UniqueConstraint(name="idxUOfficeId", columns={"id"})}
  * )
  */
 class Office extends CoreEntity
@@ -114,8 +114,14 @@ class Office extends CoreEntity
      * @ORM\JoinColumn(name="site", referencedColumnName="id", onDelete="CASCADE")
      */
     private $site;
+
     /**
-     * @ORM\Column(type="text", nullable=true)
+     * @ORM\ManyToOne(targetEntity="BiberLtd\Bundle\MemberManagementBundle\Entity\Member")
+     * @ORM\JoinColumn(name="member", referencedColumnName="id", onDelete="CASCADE")
+     */
+    private $member;
+    /**
+     * 
      */
     private $extra_info;
     /******************************************************************
@@ -640,53 +646,40 @@ class Office extends CoreEntity
         return $this;
     }
 
+    /**
+     * @name        getMember ()
+     *
+     * @author      Can Berkol
+     *
+     * @since       1.0.0
+     * @version     1.0.0
+     *
+     * @return      mixed
+     */
+    public function getMember(){
+        return $this->member;
+    }
+
+    /**
+     * @name              setMember ()
+     *
+     * @author      Can Berkol
+     *
+     * @since       1.0.0
+     * @version     1.0.0
+     *
+     * @param       mixed $member
+     *
+     * @return      $this
+     */
+    public function setMember($member){
+        if(!$this->setModified('member', $member)->isModified()){
+            return $this;
+        }
+        $this->member = $member;
+
+        return $this;
+    }
+
+
 }
-/**
- * Change Log:
- * **************************************
- * v1.0.2                      Said İmamoğlu
- * 10.07.2015
- * **************************************
- * A getExtraInfo()
- * A setExtraInfo()
- * **************************************
- * v1.0.1                      Can Berkol
- * 04.03.2013
- * **************************************
- * A getLon()
- * A getLan()
- * A setLan()
- * A setLon()
- *
- * **************************************
- * v1.0.0                      Murat Ünal
- * 10.09.2013
- * **************************************
- * A getAddress()
- * A getCity()
- * A getCoorX()
- * A getCoorY()
- * A getCountry()
- * A getEmail()
- * A getFax()
- * A getId()
- * A getName()
- * A getPhone()
- * A getSite()
- * A getState()
- * A getUrlKey()
- *
- * A setAddress()
- * A setCity()
- * A setCoorX()
- * A setCoorY()
- * A setCountry()
- * A setEmail()
- * A setFax()
- * A setName()
- * A setPhone()
- * A setSite()
- * A setState()
- * A setUrlKey()
- *
- */

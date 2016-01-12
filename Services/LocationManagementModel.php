@@ -50,6 +50,7 @@ class LocationManagementModel extends CoreModel {
 			'c'  => array('name' => 'LocationManagementBundle:City', 'alias' => 'c'),
 			'cil'=> array('name' => 'LocationManagementBundle:CheckinLogs', 'alias' => 'cil'),
 			'cl' => array('name' => 'LocationManagementBundle:CityLocalization', 'alias' => 'cl'),
+			'm' => array('name' => 'MemberManagementBundle:Member', 'alias' => 'm'),
 			'o'  => array('name' => 'LocationManagementBundle:Office', 'alias' => 'o'),
 			's'  => array('name' => 'LocationManagementBundle:State', 'alias' => 's'),
 			'sl' => array('name' => 'LocationManagementBundle:StateLocalization', 'alias' => 'sl'),
@@ -3219,6 +3220,7 @@ class LocationManagementModel extends CoreModel {
 					case 'fax':
 					case 'email':
 					case 'name':
+					case 'member':
 						$column = $this->entity['o']['alias'] . '.' . $column;
 						break;
 					default:
@@ -3345,6 +3347,38 @@ class LocationManagementModel extends CoreModel {
 		return $this->listOffices($filter, $sortOrder, $limit);
 	}
 
+	/**
+	 * @param      $member
+	 * @param null $sortOrder
+	 * @param null $limit
+	 *
+	 * @return array|\BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
+	 */
+	public function listOfficesOfMember($member, $sortOrder = null, $limit = null) {
+		$timeStamp = time();
+		$mModel = $this->kernel->getContainer()->get('membermanagement.model');
+		$response = $mModel->getMember($member);
+		if($response->error->exist){
+			return new ModelResponse(null, 0, 0, null, true, 'E:D:002', 'No entries found in database that matches to your criterion.', $timeStamp, time());
+		}
+		$member = $response->result->set;
+
+		$filter[] = array(
+			'glue'      => ' and',
+			'condition' => array(
+				array(
+					'glue'      => 'and',
+					'condition' => array(
+						'column'     => $this->entity['o']['alias'] . '.member',
+						'comparison' => '=',
+						'value'      => $member->getId()
+					)
+				)
+			)
+		);
+
+		return $this->listOffices($filter, $sortOrder, $limit);
+	}
 	/**
 	 * @name                   listOfficesByType ()
 	 *
