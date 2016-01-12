@@ -1,6 +1,16 @@
 <?php
+/**
+ * @author		Can Berkol
+ *
+ * @copyright   Biber Ltd. (http://www.biberltd.com) (C) 2015
+ * @license     GPLv3
+ *
+ * @date        12.01.2015
+ */
+
 namespace BiberLtd\Bundle\LocationManagementBundle\Entity;
 use BiberLtd\Bundle\CoreBundle\CoreEntity;
+use BiberLtd\Bundle\MultiLanguageSupportBundle\Entity\Language;
 use Doctrine\ORM\Mapping AS ORM;
 
 /** 
@@ -19,11 +29,13 @@ class CityLocalization extends CoreEntity
 {
     /** 
      * @ORM\Column(type="string", length=45, nullable=false)
+     * @var string
      */
     private $name;
 
     /** 
      * @ORM\Column(type="string", length=155, nullable=false)
+     * @var string
      */
     private $url_key;
 
@@ -31,6 +43,7 @@ class CityLocalization extends CoreEntity
      * @ORM\Id
      * @ORM\ManyToOne(targetEntity="BiberLtd\Bundle\MultiLanguageSupportBundle\Entity\Language")
      * @ORM\JoinColumn(name="language", referencedColumnName="id", nullable=false, onDelete="CASCADE")
+     * @var Language
      */
     private $language;
 
@@ -38,26 +51,16 @@ class CityLocalization extends CoreEntity
      * @ORM\Id
      * @ORM\ManyToOne(targetEntity="BiberLtd\Bundle\LocationManagementBundle\Entity\City", inversedBy="localizations")
      * @ORM\JoinColumn(name="city", referencedColumnName="id", nullable=false, onDelete="CASCADE")
+     * @var City
      */
     private $city;
 
-    /**
-     * @name                  setCity ()
-     *                                Sets the city property.
-     *                                Updates the data only if stored value and value to be set are different.
-     *
-     * @author          Can Berkol
-     *
-     * @since           1.0.0
-     * @version         1.0.0
-     *
-     * @use             $this->setModified()
-     *
-     * @param           mixed $city
-     *
-     * @return          object                $this
-     */
-    public function setCity($city) {
+	/**
+	 * @param \BiberLtd\Bundle\LocationManagementBundle\Entity\City $city
+	 *
+	 * @return $this
+	 */
+    public function setCity(City $city) {
         if(!$this->setModified('city', $city)->isModified()) {
             return $this;
         }
@@ -65,38 +68,19 @@ class CityLocalization extends CoreEntity
 		return $this;
     }
 
-    /**
-     * @name            getCity ()
-     *                          Returns the value of city property.
-     *
-     * @author          Can Berkol
-     *
-     * @since           1.0.0
-     * @version         1.0.0
-     *
-     * @return          mixed           $this->city
-     */
+	/**
+	 * @return mixed
+	 */
     public function getCity() {
         return $this->city;
     }
 
-    /**
-     * @name                  setLanguage ()
-     *                                    Sets the language property.
-     *                                    Updates the data only if stored value and value to be set are different.
-     *
-     * @author          Can Berkol
-     *
-     * @since           1.0.0
-     * @version         1.0.0
-     *
-     * @use             $this->setModified()
-     *
-     * @param           mixed $language
-     *
-     * @return          object                $this
-     */
-    public function setLanguage($language) {
+	/**
+	 * @param \BiberLtd\Bundle\MultiLanguageSupportBundle\Entity\Language $language
+	 *
+	 * @return $this
+	 */
+    public function setLanguage(Language $language) {
         if(!$this->setModified('language', $language)->isModified()) {
             return $this;
         }
@@ -104,38 +88,19 @@ class CityLocalization extends CoreEntity
 		return $this;
     }
 
-    /**
-     * @name            getLanguage ()
-     *                              Returns the value of language property.
-     *
-     * @author          Can Berkol
-     *
-     * @since           1.0.0
-     * @version         1.0.0
-     *
-     * @return          mixed           $this->language
-     */
+	/**
+	 * @return mixed
+	 */
     public function getLanguage() {
         return $this->language;
     }
 
-    /**
-     * @name                  setName ()
-     *                                Sets the name property.
-     *                                Updates the data only if stored value and value to be set are different.
-     *
-     * @author          Can Berkol
-     *
-     * @since           1.0.0
-     * @version         1.0.0
-     *
-     * @use             $this->setModified()
-     *
-     * @param           mixed $name
-     *
-     * @return          object                $this
-     */
-    public function setName($name) {
+	/**
+	 * @param string $name
+	 *
+	 * @return $this
+	 */
+    public function setName(\string $name) {
         if(!$this->setModified('name', $name)->isModified()) {
             return $this;
         }
@@ -143,38 +108,19 @@ class CityLocalization extends CoreEntity
 		return $this;
     }
 
-    /**
-     * @name            getName ()
-     *                          Returns the value of name property.
-     *
-     * @author          Can Berkol
-     *
-     * @since           1.0.0
-     * @version         1.0.0
-     *
-     * @return          mixed           $this->name
-     */
+	/**
+	 * @return string
+	 */
     public function getName() {
         return $this->name;
     }
 
-    /**
-     * @name                  setUrlKey ()
-     *                                  Sets the url_key property.
-     *                                  Updates the data only if stored value and value to be set are different.
-     *
-     * @author          Can Berkol
-     *
-     * @since           1.0.0
-     * @version         1.0.0
-     *
-     * @use             $this->setModified()
-     *
-     * @param           mixed $url_key
-     *
-     * @return          object                $this
-     */
-    public function setUrlKey($url_key) {
+	/**
+	 * @param string $url_key
+	 *
+	 * @return $this
+	 */
+    public function setUrlKey(\string $url_key) {
         if(!$this->setModified('url_key', $url_key)->isModified()) {
             return $this;
         }
@@ -182,20 +128,10 @@ class CityLocalization extends CoreEntity
 		return $this;
     }
 
-    /**
-     * @name            getUrlKey ()
-     *                            Returns the value of url_key property.
-     *
-     * @author          Can Berkol
-     *
-     * @since           1.0.0
-     * @version         1.0.0
-     *
-     * @return          mixed           $this->url_key
-     */
+	/**
+	 * @return string
+	 */
     public function getUrlKey() {
         return $this->url_key;
     }
-
-
 }

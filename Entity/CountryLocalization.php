@@ -1,19 +1,15 @@
 <?php
 /**
- * @name        CountryLocalization
- * @package		BiberLtd\Bundle\CoreBundle\LocationManagementBundle
+ * @author		Can Berkol
  *
- * @author		Murat Ünal
- * @version     1.0.0
- * @date        10.09.2013
+ * @copyright   Biber Ltd. (http://www.biberltd.com) (C) 2015
+ * @license     GPLv3
  *
- * @copyright   Biber Ltd. (http://www.biberltd.com)
- * @license     GPL v3.0
- *
- * @description Model / Entity class.
- *
+ * @date        12.01.2015
  */
+
 namespace BiberLtd\Bundle\LocationManagementBundle\Entity;
+use BiberLtd\Bundle\MultiLanguageSupportBundle\Entity\Language;
 use Doctrine\ORM\Mapping AS ORM;
 use BiberLtd\Bundle\CoreBundle\CoreEntity;
 
@@ -33,11 +29,13 @@ class CountryLocalization extends CoreEntity
 {
     /** 
      * @ORM\Column(type="string", length=45, nullable=false)
+     * @var string
      */
     private $name;
 
     /** 
      * @ORM\Column(type="string", length=155, nullable=false)
+     * @var string
      */
     private $url_key;
 
@@ -45,6 +43,7 @@ class CountryLocalization extends CoreEntity
      * @ORM\Id
      * @ORM\ManyToOne(targetEntity="BiberLtd\Bundle\MultiLanguageSupportBundle\Entity\Language")
      * @ORM\JoinColumn(name="language", referencedColumnName="id", onDelete="CASCADE")
+     * @var Language
      */
     private $language;
 
@@ -55,26 +54,16 @@ class CountryLocalization extends CoreEntity
      *     inversedBy="localizations"
      * )
      * @ORM\JoinColumn(name="country", referencedColumnName="id", onDelete="CASCADE")
+     * @var Country
      */
     private $country;
 
     /**
-     * @name                  setCountry ()
-     *                                   Sets the country property.
-     *                                   Updates the data only if stored value and value to be set are different.
+     * @param \BiberLtd\Bundle\LocationManagementBundle\Entity\Country $country
      *
-     * @author          Can Berkol
-     *
-     * @since           1.0.0
-     * @version         1.0.0
-     *
-     * @use             $this->setModified()
-     *
-     * @param           mixed $country
-     *
-     * @return          object                $this
+     * @return $this
      */
-    public function setCountry($country) {
+    public function setCountry(Country $country) {
         if(!$this->setModified('country', $country)->isModified()) {
             return $this;
         }
@@ -83,37 +72,18 @@ class CountryLocalization extends CoreEntity
     }
 
     /**
-     * @name            getCountry ()
-     *                             Returns the value of country property.
-     *
-     * @author          Can Berkol
-     *
-     * @since           1.0.0
-     * @version         1.0.0
-     *
-     * @return          mixed           $this->country
+     * @return mixed
      */
     public function getCountry() {
         return $this->country;
     }
 
     /**
-     * @name                  setLanguage ()
-     *                                    Sets the language property.
-     *                                    Updates the data only if stored value and value to be set are different.
+     * @param \BiberLtd\Bundle\MultiLanguageSupportBundle\Entity\Language $language
      *
-     * @author          Can Berkol
-     *
-     * @since           1.0.0
-     * @version         1.0.0
-     *
-     * @use             $this->setModified()
-     *
-     * @param           mixed $language
-     *
-     * @return          object                $this
+     * @return $this
      */
-    public function setLanguage($language) {
+    public function setLanguage(Language $language) {
         if(!$this->setModified('language', $language)->isModified()) {
             return $this;
         }
@@ -122,37 +92,18 @@ class CountryLocalization extends CoreEntity
     }
 
     /**
-     * @name            getLanguage ()
-     *                              Returns the value of language property.
-     *
-     * @author          Can Berkol
-     *
-     * @since           1.0.0
-     * @version         1.0.0
-     *
-     * @return          mixed           $this->language
+     * @return Language
      */
     public function getLanguage() {
         return $this->language;
     }
 
     /**
-     * @name                  setName ()
-     *                                Sets the name property.
-     *                                Updates the data only if stored value and value to be set are different.
+     * @param string $name
      *
-     * @author          Can Berkol
-     *
-     * @since           1.0.0
-     * @version         1.0.0
-     *
-     * @use             $this->setModified()
-     *
-     * @param           mixed $name
-     *
-     * @return          object                $this
+     * @return $this
      */
-    public function setName($name) {
+    public function setName(\string $name) {
         if(!$this->setModified('name', $name)->isModified()) {
             return $this;
         }
@@ -161,37 +112,18 @@ class CountryLocalization extends CoreEntity
     }
 
     /**
-     * @name            getName ()
-     *                          Returns the value of name property.
-     *
-     * @author          Can Berkol
-     *
-     * @since           1.0.0
-     * @version         1.0.0
-     *
-     * @return          mixed           $this->name
+     * @return string
      */
     public function getName() {
         return $this->name;
     }
 
     /**
-     * @name                  setUrlKey ()
-     *                                  Sets the url_key property.
-     *                                  Updates the data only if stored value and value to be set are different.
+     * @param string $url_key
      *
-     * @author          Can Berkol
-     *
-     * @since           1.0.0
-     * @version         1.0.0
-     *
-     * @use             $this->setModified()
-     *
-     * @param           mixed $url_key
-     *
-     * @return          object                $this
+     * @return $this
      */
-    public function setUrlKey($url_key) {
+    public function setUrlKey(\string $url_key) {
         if(!$this->setModified('url_key', $url_key)->isModified()) {
             return $this;
         }
@@ -200,38 +132,9 @@ class CountryLocalization extends CoreEntity
     }
 
     /**
-     * @name            getUrlKey ()
-     *                            Returns the value of url_key property.
-     *
-     * @author          Can Berkol
-     *
-     * @since           1.0.0
-     * @version         1.0.0
-     *
-     * @return          mixed           $this->url_key
+     * @return string
      */
     public function getUrlKey() {
         return $this->url_key;
     }
-    /******************************************************************
-     * PUBLIC SET AND GET FUNCTIONS                                   *
-     ******************************************************************/
-
 }
-/**
- * Change Log:
- * **************************************
- * v1.0.0                      Murat Ünal
- * 10.09.2013
- * **************************************
- * A getCountry()
- * A getLanguage()
- * A getName()
- * A getUrlKey()
- *
- * A setCountry()
- * A setLanguage()
- * A setName()
- * A setUrlKey()
- *
- */

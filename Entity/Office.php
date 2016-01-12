@@ -1,21 +1,15 @@
 <?php
 /**
- * @name        Office
- * @package		BiberLtd\Bundle\CoreBundle\LocationManagementBundle
+ * @author		Can Berkol
  *
- * @author      Can Berkol
- * @author		Murat Ünal
+ * @copyright   Biber Ltd. (http://www.biberltd.com) (C) 2015
+ * @license     GPLv3
  *
- * @version     1.0.1
- * @date        04.03.2014
- *
- * @copyright   Biber Ltd. (http://www.biberltd.com)
- * @license     GPL v3.0
- *
- * @description Model / Entity class.
- *
+ * @date        12.01.2015
  */
 namespace BiberLtd\Bundle\LocationManagementBundle\Entity;
+use BiberLtd\Bundle\MemberManagementBundle\Entity\Member;
+use BiberLtd\Bundle\SiteManagementBundle\Entity\Site;
 use Doctrine\ORM\Mapping AS ORM;
 use BiberLtd\Bundle\CoreBundle\CoreEntity;
 
@@ -23,8 +17,10 @@ use BiberLtd\Bundle\CoreBundle\CoreEntity;
  * @ORM\Entity
  * @ORM\Table(
  *     name="office",
- *     indexes={@ORM\Index(name="idx_u_office_url_key", columns={"url_key","site"})},
- *     uniqueConstraints={@ORM\UniqueConstraint(name="idx_u_office_id", columns={"id"})}
+ *     uniqueConstraints={
+ *         @ORM\UniqueConstraint(name="idxUOfficeId", columns={"id"}),
+ *         @ORM\UniqueConstraint(name="idxUOfficeUrlKey", columns={"url_key","site"})
+ *     }
  * )
  */
 class Office extends CoreEntity
@@ -33,126 +29,128 @@ class Office extends CoreEntity
      * @ORM\Id
      * @ORM\Column(type="integer", length=10)
      * @ORM\GeneratedValue(strategy="AUTO")
+     * @var int
      */
     private $id;
 
     /** 
      * @ORM\Column(type="string", length=45, nullable=false)
+     * @var string
      */
     private $name;
 
     /** 
      * @ORM\Column(type="string", unique=true, length=155, nullable=false)
+     * @var string
      */
     private $url_key;
 
     /** 
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @var string
      */
     private $address;
 
     /** 
      * @ORM\Column(type="decimal", length=10, nullable=true)
+     * @var float
      */
     private $lat;
 
     /** 
      * @ORM\Column(type="decimal", length=10, nullable=true)
+     * @var float
      */
     private $lon;
 
     /** 
      * @ORM\Column(type="string", length=45, nullable=true)
+     * @var string
      */
     private $phone;
 
     /** 
      * @ORM\Column(type="string", length=45, nullable=true)
+     * @var string
      */
     private $fax;
 
     /** 
      * @ORM\Column(type="string", length=45, nullable=true)
+     * @var string
      */
     private $email;
 
     /**
      * @ORM\Column(type="datetime", nullable=false)
+     * @var \DateTime
      */
     public $date_added;
 
     /**
      * @ORM\Column(type="datetime", nullable=false)
+     * @var \DateTime
      */
     public $date_updated;
 
     /**
      * @ORM\Column(type="datetime", nullable=true)
+     * @var \DateTime
      */
     public $date_removed;
 
     /** 
      * @ORM\ManyToOne(targetEntity="BiberLtd\Bundle\LocationManagementBundle\Entity\City")
      * @ORM\JoinColumn(name="city", referencedColumnName="id", nullable=false)
+     * @var City
      */
     private $city;
 
     /** 
      * @ORM\ManyToOne(targetEntity="BiberLtd\Bundle\LocationManagementBundle\Entity\State")
      * @ORM\JoinColumn(name="state", referencedColumnName="id", onDelete="CASCADE")
+     * @var State
      */
     private $state;
 
     /** 
      * @ORM\ManyToOne(targetEntity="BiberLtd\Bundle\LocationManagementBundle\Entity\Country")
      * @ORM\JoinColumn(name="country", referencedColumnName="id", nullable=false, onDelete="CASCADE")
+     * @var Country
      */
     private $country;
 
     /** 
      * @ORM\ManyToOne(targetEntity="BiberLtd\Bundle\SiteManagementBundle\Entity\Site")
      * @ORM\JoinColumn(name="site", referencedColumnName="id", onDelete="CASCADE")
+     * @var Site
      */
     private $site;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="BiberLtd\Bundle\MemberManagementBundle\Entity\Member")
+     * @ORM\JoinColumn(name="member", referencedColumnName="id", onDelete="CASCADE")
+     * @var Member
+     */
+    private $member;
     /**
      * 
      */
     private $extra_info;
-    /******************************************************************
-     * PUBLIC SET AND GET FUNCTIONS                                   *
-     ******************************************************************/
 
     /**
-     * @name            getId()
-     *                  Gets $id property.
-     * .
-     * @author          Murat Ünal
-     * @since           1.0.0
-     * @version         1.0.0
-     *
-     * @return          integer          $this->id
+     * @return int
      */
     public function getId(){
         return $this->id;
     }
 
     /**
-     * @name                  setAddress ()
-     *                                   Sets the address property.
-     *                                   Updates the data only if stored value and value to be set are different.
+     * @param string $address
      *
-     * @author          Can Berkol
-     *
-     * @since           1.0.0
-     * @version         1.0.0
-     *
-     * @use             $this->setModified()
-     *
-     * @param           mixed $address
-     *
-     * @return          object                $this
+     * @return $this
      */
-    public function setAddress($address) {
+    public function setAddress(\string $address) {
         if(!$this->setModified('address', $address)->isModified()) {
             return $this;
         }
@@ -161,37 +159,18 @@ class Office extends CoreEntity
     }
 
     /**
-     * @name            getAddress ()
-     *                             Returns the value of address property.
-     *
-     * @author          Can Berkol
-     *
-     * @since           1.0.0
-     * @version         1.0.0
-     *
-     * @return          mixed           $this->address
+     * @return string
      */
     public function getAddress() {
         return $this->address;
     }
 
     /**
-     * @name                  setCity ()
-     *                                Sets the city property.
-     *                                Updates the data only if stored value and value to be set are different.
+     * @param \BiberLtd\Bundle\LocationManagementBundle\Entity\City $city
      *
-     * @author          Can Berkol
-     *
-     * @since           1.0.0
-     * @version         1.0.0
-     *
-     * @use             $this->setModified()
-     *
-     * @param           mixed $city
-     *
-     * @return          object                $this
+     * @return $this
      */
-    public function setCity($city) {
+    public function setCity(City $city) {
         if(!$this->setModified('city', $city)->isModified()) {
             return $this;
         }
@@ -200,37 +179,18 @@ class Office extends CoreEntity
     }
 
     /**
-     * @name            getCity ()
-     *                          Returns the value of city property.
-     *
-     * @author          Can Berkol
-     *
-     * @since           1.0.0
-     * @version         1.0.0
-     *
-     * @return          mixed           $this->city
+     * @return \BiberLtd\Bundle\LocationManagementBundle\Entity\City
      */
     public function getCity() {
         return $this->city;
     }
 
     /**
-     * @name            setLon ()
-     *                  Sets the lon property.
-     *                  Updates the data only if stored value and value to be set are different.
+     * @param float $lon
      *
-     * @author          Can Berkol
-     *
-     * @since           1.0.0
-     * @version         1.0.0
-     *
-     * @use             $this->setModified()
-     *
-     * @param           mixed $lon
-     *
-     * @return          object                $this
+     * @return $this
      */
-    public function setLon($lon) {
+    public function setLon(\float $lon) {
         if(!$this->setModified('lon', $lon)->isModified()) {
             return $this;
         }
@@ -239,37 +199,18 @@ class Office extends CoreEntity
     }
 
     /**
-     * @name            getLon()
-     *                  Returns the value of longtitude property.
-     *
-     * @author          Can Berkol
-     *
-     * @since           1.0.0
-     * @version         1.0.0
-     *
-     * @return          mixed           $this->coor_x
+     * @return float
      */
     public function getLon(){
         return $this->lon;
     }
 
     /**
-     * @name            setLat()
-     *                  Sets the latitude property.
-     *                  Updates the data only if stored value and value to be set are different.
+     * @param float $lat
      *
-     * @author          Can Berkol
-     *
-     * @since           1.0.0
-     * @version         1.0.0
-     *
-     * @use             $this->setModified()
-     *
-     * @param           mixed $lat
-     *
-     * @return          object                $this
+     * @return $this
      */
-    public function setLat($lat) {
+    public function setLat(\float $lat) {
         if(!$this->setModified('lat', $lat)->isModified()) {
             return $this;
         }
@@ -278,37 +219,18 @@ class Office extends CoreEntity
     }
 
     /**
-     * @name            getLat ()
-     *                  Returns the value of coor_y property.
-     *
-     * @author          Can Berkol
-     *
-     * @since           1.0.0
-     * @version         1.0.0
-     *
-     * @return          mixed           $this->lat
+     * @return float
      */
     public function getLat() {
         return $this->lat;
     }
 
     /**
-     * @name            setCountry ()
-     *                  Sets the country property.
-     *                  Updates the data only if stored value and value to be set are different.
+     * @param \BiberLtd\Bundle\LocationManagementBundle\Entity\Country $country
      *
-     * @author          Can Berkol
-     *
-     * @since           1.0.0
-     * @version         1.0.0
-     *
-     * @use             $this->setModified()
-     *
-     * @param           mixed $country
-     *
-     * @return          object                $this
+     * @return $this
      */
-    public function setCountry($country) {
+    public function setCountry(Country $country) {
         if(!$this->setModified('country', $country)->isModified()) {
             return $this;
         }
@@ -317,37 +239,18 @@ class Office extends CoreEntity
     }
 
     /**
-     * @name            getCountry ()
-     *                             Returns the value of country property.
-     *
-     * @author          Can Berkol
-     *
-     * @since           1.0.0
-     * @version         1.0.0
-     *
-     * @return          mixed           $this->country
+     * @return \BiberLtd\Bundle\LocationManagementBundle\Entity\Country
      */
     public function getCountry() {
         return $this->country;
     }
 
     /**
-     * @name                  setEmail ()
-     *                                 Sets the email property.
-     *                                 Updates the data only if stored value and value to be set are different.
+     * @param string $email
      *
-     * @author          Can Berkol
-     *
-     * @since           1.0.0
-     * @version         1.0.0
-     *
-     * @use             $this->setModified()
-     *
-     * @param           mixed $email
-     *
-     * @return          object                $this
+     * @return $this
      */
-    public function setEmail($email) {
+    public function setEmail(\string $email) {
         if(!$this->setModified('email', $email)->isModified()) {
             return $this;
         }
@@ -356,37 +259,18 @@ class Office extends CoreEntity
     }
 
     /**
-     * @name            getEmail ()
-     *                           Returns the value of email property.
-     *
-     * @author          Can Berkol
-     *
-     * @since           1.0.0
-     * @version         1.0.0
-     *
-     * @return          mixed           $this->email
+     * @return string
      */
     public function getEmail() {
         return $this->email;
     }
 
     /**
-     * @name                  setFax ()
-     *                               Sets the fax property.
-     *                               Updates the data only if stored value and value to be set are different.
+     * @param string $fax
      *
-     * @author          Can Berkol
-     *
-     * @since           1.0.0
-     * @version         1.0.0
-     *
-     * @use             $this->setModified()
-     *
-     * @param           mixed $fax
-     *
-     * @return          object                $this
+     * @return $this
      */
-    public function setFax($fax) {
+    public function setFax(\string $fax) {
         if(!$this->setModified('fax', $fax)->isModified()) {
             return $this;
         }
@@ -395,37 +279,18 @@ class Office extends CoreEntity
     }
 
     /**
-     * @name            getFax ()
-     *                         Returns the value of fax property.
-     *
-     * @author          Can Berkol
-     *
-     * @since           1.0.0
-     * @version         1.0.0
-     *
-     * @return          mixed           $this->fax
+     * @return string
      */
     public function getFax() {
         return $this->fax;
     }
 
     /**
-     * @name                  setName ()
-     *                                Sets the name property.
-     *                                Updates the data only if stored value and value to be set are different.
+     * @param string $name
      *
-     * @author          Can Berkol
-     *
-     * @since           1.0.0
-     * @version         1.0.0
-     *
-     * @use             $this->setModified()
-     *
-     * @param           mixed $name
-     *
-     * @return          object                $this
+     * @return $this
      */
-    public function setName($name) {
+    public function setName(\string $name) {
         if(!$this->setModified('name', $name)->isModified()) {
             return $this;
         }
@@ -434,37 +299,18 @@ class Office extends CoreEntity
     }
 
     /**
-     * @name            getName ()
-     *                          Returns the value of name property.
-     *
-     * @author          Can Berkol
-     *
-     * @since           1.0.0
-     * @version         1.0.0
-     *
-     * @return          mixed           $this->name
+     * @return string
      */
     public function getName() {
         return $this->name;
     }
 
     /**
-     * @name                  setPhone ()
-     *                                 Sets the phone property.
-     *                                 Updates the data only if stored value and value to be set are different.
+     * @param string $phone
      *
-     * @author          Can Berkol
-     *
-     * @since           1.0.0
-     * @version         1.0.0
-     *
-     * @use             $this->setModified()
-     *
-     * @param           mixed $phone
-     *
-     * @return          object                $this
+     * @return $this
      */
-    public function setPhone($phone) {
+    public function setPhone(\string $phone) {
         if(!$this->setModified('phone', $phone)->isModified()) {
             return $this;
         }
@@ -473,37 +319,18 @@ class Office extends CoreEntity
     }
 
     /**
-     * @name            getPhone ()
-     *                           Returns the value of phone property.
-     *
-     * @author          Can Berkol
-     *
-     * @since           1.0.0
-     * @version         1.0.0
-     *
-     * @return          mixed           $this->phone
+     * @return string
      */
     public function getPhone() {
         return $this->phone;
     }
 
     /**
-     * @name                  setSite ()
-     *                                Sets the site property.
-     *                                Updates the data only if stored value and value to be set are different.
+     * @param \BiberLtd\Bundle\SiteManagementBundle\Entity\Site $site
      *
-     * @author          Can Berkol
-     *
-     * @since           1.0.0
-     * @version         1.0.0
-     *
-     * @use             $this->setModified()
-     *
-     * @param           mixed $site
-     *
-     * @return          object                $this
+     * @return $this
      */
-    public function setSite($site) {
+    public function setSite(Site $site) {
         if(!$this->setModified('site', $site)->isModified()) {
             return $this;
         }
@@ -512,37 +339,18 @@ class Office extends CoreEntity
     }
 
     /**
-     * @name            getSite ()
-     *                          Returns the value of site property.
-     *
-     * @author          Can Berkol
-     *
-     * @since           1.0.0
-     * @version         1.0.0
-     *
-     * @return          mixed           $this->site
+     * @return \BiberLtd\Bundle\SiteManagementBundle\Entity\Site
      */
     public function getSite() {
         return $this->site;
     }
 
     /**
-     * @name                  setState ()
-     *                                 Sets the state property.
-     *                                 Updates the data only if stored value and value to be set are different.
+     * @param \BiberLtd\Bundle\LocationManagementBundle\Entity\State $state
      *
-     * @author          Can Berkol
-     *
-     * @since           1.0.0
-     * @version         1.0.0
-     *
-     * @use             $this->setModified()
-     *
-     * @param           mixed $state
-     *
-     * @return          object                $this
+     * @return $this
      */
-    public function setState($state) {
+    public function setState(State $state) {
         if(!$this->setModified('state', $state)->isModified()) {
             return $this;
         }
@@ -551,37 +359,18 @@ class Office extends CoreEntity
     }
 
     /**
-     * @name            getState ()
-     *                           Returns the value of state property.
-     *
-     * @author          Can Berkol
-     *
-     * @since           1.0.0
-     * @version         1.0.0
-     *
-     * @return          mixed           $this->state
+     * @return \BiberLtd\Bundle\LocationManagementBundle\Entity\State
      */
     public function getState() {
         return $this->state;
     }
 
     /**
-     * @name                  setUrlKey ()
-     *                                  Sets the url_key property.
-     *                                  Updates the data only if stored value and value to be set are different.
+     * @param string $url_key
      *
-     * @author          Can Berkol
-     *
-     * @since           1.0.0
-     * @version         1.0.0
-     *
-     * @use             $this->setModified()
-     *
-     * @param           mixed $url_key
-     *
-     * @return          object                $this
+     * @return $this
      */
-    public function setUrlKey($url_key) {
+    public function setUrlKey(\string $url_key) {
         if(!$this->setModified('url_key', $url_key)->isModified()) {
             return $this;
         }
@@ -590,103 +379,9 @@ class Office extends CoreEntity
     }
 
     /**
-     * @name            getUrlKey ()
-     *                            Returns the value of url_key property.
-     *
-     * @author          Can Berkol
-     *
-     * @since           1.0.0
-     * @version         1.0.0
-     *
-     * @return          mixed           $this->url_key
+     * @return string
      */
     public function getUrlKey() {
         return $this->url_key;
     }
-
-    /**
-     * @name        getExtraInfo ()
-     *
-     * @author      Said İmamoğlu
-     *
-     * @since       1.0.0
-     * @version     1.0.0
-     *
-     * @return      mixed
-     */
-    public function getExtraInfo()
-    {
-        return $this->extra_info;
-    }
-
-    /**
-     * @name        setExtraInfo ()
-     *
-     * @author      Said İmamoğlu
-     *
-     * @since       1.0.0
-     * @version     1.0.0
-     *
-     * @param       mixed $extra_info
-     *
-     * @return      $this
-     */
-    public function setExtraInfo($extra_info)
-    {
-        if (!$this->setModified('extra_info', $extra_info)->isModified()) {
-            return $this;
-        }
-        $this->extra_info = $extra_info;
-        return $this;
-    }
-
 }
-/**
- * Change Log:
- * **************************************
- * v1.0.2                      Said İmamoğlu
- * 10.07.2015
- * **************************************
- * A getExtraInfo()
- * A setExtraInfo()
- * **************************************
- * v1.0.1                      Can Berkol
- * 04.03.2013
- * **************************************
- * A getLon()
- * A getLan()
- * A setLan()
- * A setLon()
- *
- * **************************************
- * v1.0.0                      Murat Ünal
- * 10.09.2013
- * **************************************
- * A getAddress()
- * A getCity()
- * A getCoorX()
- * A getCoorY()
- * A getCountry()
- * A getEmail()
- * A getFax()
- * A getId()
- * A getName()
- * A getPhone()
- * A getSite()
- * A getState()
- * A getUrlKey()
- *
- * A setAddress()
- * A setCity()
- * A setCoorX()
- * A setCoorY()
- * A setCountry()
- * A setEmail()
- * A setFax()
- * A setName()
- * A setPhone()
- * A setSite()
- * A setState()
- * A setUrlKey()
- *
- */

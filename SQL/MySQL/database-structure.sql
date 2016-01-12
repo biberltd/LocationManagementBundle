@@ -1,17 +1,11 @@
-/*
-Navicat MariaDB Data Transfer
-
-Source Server         : localmariadb
-Source Server Version : 100108
-Source Host           : localhost:3306
-Source Database       : bod_core
-
-Target Server Type    : MariaDB
-Target Server Version : 100108
-File Encoding         : 65001
-
-Date: 2015-10-22 15:33:13
-*/
+/**
+ * @author		Can Berkol
+ *
+ * @copyright   Biber Ltd. (http://www.biberltd.com) (C) 2015
+ * @license     GPLv3
+ *
+ * @date        14.12.2015
+ */
 
 SET FOREIGN_KEY_CHECKS=0;
 
@@ -57,7 +51,7 @@ CREATE TABLE `city` (
   KEY `idxFCountryOfCity` (`country`) USING BTREE,
   CONSTRAINT `idxFCountryOfCity` FOREIGN KEY (`country`) REFERENCES `country` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `idxFStateOfCity` FOREIGN KEY (`state`) REFERENCES `state` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=1190 DEFAULT CHARSET=utf8 COLLATE=utf8_turkish_ci ROW_FORMAT=COMPACT;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_turkish_ci ROW_FORMAT=COMPACT;
 
 -- ----------------------------
 -- Table structure for city_localization
@@ -88,7 +82,7 @@ CREATE TABLE `country` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `idxUCountryId` (`id`) USING BTREE,
   UNIQUE KEY `idxUCountryIsoCode` (`code_iso`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COLLATE=utf8_turkish_ci ROW_FORMAT=COMPACT;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_turkish_ci ROW_FORMAT=COMPACT;
 
 -- ----------------------------
 -- Table structure for country_localization
@@ -107,6 +101,70 @@ CREATE TABLE `country_localization` (
   KEY `idxULocalizedNameOfCountry` (`country`,`language`,`name`) USING BTREE,
   CONSTRAINT `idxFCountryLocalizationLanguage` FOREIGN KEY (`country`) REFERENCES `country` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `idxFLocalizedCountry` FOREIGN KEY (`language`) REFERENCES `language` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_turkish_ci ROW_FORMAT=COMPACT;
+
+-- ----------------------------
+-- Table structure for district
+-- ----------------------------
+DROP TABLE IF EXISTS `district`;
+CREATE TABLE `district` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'System given id.',
+  `city` int(10) unsigned NOT NULL COMMENT 'City where district is located.',
+  `zip` varchar(10) COLLATE utf8_turkish_ci DEFAULT NULL COMMENT 'Zip code of district.',
+  PRIMARY KEY (`id`),
+  KEY `idxFCityOfDistrict` (`city`),
+  CONSTRAINT `idxFCityOfDistrict` FOREIGN KEY (`city`) REFERENCES `city` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_turkish_ci ROW_FORMAT=COMPACT;
+
+-- ----------------------------
+-- Table structure for district_localization
+-- ----------------------------
+DROP TABLE IF EXISTS `district_localization`;
+CREATE TABLE `district_localization` (
+  `language` int(5) unsigned NOT NULL COMMENT 'Localization language.',
+  `district` int(10) unsigned NOT NULL COMMENT 'Localized district.',
+  `name` varchar(45) COLLATE utf8_turkish_ci NOT NULL COMMENT 'Localized name of city.',
+  `url_key` varchar(155) COLLATE utf8_turkish_ci DEFAULT NULL COMMENT 'Localized url key of city.',
+  PRIMARY KEY (`language`,`district`),
+  UNIQUE KEY `idxUDistrictLocalization` (`language`,`district`) USING BTREE,
+  KEY `idxFDistrictLocalizationLanguage` (`language`) USING BTREE,
+  KEY `idxFLocalizedDistrict` (`district`) USING BTREE,
+  KEY `idxULocalizedDistrictName` (`name`,`language`,`district`) USING BTREE,
+  KEY `idxULocalizedDistrictUrlKey` (`url_key`,`language`,`district`) USING BTREE,
+  CONSTRAINT `idxFDistrictLocalizationLanguage` FOREIGN KEY (`language`) REFERENCES `language` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `idxFLocalizedDistrict` FOREIGN KEY (`district`) REFERENCES `district` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_turkish_ci ROW_FORMAT=COMPACT;
+
+-- ----------------------------
+-- Table structure for neighborhood
+-- ----------------------------
+DROP TABLE IF EXISTS `neighborhood`;
+CREATE TABLE `neighborhood` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'System given id.',
+  `district` int(10) unsigned NOT NULL COMMENT 'District where neighborhood is located.',
+  `zip` varchar(10) COLLATE utf8_turkish_ci DEFAULT NULL COMMENT 'Zip code of district.',
+  PRIMARY KEY (`id`),
+  KEY `idxFDistrictOfNeighborhood` (`district`),
+  CONSTRAINT `idxFDistrictOfNeighborhood` FOREIGN KEY (`district`) REFERENCES `district` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_turkish_ci ROW_FORMAT=COMPACT;
+
+-- ----------------------------
+-- Table structure for neighborhood_localization
+-- ----------------------------
+DROP TABLE IF EXISTS `neighborhood_localization`;
+CREATE TABLE `neighborhood_localization` (
+  `language` int(5) unsigned NOT NULL COMMENT 'Localization language.',
+  `neighborhood` int(10) unsigned NOT NULL COMMENT 'Localized city.',
+  `name` varchar(45) COLLATE utf8_turkish_ci NOT NULL COMMENT 'Localized name of city.',
+  `url_key` varchar(155) COLLATE utf8_turkish_ci DEFAULT NULL COMMENT 'Localized url key of city.',
+  PRIMARY KEY (`language`,`neighborhood`),
+  UNIQUE KEY `idxUNeighborhoodLocalization` (`language`,`neighborhood`) USING BTREE,
+  KEY `idxFNeighborhoodLocalizationLanguage` (`language`) USING BTREE,
+  KEY `idxFLocalizedNeighborhood` (`neighborhood`) USING BTREE,
+  KEY `idxULocalizedNeighborhoodName` (`name`,`language`,`neighborhood`) USING BTREE,
+  KEY `idxULocalizedNeighborhoodUrlKey` (`url_key`,`language`,`neighborhood`) USING BTREE,
+  CONSTRAINT `neighborhood_localization_ibfk_1` FOREIGN KEY (`neighborhood`) REFERENCES `neighborhood` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `neighborhood_localization_ibfk_2` FOREIGN KEY (`language`) REFERENCES `language` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_turkish_ci ROW_FORMAT=COMPACT;
 
 -- ----------------------------
@@ -130,18 +188,21 @@ CREATE TABLE `office` (
   `date_added` datetime NOT NULL COMMENT 'Date when the entry is first added.',
   `date_update` datetime NOT NULL COMMENT 'Date when the entry is last updated.',
   `date_removed` datetime DEFAULT NULL COMMENT 'Date when the entry is last removed.',
+  `member` int(10) unsigned DEFAULT NULL COMMENT 'Owner of office.',
   PRIMARY KEY (`id`),
-  UNIQUE KEY `idx_u_office_id` (`id`),
-  KEY `idx_f_office_country_idx` (`country`),
-  KEY `idx_f_office_city_idx` (`city`),
-  KEY `idx_f_office_state_idx` (`state`),
-  KEY `idx_f_office_site` (`site`),
-  KEY `idx_u_office_url_key` (`url_key`,`site`),
+  UNIQUE KEY `idxUOfficeId` (`id`) USING BTREE,
+  KEY `idxFOfficeCountry` (`country`) USING BTREE,
+  KEY `idxFOfficeCity` (`city`) USING BTREE,
+  KEY `idxFOfficeState` (`state`) USING BTREE,
+  KEY `idxFOfficeOfSite` (`site`) USING BTREE,
+  KEY `idxUOfficeUelKey` (`url_key`,`site`) USING BTREE,
+  KEY `idxFOwnerOfOffice` (`member`),
   CONSTRAINT `idxFCityOfOffice` FOREIGN KEY (`city`) REFERENCES `city` (`id`) ON UPDATE CASCADE,
   CONSTRAINT `idxFCountryOfOffice` FOREIGN KEY (`country`) REFERENCES `country` (`id`) ON UPDATE CASCADE,
+  CONSTRAINT `idxFOwnerOfOffice` FOREIGN KEY (`member`) REFERENCES `member` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `idxFSiteOfOffice` FOREIGN KEY (`site`) REFERENCES `site` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `idxFStateOfOffice` FOREIGN KEY (`state`) REFERENCES `state` (`id`) ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=110 DEFAULT CHARSET=utf8 COLLATE=utf8_turkish_ci ROW_FORMAT=COMPACT;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_turkish_ci ROW_FORMAT=COMPACT;
 
 -- ----------------------------
 -- Table structure for state
@@ -156,7 +217,7 @@ CREATE TABLE `state` (
   UNIQUE KEY `idx_u_state_code_iso` (`code_iso`),
   KEY `idx_f_state_country_idx` (`country`),
   CONSTRAINT `state_ibfk_1` FOREIGN KEY (`country`) REFERENCES `country` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=89 DEFAULT CHARSET=utf8 COLLATE=utf8_turkish_ci ROW_FORMAT=COMPACT;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_turkish_ci ROW_FORMAT=COMPACT;
 
 -- ----------------------------
 -- Table structure for state_localization

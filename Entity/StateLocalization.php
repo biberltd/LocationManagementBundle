@@ -1,19 +1,14 @@
 <?php
 /**
- * @name        StateLocalization
- * @package		BiberLtd\Bundle\CoreBundle\LocationManagementBundle
+ * @author		Can Berkol
  *
- * @author		Murat Ünal
- * @version     1.0.0
- * @date        10.09.2013
+ * @copyright   Biber Ltd. (http://www.biberltd.com) (C) 2015
+ * @license     GPLv3
  *
- * @copyright   Biber Ltd. (http://www.biberltd.com)
- * @license     GPL v3.0
- *
- * @description Model / Entity class.
- *
+ * @date        12.01.2015
  */
 namespace BiberLtd\Bundle\LocationManagementBundle\Entity;
+use BiberLtd\Bundle\MultiLanguageSupportBundle\Entity\Language;
 use Doctrine\ORM\Mapping AS ORM;
 use BiberLtd\Bundle\CoreBundle\CoreEntity;
 
@@ -33,11 +28,13 @@ class StateLocalization extends CoreEntity
 {
     /** 
      * @ORM\Column(type="string", length=45, nullable=false)
+     * @var string
      */
     private $name;
 
     /** 
      * @ORM\Column(type="string", length=155, nullable=false)
+     * @var string
      */
     private $url_key;
 
@@ -45,6 +42,7 @@ class StateLocalization extends CoreEntity
      * @ORM\Id
      * @ORM\ManyToOne(targetEntity="BiberLtd\Bundle\LocationManagementBundle\Entity\State", inversedBy="localizations")
      * @ORM\JoinColumn(name="state", referencedColumnName="id", nullable=false, onDelete="CASCADE")
+     * @var State
      */
     private $state;
 
@@ -52,26 +50,16 @@ class StateLocalization extends CoreEntity
      * @ORM\Id
      * @ORM\ManyToOne(targetEntity="BiberLtd\Bundle\MultiLanguageSupportBundle\Entity\Language")
      * @ORM\JoinColumn(name="language", referencedColumnName="id", nullable=false, onDelete="CASCADE")
+     * @var Language
      */
     private $language;
 
     /**
-     * @name                  setLanguage ()
-     *                                    Sets the language property.
-     *                                    Updates the data only if stored value and value to be set are different.
+     * @param \BiberLtd\Bundle\MultiLanguageSupportBundle\Entity\Language $language
      *
-     * @author          Can Berkol
-     *
-     * @since           1.0.0
-     * @version         1.0.0
-     *
-     * @use             $this->setModified()
-     *
-     * @param           mixed $language
-     *
-     * @return          object                $this
+     * @return $this
      */
-    public function setLanguage($language) {
+    public function setLanguage(Language $language) {
         if(!$this->setModified('language', $language)->isModified()) {
             return $this;
         }
@@ -80,37 +68,18 @@ class StateLocalization extends CoreEntity
     }
 
     /**
-     * @name            getLanguage ()
-     *                              Returns the value of language property.
-     *
-     * @author          Can Berkol
-     *
-     * @since           1.0.0
-     * @version         1.0.0
-     *
-     * @return          mixed           $this->language
+     * @return mixed
      */
     public function getLanguage() {
         return $this->language;
     }
 
     /**
-     * @name                  setName ()
-     *                                Sets the name property.
-     *                                Updates the data only if stored value and value to be set are different.
+     * @param string $name
      *
-     * @author          Can Berkol
-     *
-     * @since           1.0.0
-     * @version         1.0.0
-     *
-     * @use             $this->setModified()
-     *
-     * @param           mixed $name
-     *
-     * @return          object                $this
+     * @return $this
      */
-    public function setName($name) {
+    public function setName(\string $name) {
         if(!$this->setModified('name', $name)->isModified()) {
             return $this;
         }
@@ -119,37 +88,18 @@ class StateLocalization extends CoreEntity
     }
 
     /**
-     * @name            getName ()
-     *                          Returns the value of name property.
-     *
-     * @author          Can Berkol
-     *
-     * @since           1.0.0
-     * @version         1.0.0
-     *
-     * @return          mixed           $this->name
+     * @return string
      */
     public function getName() {
         return $this->name;
     }
 
     /**
-     * @name                  setState ()
-     *                                 Sets the state property.
-     *                                 Updates the data only if stored value and value to be set are different.
+     * @param \BiberLtd\Bundle\LocationManagementBundle\Entity\State $state
      *
-     * @author          Can Berkol
-     *
-     * @since           1.0.0
-     * @version         1.0.0
-     *
-     * @use             $this->setModified()
-     *
-     * @param           mixed $state
-     *
-     * @return          object                $this
+     * @return $this
      */
-    public function setState($state) {
+    public function setState(State $state) {
         if(!$this->setModified('state', $state)->isModified()) {
             return $this;
         }
@@ -158,37 +108,18 @@ class StateLocalization extends CoreEntity
     }
 
     /**
-     * @name            getState ()
-     *                           Returns the value of state property.
-     *
-     * @author          Can Berkol
-     *
-     * @since           1.0.0
-     * @version         1.0.0
-     *
-     * @return          mixed           $this->state
+     * @return \BiberLtd\Bundle\LocationManagementBundle\Entity\State
      */
     public function getState() {
         return $this->state;
     }
 
     /**
-     * @name                  setUrlKey ()
-     *                                  Sets the url_key property.
-     *                                  Updates the data only if stored value and value to be set are different.
+     * @param string $url_key
      *
-     * @author          Can Berkol
-     *
-     * @since           1.0.0
-     * @version         1.0.0
-     *
-     * @use             $this->setModified()
-     *
-     * @param           mixed $url_key
-     *
-     * @return          object                $this
+     * @return $this
      */
-    public function setUrlKey($url_key) {
+    public function setUrlKey(\string $url_key) {
         if(!$this->setModified('url_key', $url_key)->isModified()) {
             return $this;
         }
@@ -197,38 +128,10 @@ class StateLocalization extends CoreEntity
     }
 
     /**
-     * @name            getUrlKey ()
-     *                            Returns the value of url_key property.
-     *
-     * @author          Can Berkol
-     *
-     * @since           1.0.0
-     * @version         1.0.0
-     *
-     * @return          mixed           $this->url_key
+     * @return string
      */
     public function getUrlKey() {
         return $this->url_key;
     }
-    /******************************************************************
-     * PUBLIC SET AND GET FUNCTIONS                                   *
-     ******************************************************************/
 
 }
-/**
- * Change Log:
- * **************************************
- * v1.0.0                      Murat Ünal
- * 10.09.2013
- * **************************************
- * A getLanguage()
- * A getName()
- * A getState()
- * A getUrlKey()
- *
- * A setLanguage()
- * A setName()
- * A setState()
- * A setUrlKey()
- *
- */

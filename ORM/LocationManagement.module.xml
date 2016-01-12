@@ -18,10 +18,11 @@
       <field name="date_added" description="Date when the entry is first added." type="datetime" required="true" uuid="71d2a579-6f84-47f6-917b-1fbba5d0555c"/>
       <field name="date_updated" description="Date when the enty is last updated." type="datetime" required="true" uuid="d62b34cb-fdad-41fe-b647-c8136169e3f4"/>
       <field name="date_removed" description="Date when the entry is marked as removed." type="datetime" uuid="d84c040f-4460-4002-919f-fba043cc0b38"/>
-      <index name="idx_u_office_id" unique="true">
+      <field name="member" type="integer" size="10" uuid="e58c9154-17b3-4658-8ee2-4cd4ad2ab31f"/>
+      <index name="idxUOfficeId" unique="true">
         <index-field name="id"/>
       </index>
-      <index name="idx_u_office_url_key">
+      <index name="idxUOfficeUrlKey" unique="true">
         <index-field name="url_key"/>
         <index-field name="site"/>
       </index>
@@ -47,6 +48,12 @@
     </association>
     <association from="\BiberLtd\Bundle\LocationManagementBundle\Entity\Office" to="\BiberLtd\Bundle\SiteManagementBundle\Entity\Site" caption="idxFSiteOfOffice" inverse-alias="site" many-owner="true" many-inverse="false" uuid="78171fae-020e-4e19-b965-b04f4eb85c76">
       <association-field from="site" to="id"/>
+      <orm-attributes>
+        <attribute name="on-delete">CASCADE</attribute>
+      </orm-attributes>
+    </association>
+    <association from="\BiberLtd\Bundle\LocationManagementBundle\Entity\Office" to="\BiberLtd\Bundle\MemberManagementBundle\Entity\Member" caption="idxFOwnerOfOffice" inverse-alias="member" many-owner="true" many-inverse="false" uuid="7280b037-c732-4191-b551-b59d4f368188">
+      <association-field from="member" to="id"/>
       <orm-attributes>
         <attribute name="on-delete">CASCADE</attribute>
       </orm-attributes>

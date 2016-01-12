@@ -1,31 +1,21 @@
 <?php
 /**
- * @package	    LocationManagementBundle
- * @subpackage	Services
- * @name	    LocationManagementModel
+ * @author		Can Berkol
  *
- * @author      Can Berkol
- * @author      Said İmamoğlu
+ * @copyright   Biber Ltd. (http://www.biberltd.com) (C) 2015
+ * @license     GPLv3
  *
- * @copyright   Biber Ltd. (www.biberltd.com)
- *
- * @version     1.1.2
- *
- * @date        01.11.2015
+ * @date        12.01.2015
  */
 
 namespace BiberLtd\Bundle\LocationManagementBundle\Services;
 
-/** Extends CoreModel */
 use BiberLtd\Bundle\CoreBundle\CoreModel;
-/** Entities to be used */
 use BiberLtd\Bundle\CoreBundle\Responses\ModelResponse;
 use BiberLtd\Bundle\LocationManagementBundle\Entity as BundleEntity;
-/** Helper Models */
 use BiberLtd\Bundle\PhpOrientBundle\Odm\Types\DateTime;
 use BiberLtd\Bundle\SiteManagementBundle\Services as SMMService;
 use BiberLtd\Bundle\MultiLanguageSupportBundle\Entity as MLSEntity;
-/** Core Service */
 use BiberLtd\Bundle\CoreBundle\Services as CoreServices;
 
 class LocationManagementModel extends CoreModel {
@@ -50,6 +40,11 @@ class LocationManagementModel extends CoreModel {
 			'c'  => array('name' => 'LocationManagementBundle:City', 'alias' => 'c'),
 			'cil'=> array('name' => 'LocationManagementBundle:CheckinLogs', 'alias' => 'cil'),
 			'cl' => array('name' => 'LocationManagementBundle:CityLocalization', 'alias' => 'cl'),
+			'd'  => array('name' => 'LocationManagementBundle:District', 'alias' => 'd'),
+			'dl' => array('name' => 'LocationManagementBundle:DistrictLocalization', 'alias' => 'dl'),
+			'm'  => array('name' => 'MemberManagement:Member', 'alias' => 'm'),
+			'n'  => array('name' => 'LocationManagementBundle:Neighborhood', 'alias' => 'n'),
+			'nl' => array('name' => 'LocationManagementBundle:NeighborhoodLocalization', 'alias' => 'nl'),
 			'o'  => array('name' => 'LocationManagementBundle:Office', 'alias' => 'o'),
 			's'  => array('name' => 'LocationManagementBundle:State', 'alias' => 's'),
 			'sl' => array('name' => 'LocationManagementBundle:StateLocalization', 'alias' => 'sl'),
@@ -59,13 +54,7 @@ class LocationManagementModel extends CoreModel {
 	}
 
 	/**
-	 * @name            __destruct ()
-	 *
-	 * @author          Said İmamoğlu
-	 *
-	 * @since           1.0.0
-	 * @version         1.0.0
-	 *
+	 * Deconstructor
 	 */
 	public function __destruct() {
 		foreach ($this as $property => $value) {
@@ -74,37 +63,20 @@ class LocationManagementModel extends CoreModel {
 	}
 
 	/**
-	 * @name            deleteCheckinLog()
+	 * @param mixed $cLog
 	 *
-	 * @since           1.1.1
-	 * @version         1.1.1
-	 *
-	 * @author          Can Berkol
-	 *
-	 * @use             $this->createException()
-	 *
-	 * @param           mixed   $cLog
-	 *
-	 * @return          array   $response
-	 *
+	 * @return \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
 	 */
 	public function deleteCheckinLog($cLog) {
 		return $this->deleteCheckinLogs(array($cLog));
 	}
 
 	/**
-	 * @name            deleteCheckinLogs()
+	 * @param array $collection
 	 *
-	 * @since           1.1.1
-	 * @version         1.1.1
-	 *
-	 * @use             $this->createException()
-	 *
-	 * @param           array       $collection
-	 *
-	 * @return          \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
+	 * @return \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
 	 */
-	public function deleteCheckinLogs($collection) {
+	public function deleteCheckinLogs(array $collection) {
 		$timeStamp = time();
 		if (!is_array($collection)) {
 			return $this->createException('InvalidParameterValueException', 'Invalid parameter value. Parameter must be an array collection', 'E:S:001');
@@ -130,39 +102,22 @@ class LocationManagementModel extends CoreModel {
 
 		return new ModelResponse(null, 0, 0, null, false, 'S:D:001', 'Selected entries have been successfully removed from database.', $timeStamp, time());
 	}
+
 	/**
-	 * @name            deleteCity ()
+	 * @param mixed $city
 	 *
-	 * @since           1.0.0
-	 * @version         1.0.6
-	 *
-	 * @author          Can Berkol
-	 * @author          Said İmamoğlu
-	 *
-	 * @use             $this->createException()
-	 *
-	 * @param           mixed $city
-	 *
-	 * @return          array   $response
-	 *
+	 * @return \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
 	 */
 	public function deleteCity($city) {
 		return $this->deleteCities(array($city));
 	}
 
 	/**
-	 * @name                  deleteCities ()
+	 * @param array $collection
 	 *
-	 * @since           1.0.0
-	 * @version         1.0.6
-	 *
-	 * @use             $this->createException()
-	 *
-	 * @param           array $collection
-	 *
-	 * @return          \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
+	 * @return \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
 	 */
-	public function deleteCities($collection) {
+	public function deleteCities(array $collection) {
 		$timeStamp = time();
 		if (!is_array($collection)) {
 			return $this->createException('InvalidParameterValueException', 'Invalid parameter value. Parameter must be an array collection', 'E:S:001');
@@ -190,23 +145,12 @@ class LocationManagementModel extends CoreModel {
 	}
 
 	/**
-	 * @name                  doesCityExist ()
+	 * @param mixed $city
+	 * @param bool $bypass
 	 *
-	 * @since           1.0.0
-	 * @version         1.0.0
-	 *
-	 * @author          Can Berkol
-	 * @author          Said İmamoğlu
-	 *
-	 * @use             $this->getCity()
-	 *
-	 * @param           mixed $city
-	 * @param           bool  $bypass
-	 *
-	 * @return          array   $response
-	 *
+	 * @return \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse|bool
 	 */
-	public function doesCityExist($city, $bypass = false) {
+	public function doesCityExist($city, \bool $bypass = false) {
 		$response = $this->getCity($city);
 		$exist = true;
 		if ($response->error->exist) {
@@ -219,19 +163,11 @@ class LocationManagementModel extends CoreModel {
 
 		return $response;
 	}
+
 	/**
-	 * @name            getCheckinLog()
+	 * @param mixed $cLog
 	 *
-	 * @since           1.1.1
-	 * @version         1.1.1
-	 *
-	 * @author          Can Berkol
-	 *
-	 * @use             $this->createException()
-	 *
-	 * @param           mixed       $cLog
-	 *
-	 * @return          \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
+	 * @return \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
 	 */
 	public function getCheckinLog($cLog) {
 		$timeStamp = time();
@@ -252,19 +188,9 @@ class LocationManagementModel extends CoreModel {
 	}
 
 	/**
-	 * @name            getCity ()
+	 * @param mixed $city
 	 *
-	 * @since           1.0.0
-	 * @version         1.0.6
-	 *
-	 * @author          Can Berkol
-	 * @author          Said İmamoğlu
-	 *
-	 * @use             $this->createException()
-	 *
-	 * @param           mixed $city
-	 *
-	 * @return          \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
+	 * @return \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
 	 */
 	public function getCity($city) {
 		$timeStamp = time();
@@ -295,19 +221,12 @@ class LocationManagementModel extends CoreModel {
 	}
 
 	/**
-	 * @name                   getCityByUrlKey ()
+	 * @param string $urlKey
+	 * @param null|mixed $language
 	 *
-	 * @since           1.0.6
-	 * @version         1.0.6
-	 *
-	 * @author          Can Berkol
-	 *
-	 * @param           mixed  $urlKey
-	 * @param            mixed $language
-	 *
-	 * @return          \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
+	 * @return \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
 	 */
-	public function getCityByUrlKey($urlKey, $language = null) {
+	public function getCityByUrlKey(\string $urlKey, $language = null) {
 		$timeStamp = time();
 		if (!is_string($urlKey)) {
 			return $this->createException('InvalidParameterValueException', '$urlKey must be a string.', 'E:S:007');
@@ -349,45 +268,27 @@ class LocationManagementModel extends CoreModel {
 	}
 
 	/**
-	 * @name                  insertCity ()
+	 * @param mixed $city
 	 *
-	 * @since           1.0.0
-	 * @version         1.0.6
-	 * @author          Can Berkol
-	 * @author          Said İmamoğlu
-	 *
-	 * @use             $this->insertCities()
-	 *
-	 * @param           mixed $city
-	 *
-	 * @return          array   $response
-	 *
+	 * @return array
 	 */
 	public function insertCity($city) {
 		return $this->insertCities(array($city));
 	}
 
 	/**
-	 * @name                  insertCityLocalizations ()
+	 * @param array $collection
 	 *
-	 * @since           1.0.3
-	 * @version         1.0.6
-	 * @author          Can Berkol
-	 *
-	 * @use             $this->createException()
-	 *
-	 * @param           array $collection
-	 *
-	 * @return          array           $response
+	 * @return \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
 	 */
-	public function insertCityLocalizations($collection) {
+	public function insertCityLocalizations(array $collection) {
 		$timeStamp = time();
 		/** Parameter must be an array */
 		if (!is_array($collection)) {
 			return $this->createException('InvalidParameter', 'Array', 'err.invalid.parameter.collection');
 		}
 		$countInserts = 0;
-		$insertedItems = array();
+		$insertedItems = [];
 		foreach ($collection as $item) {
 			if ($item instanceof BundleEntity\CityLocalization) {
 				$entity = $item;
@@ -434,30 +335,19 @@ class LocationManagementModel extends CoreModel {
 	}
 
 	/**
-	 * @name                  insertCities ()
+	 * @param array $collection
 	 *
-	 * @since           1.0.0
-	 * @version         1.0.6
-	 *
-	 * @author          Can Berkol
-	 * @author          Said İmamoğlu
-	 *
-	 * @use             $this->createException()
-	 *
-	 * @param           array $collection
-	 *
-	 * @return          array   $response
-	 *
+	 * @return \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
 	 */
-	public function insertCities($collection) {
+	public function insertCities(array $collection) {
 		$timeStamp = time();
 		if (!is_array($collection)) {
 			return $this->createException('InvalidParameterValueException', 'Invalid parameter value. Parameter must be an array collection', 'E:S:001');
 		}
 		$countInserts = 0;
 		$countLocalizations = 0;
-		$insertedItems = array();
-		$localizations = array();
+		$insertedItems = [];
+		$localizations = [];
 		$now = new \DateTime('now', new \DateTimeZone($this->kernel->getContainer()->getParameter('app_timezone')));
 		foreach ($collection as $data) {
 			if ($data instanceof BundleEntity\City) {
@@ -467,7 +357,7 @@ class LocationManagementModel extends CoreModel {
 				$countInserts++;
 			}
 			else if (is_object($data)) {
-				$localizations = array();
+				$localizations = [];
 				$entity = new BundleEntity\City;
 				foreach ($data as $column => $value) {
 					$localeSet = false;
@@ -517,24 +407,13 @@ class LocationManagementModel extends CoreModel {
 	}
 
 	/**
-	 * @name            listCities ()
+	 * @param array|null $filter
+	 * @param array|null $sortOrder
+	 * @param array|null $limit
 	 *
-	 * @since           1.0.0
-	 * @version         1.0.7
-	 *
-	 * @author          Can Berkol
-	 * @author          Said İmamoğlu
-	 *
-	 * @use             $this->createException()
-	 *
-	 * @param           array $filter    Multi dimensional array
-	 * @param           array $sortOrder 'coloumn' => 'asc|desc'
-	 * @param           array $limit     start,count
-	 *
-	 * @return          \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
-	 *
+	 * @return \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
 	 */
-	public function listCities($filter = null, $sortOrder = null, $limit = null, $query_str = null, $returnLocal = false) {
+	public function listCities(array $filter = null, array $sortOrder = null, array $limit = null) {
 		$timeStamp = time();
 		if (!is_array($sortOrder) && !is_null($sortOrder)) {
 			return $this->createException('InvalidSortOrderException', '$sortOrder must be an array with key => value pairs where value can only be "asc" or "desc".', 'E:S:002');
@@ -577,9 +456,9 @@ class LocationManagementModel extends CoreModel {
 		$q = $this->addLimit($q, $limit);
 
 		$result = $q->getResult();
-		$unique = array();
+		$unique = [];
 
-		$entities = array();
+		$entities = [];
 		foreach ($result as $entry) {
 			$id = $entry->getCity()->getId();
 			if (!isset($unique[$id])) {
@@ -594,29 +473,151 @@ class LocationManagementModel extends CoreModel {
 		}
 
 		return new ModelResponse($entities, $totalRows, 0, null, false, 'S:D:002', 'Entries successfully fetched from database.', $timeStamp, time());
-
 	}
-
 	/**
-	 * @name            listCitiesOfCountry ()
+	 * @param array|null $filter
+	 * @param array|null $sortOrder
+	 * @param array|null $limit
 	 *
-	 * @since           1.0.0
-	 * @version         1.0.6
-	 *
-	 * @author          Can Berkol
-	 * @author          Said İmamoğlu
-	 *
-	 * @use             $this->createException()
-	 * @use             $this->listCities()
-	 *
-	 * @param           mixed $country
-	 * @param           array $ortOrder
-	 * @param           array $limit
-	 *
-	 * @return          array   $response
-	 *
+	 * @return \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
 	 */
-	public function listCitiesOfCountry($country, $ortOrder = null, $limit = null) {
+	public function listDistricts(array $filter = null, array $sortOrder = null, array $limit = null) {
+		$timeStamp = time();
+		if (!is_array($sortOrder) && !is_null($sortOrder)) {
+			return $this->createException('InvalidSortOrderException', '$sortOrder must be an array with key => value pairs where value can only be "asc" or "desc".', 'E:S:002');
+		}
+		$oStr = $wStr = $gStr = $fStr = '';
+
+		$qStr = 'SELECT ' . $this->entity['dl']['alias'] . ', ' . $this->entity['dl']['alias']
+			. ' FROM ' . $this->entity['dl']['name'] . ' ' . $this->entity['dl']['alias']
+			. ' JOIN ' . $this->entity['dl']['alias'] . '.district ' . $this->entity['d']['alias'];
+
+		if (!is_null($sortOrder)) {
+			foreach ($sortOrder as $column => $direction) {
+				switch ($column) {
+					case 'id':
+					case 'country':
+					case 'state':
+					case 'code':
+						$column = $this->entity['c']['alias'] . '.' . $column;
+						break;
+					case 'language':
+					case 'city':
+					case 'name':
+					case 'url_key':
+						$column = $this->entity['cl']['alias'] . '.' . $column;
+						break;
+				}
+				$oStr .= ' ' . $column . ' ' . strtoupper($direction) . ', ';
+			}
+			$oStr = rtrim($oStr, ', ');
+			$oStr = ' ORDER BY ' . $oStr . ' ';
+		}
+
+		if (!is_null($filter)) {
+			$fStr = $this->prepareWhere($filter);
+			$wStr .= ' WHERE ' . $fStr;
+		}
+
+		$qStr .= $wStr . $gStr . $oStr;
+		$q = $this->em->createQuery($qStr);
+		$q = $this->addLimit($q, $limit);
+
+		$result = $q->getResult();
+		$unique = [];
+
+		$entities = [];
+		foreach ($result as $entry) {
+			$id = $entry->getDistrict()->getId();
+			if (!isset($unique[$id])) {
+				$entities[] = $entry->getDistrict();
+				$unique[$id] = '';
+			}
+		}
+		unset($unique);
+		$totalRows = count($entities);
+		if ($totalRows < 1) {
+			return new ModelResponse(null, 0, 0, null, true, 'E:D:002', 'No entries found in database that matches to your criterion.', $timeStamp, time());
+		}
+
+		return new ModelResponse($entities, $totalRows, 0, null, false, 'S:D:002', 'Entries successfully fetched from database.', $timeStamp, time());
+	}
+	/**
+	 * @param array|null $filter
+	 * @param array|null $sortOrder
+	 * @param array|null $limit
+	 *
+	 * @return \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
+	 */
+	public function listNeighborhoods(array $filter = null, array $sortOrder = null, array $limit = null) {
+		$timeStamp = time();
+		if (!is_array($sortOrder) && !is_null($sortOrder)) {
+			return $this->createException('InvalidSortOrderException', '$sortOrder must be an array with key => value pairs where value can only be "asc" or "desc".', 'E:S:002');
+		}
+		$oStr = $wStr = $gStr = $fStr = '';
+
+		$qStr = 'SELECT ' . $this->entity['nl']['alias'] . ', ' . $this->entity['nl']['alias']
+			. ' FROM ' . $this->entity['nl']['name'] . ' ' . $this->entity['nl']['alias']
+			. ' JOIN ' . $this->entity['nl']['alias'] . '.neighborhood ' . $this->entity['nl']['alias'];
+
+		if (!is_null($sortOrder)) {
+			foreach ($sortOrder as $column => $direction) {
+				switch ($column) {
+					case 'id':
+					case 'country':
+					case 'state':
+					case 'code':
+						$column = $this->entity['c']['alias'] . '.' . $column;
+						break;
+					case 'language':
+					case 'city':
+					case 'name':
+					case 'url_key':
+						$column = $this->entity['cl']['alias'] . '.' . $column;
+						break;
+				}
+				$oStr .= ' ' . $column . ' ' . strtoupper($direction) . ', ';
+			}
+			$oStr = rtrim($oStr, ', ');
+			$oStr = ' ORDER BY ' . $oStr . ' ';
+		}
+
+		if (!is_null($filter)) {
+			$fStr = $this->prepareWhere($filter);
+			$wStr .= ' WHERE ' . $fStr;
+		}
+
+		$qStr .= $wStr . $gStr . $oStr;
+		$q = $this->em->createQuery($qStr);
+		$q = $this->addLimit($q, $limit);
+
+		$result = $q->getResult();
+		$unique = [];
+
+		$entities = [];
+		foreach ($result as $entry) {
+			$id = $entry->getNeighborhood()->getId();
+			if (!isset($unique[$id])) {
+				$entities[] = $entry->getNeighborhood();
+				$unique[$id] = '';
+			}
+		}
+		unset($unique);
+		$totalRows = count($entities);
+		if ($totalRows < 1) {
+			return new ModelResponse(null, 0, 0, null, true, 'E:D:002', 'No entries found in database that matches to your criterion.', $timeStamp, time());
+		}
+
+		return new ModelResponse($entities, $totalRows, 0, null, false, 'S:D:002', 'Entries successfully fetched from database.', $timeStamp, time());
+	}
+	/**
+	 * @param mixed $country
+	 * @param array|null $ortOrder
+	 * @param array|null $limit
+	 *
+	 * @return \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
+	 */
+	public function listCitiesOfCountry($country, array $ortOrder = null, array $limit = null) {
 		$response = $this->getCountry($country);
 		if ($response->error->exist) {
 			return $response;
@@ -639,25 +640,13 @@ class LocationManagementModel extends CoreModel {
 	}
 
 	/**
-	 * @name                  listCitiesOfState ()
+	 * @param mixed $state
+	 * @param array|null $sortOrder
+	 * @param array|null $limit
 	 *
-	 * @since           1.0.0
-	 * @version         1.0.6
-	 *
-	 * @author          Can Berkol
-	 * @author          Said İmamoğlu
-	 *
-	 * @use             $this->createException()
-	 * @use             $this->listCities()
-	 *
-	 * @param           mixed $state
-	 * @param           array $ortOrder
-	 * @param           array $limit
-	 *
-	 * @return          array   $response
-	 *
+	 * @return \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
 	 */
-	public function listCitiesOfState($state, $ortOrder = null, $limit = null) {
+	public function listCitiesOfState($state, array $sortOrder = null, array $limit = null) {
 		$response = $this->getState($state);
 		if ($response->error->exist) {
 			return $response;
@@ -676,53 +665,30 @@ class LocationManagementModel extends CoreModel {
 			)
 		);
 
-		return $this->listCities($filter, $ortOrder, $limit);
+		return $this->listCities($filter, $sortOrder, $limit);
 	}
 
 	/**
-	 * @name                  updateCity ()
+	 * @param mixed|$city
 	 *
-	 * @since           1.0.0
-	 * @version         1.0.6
-	 *
-	 * @author          Can Berkol
-	 * @author          Said İmamoğlu
-	 *
-	 * @use             $this->updateCities()
-	 *
-	 * @param           mixed $city
-	 *
-	 * @return          array   $response
-	 *
+	 * @return array
 	 */
 	public function updateCity($city) {
 		return $this->updateCities(array($city));
 	}
 
 	/**
-	 * @name                  updateCities ()
-	 *                                     Updates one or more cities from database.
+	 * @param array $collection
 	 *
-	 * @since           1.0.0
-	 * @version         1.0.3
-	 *
-	 * @author          Can Berkol
-	 * @author          Said İmamoğlu
-	 *
-	 * @use             $this->createException()
-	 *
-	 * @param           mixed $collection  Entity or post data
-	 *
-	 * @return          array   $response
-	 *
+	 * @return \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
 	 */
-	public function updateCities($collection) {
+	public function updateCities(array $collection) {
 		$timeStamp = time();
 		if (!is_array($collection)) {
 			return $this->createException('InvalidParameterValueException', 'Invalid parameter value. Parameter must be an array collection', 'E:S:001');
 		}
 		$countUpdates = 0;
-		$updatedItems = array();
+		$updatedItems = [];
 		foreach ($collection as $data) {
 			if ($data instanceof BundleEntity\City) {
 				$entity = $data;
@@ -743,7 +709,7 @@ class LocationManagementModel extends CoreModel {
 					$set = 'set' . $this->translateColumnName($column);
 					switch ($column) {
 						case 'local':
-							$localizations = array();
+							$localizations = [];
 							foreach ($value as $langCode => $translation) {
 								$localization = $oldEntity->getLocalization($langCode, true);
 								$newLocalization = false;
@@ -804,41 +770,20 @@ class LocationManagementModel extends CoreModel {
 	}
 
 	/**
-	 * @name                  deleteCountry ()
+	 * @param mixed $country
 	 *
-	 * @since           1.0.0
-	 * @version         1.0.6
-	 *
-	 * @author          Can Berkol
-	 * @author          Said İmamoğlu
-	 *
-	 * @use             $this->createException()
-	 *
-	 * @param           mixed $country
-	 *
-	 * @return          array   $response
-	 *
+	 * @return array
 	 */
-
 	public function deleteCountry($country) {
 		return $this->deleteCountries(array($country));
 	}
 
 	/**
-	 * @name                  deleteCities ()
+	 * @param array $collection
 	 *
-	 * @since           1.0.0
-	 * @version         1.0.6
-	 *
-	 * @author          Can Berkol
-	 * @author          Said İmamoğlu
-	 *
-	 * @param           mixed $collection  Entity or post data
-	 *
-	 * @return          array   $response
-	 *
+	 * @return \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
 	 */
-	public function deleteCountries($collection) {
+	public function deleteCountries(array $collection) {
 		$timeStamp = time();
 		if (!is_array($collection)) {
 			return $this->createException('InvalidParameterValueException', 'Invalid parameter value. Parameter must be an array collection', 'E:S:001');
@@ -866,23 +811,12 @@ class LocationManagementModel extends CoreModel {
 	}
 
 	/**
-	 * @name                  doesCountryExist ()
+	 * @param mixed $country
+	 * @param bool $bypass
 	 *
-	 * @since           1.0.0
-	 * @version         1.0.6
-	 *
-	 * @author          Can Berkol
-	 * @author          Said İmamoğlu
-	 *
-	 * @use             $this->createException()
-	 *
-	 * @param           mixed $country
-	 * @param           bool  $bypass
-	 *
-	 * @return          array   $response
-	 *
+	 * @return \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse|bool
 	 */
-	public function doesCountryExist($country, $bypass = false) {
+	public function doesCountryExist($country, \bool $bypass = false) {
 		$response = $this->getCountry($country);
 		$exist = true;
 		if ($response->error->exist) {
@@ -897,19 +831,9 @@ class LocationManagementModel extends CoreModel {
 	}
 
 	/**
-	 * @name                  getCountry ()
+	 * @param mixed $country
 	 *
-	 * @since           1.0.0
-	 * @version         1.0.6
-	 *
-	 * @author          Can Berkol
-	 * @author          Said İmamoğlu
-	 *
-	 * @use             $this->createException()
-	 *
-	 * @param           mixed $country
-	 *
-	 * @return          \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
+	 * @return \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
 	 */
 	public function getCountry($country) {
 		$timeStamp = time();
@@ -940,19 +864,12 @@ class LocationManagementModel extends CoreModel {
 	}
 
 	/**
-	 * @name                   getCountryByUrlKey ()
+	 * @param string $urlKey
+	 * @param null|mixed   $language
 	 *
-	 * @since           1.0.6
-	 * @version         1.0.6
-	 *
-	 * @author          Can Berkol
-	 *
-	 * @param           mixed  $urlKey
-	 * @param            mixed $language
-	 *
-	 * @return          \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
+	 * @return array|\BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
 	 */
-	public function getCountryByUrlKey($urlKey, $language = null) {
+	public function getCountryByUrlKey(\string $urlKey, $language = null) {
 		$timeStamp = time();
 		if (!is_string($urlKey)) {
 			return $this->createException('InvalidParameterValueException', '$urlKey must be a string.', 'E:S:007');
@@ -992,47 +909,27 @@ class LocationManagementModel extends CoreModel {
 	}
 
 	/**
-	 * @name                  insertCountry ()
+	 * @param mixed $country
 	 *
-	 * @since           1.0.0
-	 * @version         1.0.6
-	 *
-	 * @author          Can Berkol
-	 * @author          Said İmamoğlu
-	 *
-	 * @use             $this->insertCountries()
-	 *
-	 * @param           mixed $country
-	 *
-	 * @return          array   $response
-	 *
+	 * @return array
 	 */
-
 	public function insertCountry($country) {
 		return $this->insertCountries(array($country));
 	}
 
 	/**
-	 * @name                  insertCountryLocalizations ()
+	 * @param array $collection
 	 *
-	 * @since           1.0.3
-	 * @version         1.0.6
-	 * @author          Can Berkol
-	 *
-	 * @use             $this->createException()
-	 *
-	 * @param           array $collection
-	 *
-	 * @return          array           $response
+	 * @return \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
 	 */
-	public function insertCountryLocalizations($collection) {
+	public function insertCountryLocalizations(array $collection) {
 		$timeStamp = time();
 		/** Parameter must be an array */
 		if (!is_array($collection)) {
 			return $this->createException('InvalidParameter', 'Array', 'err.invalid.parameter.collection');
 		}
 		$countInserts = 0;
-		$insertedItems = array();
+		$insertedItems = [];
 		foreach ($collection as $item) {
 			if ($item instanceof BundleEntity\CountryLocalization) {
 				$entity = $item;
@@ -1079,30 +976,19 @@ class LocationManagementModel extends CoreModel {
 	}
 
 	/**
-	 * @name                  insertCountries ()
-	 *                                        Inserts one or more country into database
+	 * @param array $collection
 	 *
-	 * @since           1.0.0
-	 * @version         1.0.6
-	 *
-	 * @author          Can Berkol
-	 * @author          Said İmamoğlu
-	 *
-	 * @use             $this->createException()
-	 *
-	 * @param           mixed $collection     Entity or post data
-	 *
-	 * @return          array   $response
+	 * @return \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
 	 */
-	public function insertCountries($collection) {
+	public function insertCountries(array $collection) {
 		$timeStamp = time();
 		if (!is_array($collection)) {
 			return $this->createException('InvalidParameterValueException', 'Invalid parameter value. Parameter must be an array collection', 'E:S:001');
 		}
 		$countInserts = 0;
 		$countLocalizations = 0;
-		$insertedItems = array();
-		$localizations = array();
+		$insertedItems = [];
+		$localizations = [];
 		$now = new \DateTime('now', new \DateTimeZone($this->kernel->getContainer()->getParameter('app_timezone')));
 		foreach ($collection as $data) {
 			if ($data instanceof BundleEntity\Country) {
@@ -1112,7 +998,7 @@ class LocationManagementModel extends CoreModel {
 				$countInserts++;
 			}
 			else if (is_object($data)) {
-				$localizations = array();
+				$localizations = [];
 				$entity = new BundleEntity\Country;
 				foreach ($data as $column => $value) {
 					$localeSet = false;
@@ -1150,28 +1036,13 @@ class LocationManagementModel extends CoreModel {
 	}
 
 	/**
-	 * @name                  listCountries ()
-	 *                                      Lists countries from database
+	 * @param array|null $filter
+	 * @param array|null $sortOrder
+	 * @param array|null $limit
 	 *
-	 * @since           1.0.0
-	 * @version         1.0.6
-	 *
-	 * @author          Can Berkol
-	 * @author          Said İmamoğlu
-	 *
-	 * @use             $this->createException()
-	 * @use             $this->addLimit()
-	 *
-	 *
-	 * @param           array $filter
-	 * @param           array $sortOrder
-	 * @param           array $limit
-	 *
-	 * @return          array   $response
-	 *
+	 * @return \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
 	 */
-
-	public function listCountries($filter = null, $sortOrder = null, $limit = null, $query_str = null, $returnLocal = false) {
+	public function listCountries(array $filter = null, array $sortOrder = null, array $limit = null) {
 		$timeStamp = time();
 		if (!is_array($sortOrder) && !is_null($sortOrder)) {
 			return $this->createException('InvalidSortOrderException', '$sortOrder must be an array with key => value pairs where value can only be "asc" or "desc".', 'E:S:002');
@@ -1214,7 +1085,7 @@ class LocationManagementModel extends CoreModel {
 		$q = $this->addLimit($q, $limit);
 		$result = $q->getResult();
 
-		$entities = array();
+		$entities = [];
 		foreach ($result as $entry) {
 			$id = $entry->getCountry()->getId();
 			if (!isset($unique[$id])) {
@@ -1232,49 +1103,26 @@ class LocationManagementModel extends CoreModel {
 	}
 
 	/**
-	 * @name                  updateCountry ()
+	 * @param mixed $country
 	 *
-	 * @since           1.0.0
-	 * @version         1.0.6
-	 *
-	 * @author          Said İmamoğlu
-	 * @author          Can Berkol
-	 *
-	 * @use             $this->updateCountries()
-	 *
-	 * @param           mixed $country
-	 *
-	 * @return          array   $response
-	 *
+	 * @return array
 	 */
-
 	public function updateCountry($country) {
 		return $this->updateCountries(array($country));
 	}
 
 	/**
-	 * @name                  updateCountries ()
+	 * @param array $collection
 	 *
-	 * @since           1.0.0
-	 * @version         1.0.6
-	 *
-	 * @author          Can Berkol
-	 * @author          Said İmamoğlu
-	 *
-	 * @use             $this->createException()
-	 *
-	 * @param           mixed $collection     Entity or post data
-	 *
-	 * @return          array   $response
-	 *
+	 * @return \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
 	 */
-	public function updateCountries($collection) {
+	public function updateCountries(array $collection) {
 		$timeStamp = time();
 		if (!is_array($collection)) {
 			return $this->createException('InvalidParameterValueException', 'Invalid parameter value. Parameter must be an array collection', 'E:S:001');
 		}
 		$countUpdates = 0;
-		$updatedItems = array();
+		$updatedItems = [];
 		foreach ($collection as $data) {
 			if ($data instanceof BundleEntity\Country) {
 				$entity = $data;
@@ -1295,7 +1143,7 @@ class LocationManagementModel extends CoreModel {
 					$set = 'set' . $this->translateColumnName($column);
 					switch ($column) {
 						case 'local':
-							$localizations = array();
+							$localizations = [];
 							foreach ($value as $langCode => $translation) {
 								$localization = $oldEntity->getLocalization($langCode, true);
 								$newLocalization = false;
@@ -1346,45 +1194,20 @@ class LocationManagementModel extends CoreModel {
 	}
 
 	/**
-	 * @name                  deleteState ()
+	 * @param mixed $state
 	 *
-	 * @since           1.0.0
-	 * @version         1.0.6
-	 *
-	 * @author          Can Berkol
-	 * @author          Said İmamoğlu
-	 *
-	 * @use             $this->deleteStates()
-	 *
-	 * @param           mixed $state
-	 *
-	 * @return          array   $response
-	 *
+	 * @return array
 	 */
 	public function deleteState($state) {
 		return $this->deleteStates(array($state));
 	}
 
 	/**
-	 * @name                  deleteStates ()
+	 * @param array $collection
 	 *
-	 * @since           1.0.0
-	 * @version         1.0.6
-	 *
-	 * @author          Can Berkol
-	 * @author          Said İmamoğlu
-	 *
-	 * @use             $this->createException()
-	 * @use             $this->doesStateExist()
-	 *
-	 *
-	 * @param           mixed $collection  Entity or post date
-	 *
-	 * @return          array   $response
-	 *
+	 * @return \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
 	 */
-
-	public function deleteStates($collection) {
+	public function deleteStates(array $collection) {
 		$timeStamp = time();
 		if (!is_array($collection)) {
 			return $this->createException('InvalidParameterValueException', 'Invalid parameter value. Parameter must be an array collection', 'E:S:001');
@@ -1412,23 +1235,12 @@ class LocationManagementModel extends CoreModel {
 	}
 
 	/**
-	 * @name                  doesStateExist ()
+	 * @param mixed $state
+	 * @param bool $bypass
 	 *
-	 * @since           1.0.0
-	 * @version         1.0.6
-	 *
-	 * @author          Can Berkol
-	 * @author          Said İmamoğlu
-	 *
-	 * @use             $this->createException()
-	 *
-	 * @param           mixed $state
-	 * @param           bool  $bypass
-	 *
-	 * @return          array   $response
-	 *
+	 * @return \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse|bool
 	 */
-	public function doesStateExist($state, $bypass = false) {
+	public function doesStateExist($state, \bool $bypass = false) {
 		$response = $this->getState($state);
 		$exist = true;
 		if ($response->error->exist) {
@@ -1443,19 +1255,9 @@ class LocationManagementModel extends CoreModel {
 	}
 
 	/**
-	 * @name                  getState ()
+	 * @param mixed $state
 	 *
-	 * @since           1.0.0
-	 * @version         1.0.6
-	 *
-	 * @author          Can Berkol
-	 * @author          Said İmamoğlu
-	 *
-	 * @use             $this->createException()
-	 *
-	 * @param           mixed $state
-	 *
-	 * @return          \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
+	 * @return \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
 	 */
 	public function getState($state) {
 		$timeStamp = time();
@@ -1486,19 +1288,12 @@ class LocationManagementModel extends CoreModel {
 	}
 
 	/**
-	 * @name                   getStateByUrlKey ()
+	 * @param string $urlKey
+	 * @param null|mixed   $language
 	 *
-	 * @since           1.0.6
-	 * @version         1.0.6
-	 *
-	 * @author          Can Berkol
-	 *
-	 * @param           mixed  $urlKey
-	 * @param            mixed $language
-	 *
-	 * @return          \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
+	 * @return array|\BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
 	 */
-	public function getStateByUrlKey($urlKey, $language = null) {
+	public function getStateByUrlKey(\string $urlKey, $language = null) {
 		$timeStamp = time();
 		if (!is_string($urlKey)) {
 			return $this->createException('InvalidParameterValueException', '$urlKey must be a string.', 'E:S:007');
@@ -1533,52 +1328,28 @@ class LocationManagementModel extends CoreModel {
 	}
 
 	/**
-	 * @name                  insertState ()
+	 * @param $mixed state
 	 *
-	 * @since           1.0.0
-	 * @version         1.0.6
-	 *
-	 * @author          Can Berkol
-	 * @author          Said İmamoğlu
-	 *
-	 * @use             $this->insertStates()
-	 *
-	 * @param           mixed $state
-	 *
-	 * @return          array   $response
-	 *
+	 * @return array
 	 */
-
 	public function insertState($state) {
 		return $this->insertStates(array($state));
 	}
 
 	/**
-	 * @name                  insertStates ()
+	 * @param array $collection
 	 *
-	 * @since           1.0.0
-	 * @version         1.0.6
-	 *
-	 * @author          Can Berkol
-	 * @author          Said İmamoğlu
-	 *
-	 * @use             $this->createException()
-	 *
-	 * @param           mixed $collection
-	 *
-	 * @return          array   $response
-	 *
+	 * @return \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
 	 */
-	public function insertStates($collection) {
+	public function insertStates(array $collection) {
 		$timeStamp = time();
 		if (!is_array($collection)) {
 			return $this->createException('InvalidParameterValueException', 'Invalid parameter value. Parameter must be an array collection', 'E:S:001');
 		}
 		$countInserts = 0;
 		$countLocalizations = 0;
-		$insertedItems = array();
-		$localizations = array();
-		$now = new \DateTime('now', new \DateTimeZone($this->kernel->getContainer()->getParameter('app_timezone')));
+		$insertedItems = [];
+		$localizations = [];
 		foreach ($collection as $data) {
 			if ($data instanceof BundleEntity\State) {
 				$entity = $data;
@@ -1587,7 +1358,7 @@ class LocationManagementModel extends CoreModel {
 				$countInserts++;
 			}
 			else if (is_object($data)) {
-				$localizations = array();
+				$localizations = [];
 				$entity = new BundleEntity\State;
 				foreach ($data as $column => $value) {
 					$localeSet = false;
@@ -1633,26 +1404,18 @@ class LocationManagementModel extends CoreModel {
 	}
 
 	/**
-	 * @name                  insertStateLocalizations ()
+	 * @param array $collection
 	 *
-	 * @since           1.0.3
-	 * @version         1.0.6
-	 * @author          Can Berkol
-	 *
-	 * @use             $this->createException()
-	 *
-	 * @param           array $collection
-	 *
-	 * @return          array           $response
+	 * @return \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
 	 */
-	public function insertStateLocalizations($collection) {
+	public function insertStateLocalizations(array $collection) {
 		$timeStamp = time();
 		/** Parameter must be an array */
 		if (!is_array($collection)) {
 			return $this->createException('InvalidParameter', 'Array', 'err.invalid.parameter.collection');
 		}
 		$countInserts = 0;
-		$insertedItems = array();
+		$insertedItems = [];
 		foreach ($collection as $item) {
 			if ($item instanceof BundleEntity\StateLocalization) {
 				$entity = $item;
@@ -1697,22 +1460,15 @@ class LocationManagementModel extends CoreModel {
 
 		return new ModelResponse(null, 0, 0, null, true, 'E:D:003', 'One or more entities cannot be inserted into database.', $timeStamp, time());
 	}
+
 	/**
-	 * @name            listCheckinLogs()
+	 * @param array|null $filter
+	 * @param array|null $sortOrder
+	 * @param array|null $limit
 	 *
-	 * @since           1.1.1
-	 * @version         1.1.1
-	 *
-	 * @author          Can Berkol
-	 *
-	 * @param           array   $filter
-	 * @param           array   $sortOrder
-	 * @param           array   $limit
-	 *
-	 * @return          array   $response
-	 *
+	 * @return \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
 	 */
-	public function listCheckinLogs($filter = null, $sortOrder = null, $limit = null) {
+	public function listCheckinLogs(array $filter = null, array $sortOrder = null, array $limit = null) {
 		$timeStamp = time();
 		if (!is_array($sortOrder) && !is_null($sortOrder)) {
 			return $this->createException('InvalidSortOrderException', '$sortOrder must be an array with key => value pairs where value can only be "asc" or "desc".', 'E:S:002');
@@ -1762,25 +1518,16 @@ class LocationManagementModel extends CoreModel {
 
 		return new ModelResponse($result, $totalRows, 0, null, false, 'S:D:002', 'Entries successfully fetched from database.', $timeStamp, time());
 	}
+
 	/**
-	 * @name            listCheckinLogsByCheckinCoordinates ()
+	 * @param float      $lat
+	 * @param float      $lon
+	 * @param array|null $sortOrder
+	 * @param array|null $limit
 	 *
-	 * @since           1.1.1
-	 * @version         1.1.1
-	 *
-	 * @author          Can Berkol
-	 *
-	 * @use             $this->listCheckinLogs()
-	 *
-	 * @param           decimal $lat                     X Coordinate
-	 * @param           decimal $lon                     Y Coordinate
-	 * @param           mixed   $sortOrder
-	 * @param           mixed   $limit
-	 *
-	 * @return          array   $response
-	 *
+	 * @return \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
 	 */
-	public function listCheckinLogsByCheckinCoordinates($lat, $lon, $sortOrder = null, $limit = null) {
+	public function listCheckinLogsByCheckinCoordinates(\float $lat, \float $lon, array $sortOrder = null, array $limit = null) {
 		$filter[] = array(
 			'glue'      => ' and',
 			'condition' => array(
@@ -1805,25 +1552,16 @@ class LocationManagementModel extends CoreModel {
 
 		return $this->listCheckinLogs($filter, $sortOrder, $limit);
 	}
+
 	/**
-	 * @name            listCheckinLogsByCheckoutCoordinates ()
+	 * @param float      $lat
+	 * @param float      $lon
+	 * @param array|null $sortOrder
+	 * @param array|null $limit
 	 *
-	 * @since           1.1.1
-	 * @version         1.1.1
-	 *
-	 * @author          Can Berkol
-	 *
-	 * @use             $this->listCheckinLogs()
-	 *
-	 * @param           decimal $lat                     X Coordinate
-	 * @param           decimal $lon                     Y Coordinate
-	 * @param           mixed   $sortOrder
-	 * @param           mixed   $limit
-	 *
-	 * @return          array   $response
-	 *
+	 * @return \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
 	 */
-	public function listCheckinLogsByCheckoutCoordinates ($lat, $lon, $sortOrder = null, $limit = null) {
+	public function listCheckinLogsByCheckoutCoordinates (\float $lat, \float $lon, array $sortOrder = null, array $limit = null) {
 		$filter[] = array(
 			'glue'      => ' and',
 			'condition' => array(
@@ -1848,25 +1586,16 @@ class LocationManagementModel extends CoreModel {
 
 		return $this->listCheckinLogs($filter, $sortOrder, $limit);
 	}
+
 	/**
-	 * @name            listCheckinLogsOfMemberByOffice ()
+	 * @param mixed $member
+	 * @param mixed $office
+	 * @param array|null $sortOrder
+	 * @param array|null $limit
 	 *
-	 * @since           1.1.1
-	 * @version         1.1.1
-	 *
-	 * @author          Can Berkol
-	 *
-	 * @use             $this->listCheckinLogs()
-	 *
-	 * @param           mixed   $member
-	 * @param           mixed   $office
-	 * @param           mixed   $sortOrder
-	 * @param           mixed   $limit
-	 *
-	 * @return          array   $response
-	 *
+	 * @return array|\BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
 	 */
-	public function listCheckinLogsOfMemberByOffice ($member, $office, $sortOrder = null, $limit = null) {
+	public function listCheckinLogsOfMemberByOffice ($member, $office, array $sortOrder = null, array $limit = null) {
 		$response = $this->getOffice($office);
 		if($response->error->exist){
 			return $response;
@@ -1900,47 +1629,29 @@ class LocationManagementModel extends CoreModel {
 
 		return $this->listCheckinLogs($filter, $sortOrder, $limit);
 	}
+
 	/**
-	 * @name            listCheckinLogsOfOfficeByMember ()
+	 * @param mixed $office
+	 * @param mixed $member
+	 * @param array|null $sortOrder
+	 * @param array|null $limit
 	 *
-	 * @since           1.1.1
-	 * @version         1.1.1
-	 *
-	 * @author          Can Berkol
-	 *
-	 * @use             $this->listCheckinLogs()
-	 *
-	 * @param           mixed   $office
-	 * @param           mixed   $member
-	 * @param           mixed   $sortOrder
-	 * @param           mixed   $limit
-	 *
-	 * @return          array   $response
-	 *
+	 * @return array|\BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
 	 */
-	public function listCheckinLogsOfOfficeByMember ($office, $member, $sortOrder = null, $limit = null) {
+	public function listCheckinLogsOfOfficeByMember ($office, $member, array $sortOrder = null, array $limit = null) {
 		return $this->listCheckinLogsOfMemberByOffice($member, $office, $sortOrder, $limit);
 	}
+
 	/**
-	 * @name            listCheckinLogsOfOfficeByMemberCheckedInDuring ()
+	 * @param mixed $member
+	 * @param mixed $office
+	 * @param array      $dateRange
+	 * @param array|null $sortOrder
+	 * @param array|null $limit
 	 *
-	 * @since           1.1.1
-	 * @version         1.1.1
-	 *
-	 * @author          Can Berkol
-	 *
-	 * @use             $this->listCheckinLogs()
-	 *
-	 * @param           mixed   $member
-	 * @param           mixed   $office
-	 * @param           array   $dateRange
-	 * @param           mixed   $sortOrder
-	 * @param           mixed   $limit
-	 *
-	 * @return          array   $response
-	 *
+	 * @return array|\BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
 	 */
-	public function listCheckinLogsOfOfficeByMemberCheckedInDuring ($member, $office, array $dateRange = array(), $sortOrder = null, $limit = null) {
+	public function listCheckinLogsOfOfficeByMemberCheckedInDuring ($member, $office, array $dateRange = [], array $sortOrder = null, array $limit = null) {
 		$timeStamp = microtime();
 		$response = $this->getOffice($office);
 		if($response->error->exist){
@@ -2014,26 +1725,17 @@ class LocationManagementModel extends CoreModel {
 
 		return $this->listCheckinLogs($filter, $sortOrder, $limit);
 	}
+
 	/**
-	 * @name            listCheckinLogsOfOfficeByMemberCheckedInDuring ()
+	 * @param mixed $member
+	 * @param mixed $office
+	 * @param array      $dateRange
+	 * @param array|null $sortOrder
+	 * @param array|null $limit
 	 *
-	 * @since           1.1.1
-	 * @version         1.1.1
-	 *
-	 * @author          Can Berkol
-	 *
-	 * @use             $this->listCheckinLogs()
-	 *
-	 * @param           mixed   $member
-	 * @param           mixed   $office
-	 * @param           array   $dateRange
-	 * @param           mixed   $sortOrder
-	 * @param           mixed   $limit
-	 *
-	 * @return          array   $response
-	 *
+	 * @return array|\BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
 	 */
-	public function listCheckinLogsOfOfficeByMemberCheckedOutDuring ($member, $office, array $dateRange = array(), $sortOrder = null, $limit = null) {
+	public function listCheckinLogsOfOfficeByMemberCheckedOutDuring ($member, $office, array $dateRange = [], array $sortOrder = null, array $limit = null) {
 		$timeStamp = microtime();
 		$response = $this->getOffice($office);
 		if($response->error->exist){
@@ -2108,24 +1810,14 @@ class LocationManagementModel extends CoreModel {
 		return $this->listCheckinLogs($filter, $sortOrder, $limit);
 	}
 	/**
-	 * @name            listCheckinLogsOfOfficeCheckedInDuring ()
+	 * @param mixed $office
+	 * @param array      $dateRange
+	 * @param array|null $sortOrder
+	 * @param array|null $limit
 	 *
-	 * @since           1.1.1
-	 * @version         1.1.1
-	 *
-	 * @author          Can Berkol
-	 *
-	 * @use             $this->listCheckinLogs()
-	 *
-	 * @param           mixed   $office
-	 * @param           array   $dateRange
-	 * @param           mixed   $sortOrder
-	 * @param           mixed   $limit
-	 *
-	 * @return          array   $response
-	 *
+	 * @return array|\BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
 	 */
-	public function listCheckinLogsOfOfficeCheckedInDuring($office, array $dateRange = array(), $sortOrder = null, $limit = null) {
+	public function listCheckinLogsOfOfficeCheckedInDuring($office, array $dateRange = [], array $sortOrder = null, array $limit = null) {
 		$timeStamp = microtime();
 		$response = $this->getOffice($office);
 		if($response->error->exist){
@@ -2186,25 +1878,16 @@ class LocationManagementModel extends CoreModel {
 
 		return $this->listCheckinLogs($filter, $sortOrder, $limit);
 	}
+
 	/**
-	 * @name            listCheckinLogsOfMemberCheckedInDuring ()
+	 * @param mixed $member
+	 * @param array      $dateRange
+	 * @param array|null $sortOrder
+	 * @param array|null $limit
 	 *
-	 * @since           1.1.1
-	 * @version         1.1.1
-	 *
-	 * @author          Can Berkol
-	 *
-	 * @use             $this->listCheckinLogs()
-	 *
-	 * @param           mixed   $member
-	 * @param           array   $dateRange
-	 * @param           mixed   $sortOrder
-	 * @param           mixed   $limit
-	 *
-	 * @return          array   $response
-	 *
+	 * @return \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
 	 */
-	public function listCheckinLogsOfMemberCheckedOutDuring ($member, array $dateRange = array(), $sortOrder = null, $limit = null) {
+	public function listCheckinLogsOfMemberCheckedOutDuring ($member, array $dateRange = [], array $sortOrder = null, array $limit = null) {
 		$timeStamp = microtime();
 		$mModel = $this->kernel->getContainer()->get('membermanagement.model');
 		$response = $mModel->getMember($member, 'id');
@@ -2266,25 +1949,16 @@ class LocationManagementModel extends CoreModel {
 
 		return $this->listCheckinLogs($filter, $sortOrder, $limit);
 	}
+
 	/**
-	 * @name            listCheckinLogsOfOfficeCheckedInDuring ()
+	 * @param            $office
+	 * @param array      $dateRange
+	 * @param array|null $sortOrder
+	 * @param array|null $limit
 	 *
-	 * @since           1.1.1
-	 * @version         1.1.1
-	 *
-	 * @author          Can Berkol
-	 *
-	 * @use             $this->listCheckinLogs()
-	 *
-	 * @param           mixed   $office
-	 * @param           array   $dateRange
-	 * @param           mixed   $sortOrder
-	 * @param           mixed   $limit
-	 *
-	 * @return          array   $response
-	 *
+	 * @return array|\BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
 	 */
-	public function listCheckinLogsOfOfficeCheckedOutDuring($office, array $dateRange = array(), $sortOrder = null, $limit = null) {
+	public function listCheckinLogsOfOfficeCheckedOutDuring($office, array $dateRange = [], array $sortOrder = null, array $limit = null) {
 		$timeStamp = microtime();
 		$response = $this->getOffice($office);
 		if($response->error->exist){
@@ -2345,25 +2019,16 @@ class LocationManagementModel extends CoreModel {
 
 		return $this->listCheckinLogs($filter, $sortOrder, $limit);
 	}
+
 	/**
-	 * @name            listCheckinLogsOfMemberCheckedInDuring ()
+	 * @param mixed $member
+	 * @param array      $dateRange
+	 * @param array|null $sortOrder
+	 * @param array|null $limit
 	 *
-	 * @since           1.1.1
-	 * @version         1.1.1
-	 *
-	 * @author          Can Berkol
-	 *
-	 * @use             $this->listCheckinLogs()
-	 *
-	 * @param           mixed   $member
-	 * @param           array   $dateRange
-	 * @param           mixed   $sortOrder
-	 * @param           mixed   $limit
-	 *
-	 * @return          array   $response
-	 *
+	 * @return \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
 	 */
-	public function listCheckinLogsOfMemberCheckedInDuring ($member, array $dateRange = array(), $sortOrder = null, $limit = null) {
+	public function listCheckinLogsOfMemberCheckedInDuring ($member, array $dateRange = [], array $sortOrder = null, array $limit = null) {
 		$timeStamp = microtime();
 		$mModel = $this->kernel->getContainer()->get('membermanagement.model');
 		$response = $mModel->getMember($member, 'id');
@@ -2425,24 +2090,15 @@ class LocationManagementModel extends CoreModel {
 
 		return $this->listCheckinLogs($filter, $sortOrder, $limit);
 	}
+
 	/**
-	 * @name            listCheckinLogsOfMemberByOffice ()
+	 * @param mixed $member
+	 * @param array|null $sortOrder
+	 * @param array|null $limit
 	 *
-	 * @since           1.1.1
-	 * @version         1.1.1
-	 *
-	 * @author          Can Berkol
-	 *
-	 * @use             $this->listCheckinLogs()
-	 *
-	 * @param           mixed   $member
-	 * @param           mixed   $sortOrder
-	 * @param           mixed   $limit
-	 *
-	 * @return          array   $response
-	 *
+	 * @return \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
 	 */
-	public function listCheckinLogsOfMember($member, $sortOrder = null, $limit = null) {
+	public function listCheckinLogsOfMember($member, array $sortOrder = null, array $limit = null) {
 		$mModel = $this->kernel->getContainer()->get('membermanagement.model');
 		$response = $mModel->getMember($member, 'id');
 		if($response->error->exist){
@@ -2464,24 +2120,15 @@ class LocationManagementModel extends CoreModel {
 
 		return $this->listCheckinLogs($filter, $sortOrder, $limit);
 	}
+
 	/**
-	 * @name            listCheckinLogsOfOffice ()
+	 * @param mixed $office
+	 * @param array|null $sortOrder
+	 * @param array|null $limit
 	 *
-	 * @since           1.1.1
-	 * @version         1.1.1
-	 *
-	 * @author          Can Berkol
-	 *
-	 * @use             $this->listCheckinLogs()
-	 *
-	 * @param           mixed   $office
-	 * @param           mixed   $sortOrder
-	 * @param           mixed   $limit
-	 *
-	 * @return          array   $response
-	 *
+	 * @return array|\BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
 	 */
-	public function listCheckinLogsOfOffice($office, $sortOrder = null, $limit = null) {
+	public function listCheckinLogsOfOffice($office, array $sortOrder = null, array $limit = null) {
 		$response = $this->getOffice($office);
 		if($response->error->exist){
 			return $response;
@@ -2503,23 +2150,15 @@ class LocationManagementModel extends CoreModel {
 
 		return $this->listCheckinLogs($filter, $sortOrder, $limit);
 	}
+
 	/**
-	 * @name            listStates ()
+	 * @param array|null $filter
+	 * @param array|null $sortOrder
+	 * @param array|null $limit
 	 *
-	 * @since           1.0.0
-	 * @version         1.0.9
-	 *
-	 * @author          Can Berkol
-	 * @author          Said İmamoğlu
-	 *
-	 * @param           array $filter
-	 * @param           array $sortOrder
-	 * @param           array $limit
-	 *
-	 * @return          array   $response
-	 *
+	 * @return \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
 	 */
-	public function listStates($filter = null, $sortOrder = null, $limit = null) {
+	public function listStates(array $filter = null, array $sortOrder = null, array $limit = null) {
 		$timeStamp = time();
 		if (!is_array($sortOrder) && !is_null($sortOrder)) {
 			return $this->createException('InvalidSortOrderException', '$sortOrder must be an array with key => value pairs where value can only be "asc" or "desc".', 'E:S:002');
@@ -2559,7 +2198,7 @@ class LocationManagementModel extends CoreModel {
 		$q = $this->addLimit($q, $limit);
 		$result = $q->getResult();
 
-		$entities = array();
+		$entities = [];
 		foreach ($result as $entry) {
 			$id = $entry->getState()->getId();
 			if (!isset($unique[$id])) {
@@ -2577,30 +2216,20 @@ class LocationManagementModel extends CoreModel {
 	}
 
 	/**
-	 * @name                  listStatesOfCountry ()
+	 * @param mixed $country
+	 * @param array|null $sortOrder
+	 * @param array|null $limit
 	 *
-	 * @since           1.0.0
-	 * @version         1.0.6
-	 * @author          Can Berkol
-	 *
-	 * @use             $this->createException()
-	 * @use             $this->listCities()
-	 *
-	 * @param           mixed $country
-	 * @param           array $sortOrder
-	 * @param           array $limit
-	 *
-	 * @return          array   $response
-	 *
+	 * @return \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
 	 */
-	public function listStatesOfCountry($country, $sortOrder = null, $limit = null) {
+	public function listStatesOfCountry($country, array $sortOrder = null, array $limit = null) {
 		$response = $this->getCountry($country);
 		if ($response->error->exist) {
 			return $response;
 		}
 		$country = $response->result->set;
 		unseT($response);
-		$filter = array();
+		$filter = [];
 		$filter[] = array(
 			'glue'      => 'and',
 			'condition' => array(
@@ -2615,45 +2244,28 @@ class LocationManagementModel extends CoreModel {
 
 		return $this->listStates($filter, $sortOrder, $limit);
 	}
+
 	/**
-	 * @name            updateCheckinLog()
+	 * @param mixed $cLog
 	 *
-	 * @since           1.1.1
-	 * @version         1.1.1
-	 *
-	 * @author          Can Berkol
-	 *
-	 * @use             $this->updateCheckinLogs()
-	 *
-	 * @param           mixed   $cLog
-	 *
-	 * @return          array   $response
-	 *
+	 * @return array
 	 */
 	public function updateCheckinLog($cLog) {
 		return $this->updateCheckinLogs(array($cLog));
 	}
 
 	/**
-	 * @name            updateCheckinLogs()
+	 * @param array $collection
 	 *
-	 * @since           1.1.1
-	 * @version         1.1.1
-	 *
-	 * @author          Can Berkol
-	 *
-	 * @param           mixed   $collection
-	 *
-	 * @return          array   $response
-	 *
+	 * @return \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
 	 */
-	public function updateCheckinLogs($collection) {
+	public function updateCheckinLogs(array $collection) {
 		$timeStamp = time();
 		if (!is_array($collection)) {
 			return $this->createException('InvalidParameterValueException', 'Invalid parameter value. Parameter must be an array collection', 'E:S:001');
 		}
 		$countUpdates = 0;
-		$updatedItems = array();
+		$updatedItems = [];
 		foreach ($collection as $data) {
 			if ($data instanceof BundleEntity\CheckinLogs) {
 				$entity = $data;
@@ -2721,48 +2333,26 @@ class LocationManagementModel extends CoreModel {
 	}
 
 	/**
-	 * @name            updateState ()
+	 * @param mixed $state
 	 *
-	 * @since           1.0.0
-	 * @version         1.0.6
-	 *
-	 * @author          Can Berkol
-	 * @author          Said İmamoğlu
-	 *
-	 * @use             $this->updateStates()
-	 *
-	 * @param           mixed $state
-	 *
-	 * @return          array   $response
-	 *
+	 * @return array
 	 */
 	public function updateState($state) {
 		return $this->updateStates(array($state));
 	}
 
 	/**
-	 * @name                  updateStates ()
+	 * @param array $collection
 	 *
-	 * @since           1.0.0
-	 * @version         1.0.6
-	 *
-	 * @author          Can Berkol
-	 * @author          Said İmamoğlu
-	 *
-	 * @use             $this->createException()
-	 *
-	 * @param           mixed $collection
-	 *
-	 * @return          array   $response
-	 *
+	 * @return \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
 	 */
-	public function updateStates($collection) {
+	public function updateStates(array $collection) {
 		$timeStamp = time();
 		if (!is_array($collection)) {
 			return $this->createException('InvalidParameterValueException', 'Invalid parameter value. Parameter must be an array collection', 'E:S:001');
 		}
 		$countUpdates = 0;
-		$updatedItems = array();
+		$updatedItems = [];
 		foreach ($collection as $data) {
 			if ($data instanceof BundleEntity\State) {
 				$entity = $data;
@@ -2783,7 +2373,7 @@ class LocationManagementModel extends CoreModel {
 					$set = 'set' . $this->translateColumnName($column);
 					switch ($column) {
 						case 'local':
-							$localizations = array();
+							$localizations = [];
 							foreach ($value as $langCode => $translation) {
 								$localization = $oldEntity->getLocalization($langCode, true);
 								$newLocalization = false;
@@ -2845,43 +2435,20 @@ class LocationManagementModel extends CoreModel {
 	}
 
 	/**
-	 * @name            deleteOffice ()
+	 * @param array $collection
 	 *
-	 * @since           1.0.0
-	 * @version         1.0.6
-	 *
-	 * @author          Can Berkol
-	 * @author          Said İmamoğlu
-	 *
-	 * @use             $this->deleteOffices()
-	 *
-	 * @param           mixed $collection
-	 *
-	 * @return          array   $response
-	 *
+	 * @return array
 	 */
-
-	public function deleteOffice($collection) {
+	public function deleteOffice(array $collection) {
 		return $this->deleteOffices(array($collection));
 	}
 
 	/**
-	 * @name                  deleteOffices ()
+	 * @param array $collection
 	 *
-	 * @since           1.0.0
-	 * @version         1.0.6
-	 *
-	 * @author          Can Berkol
-	 * @author          Said İmamoğlu
-	 *
-	 *
-	 * @param           array $collection
-	 *
-	 * @return          array   $response
-	 *
+	 * @return \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
 	 */
-
-	public function deleteOffices($collection) {
+	public function deleteOffices(array $collection) {
 		$timeStamp = time();
 		if (!is_array($collection)) {
 			return $this->createException('InvalidParameterValueException', 'Invalid parameter value. Parameter must be an array collection', 'E:S:001');
@@ -2909,23 +2476,12 @@ class LocationManagementModel extends CoreModel {
 	}
 
 	/**
-	 * @name                  doesOfficeExist ()
+	 * @param mixed $office
+	 * @param bool $bypass
 	 *
-	 * @since           1.0.0
-	 * @version         1.0.6
-	 *
-	 * @author          Can Berkol
-	 * @author          Said İmamoğlu
-	 *
-	 * @use             $this->getOffice()
-	 *
-	 * @param           mixed $office
-	 * @param           bool  $bypass
-	 *
-	 * @return          array   $response
-	 *
+	 * @return array|bool
 	 */
-	public function doesOfficeExist($office, $bypass = false) {
+	public function doesOfficeExist($office, \bool $bypass = false) {
 		$response = $this->getOffice($office);
 		$exist = true;
 		if ($response->error->exist) {
@@ -2940,18 +2496,9 @@ class LocationManagementModel extends CoreModel {
 	}
 
 	/**
-	 * @name                  getOffice ()
+	 * @param mixed $office
 	 *
-	 * @since           1.0.0
-	 * @version         1.0.6
-	 *
-	 * @author          Can Berkol
-	 * @author          Said İmamoğlu
-	 *
-	 * @param           mixed $office
-	 *
-	 * @return          array   $response
-	 *
+	 * @return \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
 	 */
 
 	public function getOffice($office) {
@@ -2977,45 +2524,26 @@ class LocationManagementModel extends CoreModel {
 	}
 
 	/**
-	 * @name            insertCheckinLog()
+	 * @param mixed  $cLog
 	 *
-	 * @since           1.1.1
-	 * @version         1.1.1
-	 *
-	 * @author          Can Berkol
-	 *
-	 * @use             $this->insertCheckinLogs()
-	 *
-	 * @param           mixed   $cLog
-	 *
-	 * @return          array   $response
-	 *
+	 * @return array
 	 */
-
 	public function insertCheckinLog($cLog) {
 		return $this->insertCheckinLogs(array($cLog));
 	}
 
 	/**
-	 * @name            insertCheckinLogs()
+	 * @param array $collection
 	 *
-	 * @since           1.1.1
-	 * @version         1.1.1
-	 *
-	 * @author          Can Berkol
-	 *
-	 * @param           mixed   $collection
-	 *
-	 * @return          array   $response
-	 *
+	 * @return \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
 	 */
-	public function insertCheckinLogs($collection) {
+	public function insertCheckinLogs(array $collection) {
 		$timeStamp = time();
 		if (!is_array($collection)) {
 			return $this->createException('InvalidParameterValueException', 'Invalid parameter value. Parameter must be an array collection', 'E:S:001');
 		}
 		$countInserts = 0;
-		$insertedItems = array();
+		$insertedItems = [];
 		foreach ($collection as $data) {
 			if ($data instanceof BundleEntity\CheckinLogs) {
 				$entity = $data;
@@ -3070,47 +2598,26 @@ class LocationManagementModel extends CoreModel {
 	}
 
 	/**
-	 * @name            insertOffice ()
+	 * @param mixed $office
 	 *
-	 * @since           1.0.0
-	 * @version         1.0.6
-	 *
-	 * @author          Can Berkol
-	 * @author          Said İmamoğlu
-	 *
-	 * @use             $this->insertOffices()
-	 *
-	 * @param           mixed $office
-	 *
-	 * @return          array   $response
-	 *
+	 * @return array
 	 */
-
 	public function insertOffice($office) {
 		return $this->insertOffices(array($office));
 	}
 
 	/**
-	 * @name            insertOffices ()
+	 * @param array $collection
 	 *
-	 * @since           1.0.0
-	 * @version         1.0.6
-	 *
-	 * @author          Can Berkol
-	 * @author          Said İmamoğlu
-	 *
-	 * @param           mixed $collection
-	 *
-	 * @return          array   $response
-	 *
+	 * @return \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
 	 */
-	public function insertOffices($collection) {
+	public function insertOffices(array $collection) {
 		$timeStamp = time();
 		if (!is_array($collection)) {
 			return $this->createException('InvalidParameterValueException', 'Invalid parameter value. Parameter must be an array collection', 'E:S:001');
 		}
 		$countInserts = 0;
-		$insertedItems = array();
+		$insertedItems = [];
 		foreach ($collection as $data) {
 			if ($data instanceof BundleEntity\Office) {
 				$entity = $data;
@@ -3181,23 +2688,13 @@ class LocationManagementModel extends CoreModel {
 	}
 
 	/**
-	 * @name            listOffices ()
+	 * @param array|null $filter
+	 * @param array|null $sortOrder
+	 * @param array|null $limit
 	 *
-	 * @since           1.0.0
-	 * @version         1.0.6
-	 *
-	 * @author          Can Berkol
-	 * @author          Said İmamoğlu
-	 *
-	 * @param           array $filter
-	 * @param           array $sortOrder
-	 * @param           array $limit
-	 *
-	 * @return          array   $response
-	 *
+	 * @return \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
 	 */
-
-	public function listOffices($filter = null, $sortOrder = null, $limit = null) {
+	public function listOffices(array $filter = null, array $sortOrder = null, array $limit = null) {
 		$timeStamp = time();
 		if (!is_array($sortOrder) && !is_null($sortOrder)) {
 			return $this->createException('InvalidSortOrderException', '$sortOrder must be an array with key => value pairs where value can only be "asc" or "desc".', 'E:S:002');
@@ -3219,6 +2716,7 @@ class LocationManagementModel extends CoreModel {
 					case 'fax':
 					case 'email':
 					case 'name':
+					case 'member':
 						$column = $this->entity['o']['alias'] . '.' . $column;
 						break;
 					default:
@@ -3248,23 +2746,12 @@ class LocationManagementModel extends CoreModel {
 	}
 
 	/**
-	 * @name            listOfficesByCoordinates ()
+	 * @param float $lat
+	 * @param float $lon
 	 *
-	 * @since           1.0.0
-	 * @version         1.0.6
-	 *
-	 * @author          Can Berkol
-	 * @author          Said İmamoğlu
-	 *
-	 * @use             $this->listOffices()
-	 *
-	 * @param           decimal $lat                     X Coordinate
-	 * @param           decimal $lon                     Y Coordinate
-	 *
-	 * @return          array   $response
-	 *
+	 * @return \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
 	 */
-	public function listOfficesByCoordinates($lat, $lon) {
+	public function listOfficesByCoordinates(\float $lat, \float $lon) {
 		$filter[] = array(
 			'glue'      => ' and',
 			'condition' => array(
@@ -3291,12 +2778,13 @@ class LocationManagementModel extends CoreModel {
 	}
 
 	/**
-	 * @param array $coordinates
-	 * @param null $sortOrder
-	 * @param null $limit
-	 * @return ModelResponse
+	 * @param array      $coordinates
+	 * @param array|null $sortOrder
+	 * @param array|null $limit
+	 *
+	 * @return \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
 	 */
-	public function listOfficesWithinCoordinates(array $coordinates, $sortOrder = null, $limit = null) {
+	public function listOfficesWithinCoordinates(array $coordinates, array $sortOrder = null, array $limit = null) {
 		$timeStamp = time();
 		if(!isset($coordinates['from']) || !isset($coordinates['to'])){
 			return new ModelResponse(null, 0, 0, null, true, 'E:D:002', 'Invalid coordinate', $timeStamp, time());
@@ -3346,22 +2834,11 @@ class LocationManagementModel extends CoreModel {
 	}
 
 	/**
-	 * @name                   listOfficesByType ()
+	 * @param string $type
 	 *
-	 * @since           1.0.5
-	 * @version         1.0.6
-	 *
-	 * @author          Said İmamoğlu
-	 *
-	 * @use             $this->listOffices()
-	 *
-	 *
-	 * @param           string $type
-	 *
-	 * @return          array   $response
-	 *
+	 * @return \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
 	 */
-	public function listOfficesByType($type) {
+	public function listOfficesByType(\string $type) {
 		$filter[] = array(
 			'glue'      => ' and',
 			'condition' => array(
@@ -3379,7 +2856,12 @@ class LocationManagementModel extends CoreModel {
 		return $this->listOffices($filter);
 	}
 
-	public function listOfficesByName($name) {
+	/**
+	 * @param string $name
+	 *
+	 * @return \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
+	 */
+	public function listOfficesByName(\string $name) {
 		$filter[] = array(
 			'glue'      => ' and',
 			'condition' => array(
@@ -3398,26 +2880,15 @@ class LocationManagementModel extends CoreModel {
 	}
 
 	/**
-	 * @name            listOfficesInCities()
+	 * @param array      $cities
+	 * @param array|null $sortOrder
+	 * @param array|null $limit
 	 *
-	 * @since           1.0.7
-	 * @version         1.0.7
-	 *
-	 * @author          Can Berkol
-	 *
-	 * @use             $this->listOffices()
-	 *
-	 *
-	 * @param           array $cities
-	 * @param           array $sortOrder
-	 * @param           array $limit
-	 *
-	 * @return          array       $response
-	 *
+	 * @return \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
 	 */
-	public function listOfficesInCities(array $cities, $sortOrder = null, $limit = null) {
+	public function listOfficesInCities(array $cities, array $sortOrder = null, array $limit = null) {
 		$timeStamp = time();
-		$in = array();
+		$in = [];
 		foreach($cities as $city){
 			$response = $this->getCity($city);
 			if(!$response->error->exist){
@@ -3446,25 +2917,15 @@ class LocationManagementModel extends CoreModel {
 
 		return $this->listOffices($filter, $sortOrder, $limit);
 	}
+
 	/**
-	 * @name            listOfficesInCity ()
+	 * @param mixed $city
+	 * @param array|null $sortOrder
+	 * @param array|null $limit
 	 *
-	 * @since           1.0.0
-	 * @version         1.0.6
-	 *
-	 * @author          Can Berkol
-	 *
-	 * @use             $this->listOffices()
-	 *
-	 *
-	 * @param           mixed $city
-	 * @param           array $sortOrder
-	 * @param           array $limit
-	 *
-	 * @return          array       $response
-	 *
+	 * @return \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
 	 */
-	public function listOfficesInCity($city, $sortOrder = null, $limit = null) {
+	public function listOfficesInCity($city, array $sortOrder = null, array $limit = null) {
 		$response = $this->getCity($city);
 		if ($response->error->exist) {
 			return $response;
@@ -3488,25 +2949,46 @@ class LocationManagementModel extends CoreModel {
 	}
 
 	/**
-	 * @name            listOfficesInCCountry ()
+	 * @param            $member
+	 * @param array|null $sortOrder
+	 * @param array|null $limit
 	 *
-	 *
-	 * @since           1.0.0
-	 * @version         1.0.4
-	 *
-	 * @author          Can Berkol
-	 *
-	 * @use             $this->listOffices()
-	 *
-	 *
-	 * @param           mixed $country
-	 * @param           array $sortOrder
-	 * @param           array $limit
-	 *
-	 * @return          array       $response
-	 *
+	 * @return \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
 	 */
-	public function listOfficesInCountry($country, $sortOrder = null, $limit = null) {
+	public function listOfficesOfMember($member, array $sortOrder = null, array $limit = null) {
+		$mModel = $this->kernel->getContainer()->get('membermanagement.model');
+		/**
+		 * ModelResponse
+		 */
+		$response = $mModel->getMember($member);
+		if ($response->error->exist) {
+			return $response;
+		}
+		$member = $response->result->set;
+		unset($response);
+		$filter[] = array(
+			'glue'      => ' and',
+			'condition' => array(
+				array(
+					'glue'      => 'and',
+					'condition' => array(
+						'column'     => $this->entity['o']['alias'] . '.member',
+						'comparison' => '=',
+						'value'      => $member->getId()
+					)
+				)
+			)
+		);
+		return $this->listOffices($filter, $sortOrder, $limit);
+	}
+	/**
+	 * @param mixed $country
+	 * @param array|null $sortOrder
+	 * @param array|null $limit
+	 *
+	 * @return \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
+	 */
+	public function listOfficesInCountry($country, array $sortOrder = null, array $limit = null) {
 		$response = $this->getCountry($country);
 		if ($response->error->exist) {
 			return $response;
@@ -3531,25 +3013,13 @@ class LocationManagementModel extends CoreModel {
 	}
 
 	/**
-	 * @name                  listOfficesInState ()
-	 *                                           Lists offices located in a state.
+	 * @param mixed $state
+	 * @param array|null $sortOrder
+	 * @param array|null $limit
 	 *
-	 * @since           1.0.0
-	 * @version         1.0.6
-	 *
-	 * @author          Can Berkol
-	 *
-	 * @use             $this->listOffices()
-	 *
-	 *
-	 * @param           mixed $state
-	 * @param           array $sortOrder
-	 * @param           array $limit
-	 *
-	 * @return          array       $response
-	 *
+	 * @return \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
 	 */
-	public function listOfficesInState($state, $sortOrder = null, $limit = null) {
+	public function listOfficesInState($state, array $sortOrder = null, array $limit = null) {
 		$response = $this->getState($state);
 		if ($response->error->exist) {
 			return $response;
@@ -3574,48 +3044,26 @@ class LocationManagementModel extends CoreModel {
 	}
 
 	/**
-	 * @name                  updateOffice ()
+	 * @param mixed $office
 	 *
-	 * @since           1.0.0
-	 * @version         1.0.6
-	 *
-	 * @author          Can Berkol
-	 * @author          Said İmamoğlu
-	 *
-	 * @use             $this->updateOffice()
-	 *
-	 * @param           mixed $office
-	 *
-	 * @return          array   $response
-	 *
+	 * @return array
 	 */
-
 	public function updateOffice($office) {
 		return $this->updateOffices(array($office));
 	}
 
 	/**
-	 * @name                  updateOffices ()
+	 * @param array $collection
 	 *
-	 * @since           1.0.0
-	 * @version         1.0.6
-	 *
-	 * @author          Can Berkol
-	 * @author          Said İmamoğlu
-	 *
-	 *
-	 * @param           mixed $collection   Entity or post data
-	 *
-	 * @return          array   $response
-	 *
+	 * @return \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
 	 */
-	public function updateOffices($collection) {
+	public function updateOffices(array $collection) {
 		$timeStamp = time();
 		if (!is_array($collection)) {
 			return $this->createException('InvalidParameterValueException', 'Invalid parameter value. Parameter must be an array collection', 'E:S:001');
 		}
 		$countUpdates = 0;
-		$updatedItems = array();
+		$updatedItems = [];
 		foreach ($collection as $data) {
 			if ($data instanceof BundleEntity\Office) {
 				$entity = $data;
@@ -3680,101 +3128,8 @@ class LocationManagementModel extends CoreModel {
 		}
 		if ($countUpdates > 0) {
 			$this->em->flush();
-
 			return new ModelResponse($updatedItems, $countUpdates, 0, null, false, 'S:D:004', 'Selected entries have been successfully updated within database.', $timeStamp, time());
 		}
-
 		return new ModelResponse(null, 0, 0, null, true, 'E:D:004', 'One or more entities cannot be updated within database.', $timeStamp, time());
 	}
 }
-
-
-/**
- * Change Log
- * **************************************
- * v1.1.1                      04.11.2015
- * Can Berkol
- * **************************************
- * BF :: ->exists replaced with ->exist
- *
- * **************************************
- * v1.1.0                      26.08.2015
- * Can Berkol
- * **************************************
- * BF :: filter relatedproblems fixed.
- *
- * **************************************
- * v1.0.9                      23.07.2015
- * Can Berkol
- * **************************************
- * BF :: listStates function was not handling WHERE and ORDER BY correctly. Fixed.
- * BF :: insertOffices() copy paste errors fixed.
- *
- * **************************************
- * v1.0.8                      22.07.2015
- * Can Berkol
- * **************************************
- * BF :: list functions now return unique values.
- *
- * **************************************
- * v1.0.7                      15.07.2015
- * Can Berkol
- * **************************************
- * BF :: listStates() was trying to return country object. Fixed.
- * BF :: listCities() "city" changed to "c".
- * FR :: listOfficesInCities().
- *
- * **************************************
- * v1.0.6                      23.06.2015
- * Can Berkol
- * **************************************
- * FR :: Made compatible with Core 3.3
- *
- * **************************************
- * v1.0.5                   Said İmamoğlu
- * 17.04.2015
- * **************************************
- * A listOfficesBySite()
- * A listOfficesOfSiteBySite()
- *
- * **************************************
- * v1.0.4                      Can Berkol
- * 20.03.2014
- * **************************************
- * A listOfficesInCity()
- * A listOfficesInCountry()
- * A listOfficesInState()
- * U listOfficesByCoordinates()
- *
- * **************************************
- * v1.0.3                      Can Berkol
- * 13.03.2014
- * **************************************
- * A insertCityLocalization()
- * A insertCountryLocalization()
- * A insertStateLocalization()
- * U insertCity()
- * U insertCities()
- * U insertCountry()
- * U insertCountries()
- * U insertState()
- * U insertStates()
- * U updateCity()
- * U updateCities()
- * U updateCountry()
- * U updateCountries()
- * U updateState()
- * U updateStates()
- *
- * **************************************
- * v1.0.2                      Can Berkol
- * 04.03.2014
- * **************************************
- * A listStatesOfCountry()
- * U listCities()
- * U listCountries()
- * U listStates
- * U updateOffice()
- * U updateOffices()
- *
- */
