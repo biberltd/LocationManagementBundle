@@ -77,7 +77,7 @@ class LocationManagementModel extends CoreModel {
 	 * @return \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
 	 */
 	public function deleteCheckinLogs(array $collection) {
-		$timeStamp = time();
+		$timeStamp = microtime(true);
 		if (!is_array($collection)) {
 			return $this->createException('InvalidParameterValueException', 'Invalid parameter value. Parameter must be an array collection', 'E:S:001');
 		}
@@ -96,11 +96,11 @@ class LocationManagementModel extends CoreModel {
 			}
 		}
 		if ($countDeleted < 0) {
-			return new ModelResponse(null, 0, 0, null, true, 'E:E:001', 'Unable to delete all or some of the selected entries.', $timeStamp, time());
+			return new ModelResponse(null, 0, 0, null, true, 'E:E:001', 'Unable to delete all or some of the selected entries.', $timeStamp, microtime(true));
 		}
 		$this->em->flush();
 
-		return new ModelResponse(null, 0, 0, null, false, 'S:D:001', 'Selected entries have been successfully removed from database.', $timeStamp, time());
+		return new ModelResponse(null, 0, 0, null, false, 'S:D:001', 'Selected entries have been successfully removed from database.', $timeStamp, microtime(true));
 	}
 
 	/**
@@ -118,7 +118,7 @@ class LocationManagementModel extends CoreModel {
 	 * @return \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
 	 */
 	public function deleteCities(array $collection) {
-		$timeStamp = time();
+		$timeStamp = microtime(true);
 		if (!is_array($collection)) {
 			return $this->createException('InvalidParameterValueException', 'Invalid parameter value. Parameter must be an array collection', 'E:S:001');
 		}
@@ -137,11 +137,11 @@ class LocationManagementModel extends CoreModel {
 			}
 		}
 		if ($countDeleted < 0) {
-			return new ModelResponse(null, 0, 0, null, true, 'E:E:001', 'Unable to delete all or some of the selected entries.', $timeStamp, time());
+			return new ModelResponse(null, 0, 0, null, true, 'E:E:001', 'Unable to delete all or some of the selected entries.', $timeStamp, microtime(true));
 		}
 		$this->em->flush();
 
-		return new ModelResponse(null, 0, 0, null, false, 'S:D:001', 'Selected entries have been successfully removed from database.', $timeStamp, time());
+		return new ModelResponse(null, 0, 0, null, false, 'S:D:001', 'Selected entries have been successfully removed from database.', $timeStamp, microtime(true));
 	}
 
 	/**
@@ -150,7 +150,7 @@ class LocationManagementModel extends CoreModel {
 	 *
 	 * @return \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse|bool
 	 */
-	public function doesCityExist($city, \bool $bypass = false) {
+	public function doesCityExist($city, bool $bypass = false) {
 		$response = $this->getCity($city);
 		$exist = true;
 		if ($response->error->exist) {
@@ -170,9 +170,9 @@ class LocationManagementModel extends CoreModel {
 	 * @return \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
 	 */
 	public function getCheckinLog($cLog) {
-		$timeStamp = time();
+		$timeStamp = microtime(true);
 		if ($cLog instanceof BundleEntity\CheckinLogs) {
-			return new ModelResponse(CheckinLogs, 1, 0, null, false, 'S:D:002', 'Entries successfully fetched from database.', $timeStamp, time());
+			return new ModelResponse(CheckinLogs, 1, 0, null, false, 'S:D:002', 'Entries successfully fetched from database.', $timeStamp, microtime(true));
 		}
 		$result = null;
 		switch (CheckinLogs) {
@@ -181,10 +181,10 @@ class LocationManagementModel extends CoreModel {
 				break;
 		}
 		if (is_null($result)) {
-			return new ModelResponse($result, 0, 0, null, true, 'E:D:002', 'Unable to find request entry in database.', $timeStamp, time());
+			return new ModelResponse($result, 0, 0, null, true, 'E:D:002', 'Unable to find request entry in database.', $timeStamp, microtime(true));
 		}
 
-		return new ModelResponse($result, 1, 0, null, false, 'S:D:002', 'Entries successfully fetched from database.', $timeStamp, time());
+		return new ModelResponse($result, 1, 0, null, false, 'S:D:002', 'Entries successfully fetched from database.', $timeStamp, microtime(true));
 	}
 
 	/**
@@ -193,9 +193,9 @@ class LocationManagementModel extends CoreModel {
 	 * @return \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
 	 */
 	public function getCity($city) {
-		$timeStamp = time();
+		$timeStamp = microtime(true);
 		if ($city instanceof BundleEntity\City) {
-			return new ModelResponse($city, 1, 0, null, false, 'S:D:002', 'Entries successfully fetched from database.', $timeStamp, time());
+			return new ModelResponse($city, 1, 0, null, false, 'S:D:002', 'Entries successfully fetched from database.', $timeStamp, microtime(true));
 		}
 		$result = null;
 		switch ($city) {
@@ -214,10 +214,10 @@ class LocationManagementModel extends CoreModel {
 				break;
 		}
 		if (is_null($result)) {
-			return new ModelResponse($result, 0, 0, null, true, 'E:D:002', 'Unable to find request entry in database.', $timeStamp, time());
+			return new ModelResponse($result, 0, 0, null, true, 'E:D:002', 'Unable to find request entry in database.', $timeStamp, microtime(true));
 		}
 
-		return new ModelResponse($result, 1, 0, null, false, 'S:D:002', 'Entries successfully fetched from database.', $timeStamp, time());
+		return new ModelResponse($result, 1, 0, null, false, 'S:D:002', 'Entries successfully fetched from database.', $timeStamp, microtime(true));
 	}
 
 	/**
@@ -226,8 +226,8 @@ class LocationManagementModel extends CoreModel {
 	 *
 	 * @return \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
 	 */
-	public function getCityByUrlKey(\string $urlKey, $language = null) {
-		$timeStamp = time();
+	public function getCityByUrlKey(string $urlKey, $language = null) {
+		$timeStamp = microtime(true);
 		if (!is_string($urlKey)) {
 			return $this->createException('InvalidParameterValueException', '$urlKey must be a string.', 'E:S:007');
 		}
@@ -262,7 +262,7 @@ class LocationManagementModel extends CoreModel {
 		}
 		$response->result->set = $response->result->set[0];
 		$response->stats->execution->start = $timeStamp;
-		$response->stats->execution->end = time();
+		$response->stats->execution->end = microtime(true);
 
 		return $response;
 	}
@@ -282,7 +282,7 @@ class LocationManagementModel extends CoreModel {
 	 * @return \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
 	 */
 	public function insertCityLocalizations(array $collection) {
-		$timeStamp = time();
+		$timeStamp = microtime(true);
 		/** Parameter must be an array */
 		if (!is_array($collection)) {
 			return $this->createException('InvalidParameter', 'Array', 'err.invalid.parameter.collection');
@@ -328,10 +328,10 @@ class LocationManagementModel extends CoreModel {
 		if ($countInserts > 0) {
 			$this->em->flush();
 
-			return new ModelResponse($insertedItems, $countInserts, 0, null, false, 'S:D:003', 'Selected entries have been successfully inserted into database.', $timeStamp, time());
+			return new ModelResponse($insertedItems, $countInserts, 0, null, false, 'S:D:003', 'Selected entries have been successfully inserted into database.', $timeStamp, microtime(true));
 		}
 
-		return new ModelResponse(null, 0, 0, null, true, 'E:D:003', 'One or more entities cannot be inserted into database.', $timeStamp, time());
+		return new ModelResponse(null, 0, 0, null, true, 'E:D:003', 'One or more entities cannot be inserted into database.', $timeStamp, microtime(true));
 	}
 
 	/**
@@ -340,7 +340,7 @@ class LocationManagementModel extends CoreModel {
 	 * @return \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
 	 */
 	public function insertCities(array $collection) {
-		$timeStamp = time();
+		$timeStamp = microtime(true);
 		if (!is_array($collection)) {
 			return $this->createException('InvalidParameterValueException', 'Invalid parameter value. Parameter must be an array collection', 'E:S:001');
 		}
@@ -400,10 +400,10 @@ class LocationManagementModel extends CoreModel {
 		if ($countInserts > 0) {
 			$this->em->flush();
 
-			return new ModelResponse($insertedItems, $countInserts, 0, null, false, 'S:D:003', 'Selected entries have been successfully inserted into database.', $timeStamp, time());
+			return new ModelResponse($insertedItems, $countInserts, 0, null, false, 'S:D:003', 'Selected entries have been successfully inserted into database.', $timeStamp, microtime(true));
 		}
 
-		return new ModelResponse(null, 0, 0, null, true, 'E:D:003', 'One or more entities cannot be inserted into database.', $timeStamp, time());
+		return new ModelResponse(null, 0, 0, null, true, 'E:D:003', 'One or more entities cannot be inserted into database.', $timeStamp, microtime(true));
 	}
 
 	/**
@@ -414,7 +414,7 @@ class LocationManagementModel extends CoreModel {
 	 * @return \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
 	 */
 	public function listCities(array $filter = null, array $sortOrder = null, array $limit = null) {
-		$timeStamp = time();
+		$timeStamp = microtime(true);
 		if (!is_array($sortOrder) && !is_null($sortOrder)) {
 			return $this->createException('InvalidSortOrderException', '$sortOrder must be an array with key => value pairs where value can only be "asc" or "desc".', 'E:S:002');
 		}
@@ -469,10 +469,10 @@ class LocationManagementModel extends CoreModel {
 		unset($unique);
 		$totalRows = count($entities);
 		if ($totalRows < 1) {
-			return new ModelResponse(null, 0, 0, null, true, 'E:D:002', 'No entries found in database that matches to your criterion.', $timeStamp, time());
+			return new ModelResponse(null, 0, 0, null, true, 'E:D:002', 'No entries found in database that matches to your criterion.', $timeStamp, microtime(true));
 		}
 
-		return new ModelResponse($entities, $totalRows, 0, null, false, 'S:D:002', 'Entries successfully fetched from database.', $timeStamp, time());
+		return new ModelResponse($entities, $totalRows, 0, null, false, 'S:D:002', 'Entries successfully fetched from database.', $timeStamp, microtime(true));
 	}
 	/**
 	 * @param array|null $filter
@@ -482,7 +482,7 @@ class LocationManagementModel extends CoreModel {
 	 * @return \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
 	 */
 	public function listDistricts(array $filter = null, array $sortOrder = null, array $limit = null) {
-		$timeStamp = time();
+		$timeStamp = microtime(true);
 		if (!is_array($sortOrder) && !is_null($sortOrder)) {
 			return $this->createException('InvalidSortOrderException', '$sortOrder must be an array with key => value pairs where value can only be "asc" or "desc".', 'E:S:002');
 		}
@@ -537,10 +537,10 @@ class LocationManagementModel extends CoreModel {
 		unset($unique);
 		$totalRows = count($entities);
 		if ($totalRows < 1) {
-			return new ModelResponse(null, 0, 0, null, true, 'E:D:002', 'No entries found in database that matches to your criterion.', $timeStamp, time());
+			return new ModelResponse(null, 0, 0, null, true, 'E:D:002', 'No entries found in database that matches to your criterion.', $timeStamp, microtime(true));
 		}
 
-		return new ModelResponse($entities, $totalRows, 0, null, false, 'S:D:002', 'Entries successfully fetched from database.', $timeStamp, time());
+		return new ModelResponse($entities, $totalRows, 0, null, false, 'S:D:002', 'Entries successfully fetched from database.', $timeStamp, microtime(true));
 	}
 	/**
 	 * @param array|null $filter
@@ -550,7 +550,7 @@ class LocationManagementModel extends CoreModel {
 	 * @return \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
 	 */
 	public function listNeighborhoods(array $filter = null, array $sortOrder = null, array $limit = null) {
-		$timeStamp = time();
+		$timeStamp = microtime(true);
 		if (!is_array($sortOrder) && !is_null($sortOrder)) {
 			return $this->createException('InvalidSortOrderException', '$sortOrder must be an array with key => value pairs where value can only be "asc" or "desc".', 'E:S:002');
 		}
@@ -605,10 +605,10 @@ class LocationManagementModel extends CoreModel {
 		unset($unique);
 		$totalRows = count($entities);
 		if ($totalRows < 1) {
-			return new ModelResponse(null, 0, 0, null, true, 'E:D:002', 'No entries found in database that matches to your criterion.', $timeStamp, time());
+			return new ModelResponse(null, 0, 0, null, true, 'E:D:002', 'No entries found in database that matches to your criterion.', $timeStamp, microtime(true));
 		}
 
-		return new ModelResponse($entities, $totalRows, 0, null, false, 'S:D:002', 'Entries successfully fetched from database.', $timeStamp, time());
+		return new ModelResponse($entities, $totalRows, 0, null, false, 'S:D:002', 'Entries successfully fetched from database.', $timeStamp, microtime(true));
 	}
 	/**
 	 * @param mixed $country
@@ -683,7 +683,7 @@ class LocationManagementModel extends CoreModel {
 	 * @return \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
 	 */
 	public function updateCities(array $collection) {
-		$timeStamp = time();
+		$timeStamp = microtime(true);
 		if (!is_array($collection)) {
 			return $this->createException('InvalidParameterValueException', 'Invalid parameter value. Parameter must be an array collection', 'E:S:001');
 		}
@@ -763,10 +763,10 @@ class LocationManagementModel extends CoreModel {
 		if ($countUpdates > 0) {
 			$this->em->flush();
 
-			return new ModelResponse($updatedItems, $countUpdates, 0, null, false, 'S:D:004', 'Selected entries have been successfully updated within database.', $timeStamp, time());
+			return new ModelResponse($updatedItems, $countUpdates, 0, null, false, 'S:D:004', 'Selected entries have been successfully updated within database.', $timeStamp, microtime(true));
 		}
 
-		return new ModelResponse(null, 0, 0, null, true, 'E:D:004', 'One or more entities cannot be updated within database.', $timeStamp, time());
+		return new ModelResponse(null, 0, 0, null, true, 'E:D:004', 'One or more entities cannot be updated within database.', $timeStamp, microtime(true));
 	}
 
 	/**
@@ -784,7 +784,7 @@ class LocationManagementModel extends CoreModel {
 	 * @return \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
 	 */
 	public function deleteCountries(array $collection) {
-		$timeStamp = time();
+		$timeStamp = microtime(true);
 		if (!is_array($collection)) {
 			return $this->createException('InvalidParameterValueException', 'Invalid parameter value. Parameter must be an array collection', 'E:S:001');
 		}
@@ -803,11 +803,11 @@ class LocationManagementModel extends CoreModel {
 			}
 		}
 		if ($countDeleted < 0) {
-			return new ModelResponse(null, 0, 0, null, true, 'E:E:001', 'Unable to delete all or some of the selected entries.', $timeStamp, time());
+			return new ModelResponse(null, 0, 0, null, true, 'E:E:001', 'Unable to delete all or some of the selected entries.', $timeStamp, microtime(true));
 		}
 		$this->em->flush();
 
-		return new ModelResponse(null, 0, 0, null, false, 'S:D:001', 'Selected entries have been successfully removed from database.', $timeStamp, time());
+		return new ModelResponse(null, 0, 0, null, false, 'S:D:001', 'Selected entries have been successfully removed from database.', $timeStamp, microtime(true));
 	}
 
 	/**
@@ -816,7 +816,7 @@ class LocationManagementModel extends CoreModel {
 	 *
 	 * @return \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse|bool
 	 */
-	public function doesCountryExist($country, \bool $bypass = false) {
+	public function doesCountryExist($country, bool $bypass = false) {
 		$response = $this->getCountry($country);
 		$exist = true;
 		if ($response->error->exist) {
@@ -836,9 +836,9 @@ class LocationManagementModel extends CoreModel {
 	 * @return \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
 	 */
 	public function getCountry($country) {
-		$timeStamp = time();
+		$timeStamp = microtime(true);
 		if ($country instanceof BundleEntity\Country) {
-			return new ModelResponse($country, 1, 0, null, false, 'S:D:002', 'Entries successfully fetched from database.', $timeStamp, time());
+			return new ModelResponse($country, 1, 0, null, false, 'S:D:002', 'Entries successfully fetched from database.', $timeStamp, microtime(true));
 		}
 		$result = null;
 		switch ($country) {
@@ -857,10 +857,10 @@ class LocationManagementModel extends CoreModel {
 				break;
 		}
 		if (is_null($result)) {
-			return new ModelResponse($result, 0, 0, null, true, 'E:D:002', 'Unable to find request entry in database.', $timeStamp, time());
+			return new ModelResponse($result, 0, 0, null, true, 'E:D:002', 'Unable to find request entry in database.', $timeStamp, microtime(true));
 		}
 
-		return new ModelResponse($result, 1, 0, null, false, 'S:D:002', 'Entries successfully fetched from database.', $timeStamp, time());
+		return new ModelResponse($result, 1, 0, null, false, 'S:D:002', 'Entries successfully fetched from database.', $timeStamp, microtime(true));
 	}
 
 	/**
@@ -869,8 +869,8 @@ class LocationManagementModel extends CoreModel {
 	 *
 	 * @return array|\BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
 	 */
-	public function getCountryByUrlKey(\string $urlKey, $language = null) {
-		$timeStamp = time();
+	public function getCountryByUrlKey(string $urlKey, $language = null) {
+		$timeStamp = microtime(true);
 		if (!is_string($urlKey)) {
 			return $this->createException('InvalidParameterValueException', '$urlKey must be a string.', 'E:S:007');
 		}
@@ -923,7 +923,7 @@ class LocationManagementModel extends CoreModel {
 	 * @return \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
 	 */
 	public function insertCountryLocalizations(array $collection) {
-		$timeStamp = time();
+		$timeStamp = microtime(true);
 		/** Parameter must be an array */
 		if (!is_array($collection)) {
 			return $this->createException('InvalidParameter', 'Array', 'err.invalid.parameter.collection');
@@ -969,10 +969,10 @@ class LocationManagementModel extends CoreModel {
 		if ($countInserts > 0) {
 			$this->em->flush();
 
-			return new ModelResponse($insertedItems, $countInserts, 0, null, false, 'S:D:003', 'Selected entries have been successfully inserted into database.', $timeStamp, time());
+			return new ModelResponse($insertedItems, $countInserts, 0, null, false, 'S:D:003', 'Selected entries have been successfully inserted into database.', $timeStamp, microtime(true));
 		}
 
-		return new ModelResponse(null, 0, 0, null, true, 'E:D:003', 'One or more entities cannot be inserted into database.', $timeStamp, time());
+		return new ModelResponse(null, 0, 0, null, true, 'E:D:003', 'One or more entities cannot be inserted into database.', $timeStamp, microtime(true));
 	}
 
 	/**
@@ -981,7 +981,7 @@ class LocationManagementModel extends CoreModel {
 	 * @return \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
 	 */
 	public function insertCountries(array $collection) {
-		$timeStamp = time();
+		$timeStamp = microtime(true);
 		if (!is_array($collection)) {
 			return $this->createException('InvalidParameterValueException', 'Invalid parameter value. Parameter must be an array collection', 'E:S:001');
 		}
@@ -1029,10 +1029,10 @@ class LocationManagementModel extends CoreModel {
 		if ($countInserts > 0) {
 			$this->em->flush();
 
-			return new ModelResponse($insertedItems, $countInserts, 0, null, false, 'S:D:003', 'Selected entries have been successfully inserted into database.', $timeStamp, time());
+			return new ModelResponse($insertedItems, $countInserts, 0, null, false, 'S:D:003', 'Selected entries have been successfully inserted into database.', $timeStamp, microtime(true));
 		}
 
-		return new ModelResponse(null, 0, 0, null, true, 'E:D:003', 'One or more entities cannot be inserted into database.', $timeStamp, time());
+		return new ModelResponse(null, 0, 0, null, true, 'E:D:003', 'One or more entities cannot be inserted into database.', $timeStamp, microtime(true));
 	}
 
 	/**
@@ -1043,7 +1043,7 @@ class LocationManagementModel extends CoreModel {
 	 * @return \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
 	 */
 	public function listCountries(array $filter = null, array $sortOrder = null, array $limit = null) {
-		$timeStamp = time();
+		$timeStamp = microtime(true);
 		if (!is_array($sortOrder) && !is_null($sortOrder)) {
 			return $this->createException('InvalidSortOrderException', '$sortOrder must be an array with key => value pairs where value can only be "asc" or "desc".', 'E:S:002');
 		}
@@ -1096,10 +1096,10 @@ class LocationManagementModel extends CoreModel {
 		unset($unique);
 		$totalRows = count($entities);
 		if ($totalRows < 1) {
-			return new ModelResponse(null, 0, 0, null, true, 'E:D:002', 'No entries found in database that matches to your criterion.', $timeStamp, time());
+			return new ModelResponse(null, 0, 0, null, true, 'E:D:002', 'No entries found in database that matches to your criterion.', $timeStamp, microtime(true));
 		}
 
-		return new ModelResponse($entities, $totalRows, 0, null, false, 'S:D:002', 'Entries successfully fetched from database.', $timeStamp, time());
+		return new ModelResponse($entities, $totalRows, 0, null, false, 'S:D:002', 'Entries successfully fetched from database.', $timeStamp, microtime(true));
 	}
 
 	/**
@@ -1117,7 +1117,7 @@ class LocationManagementModel extends CoreModel {
 	 * @return \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
 	 */
 	public function updateCountries(array $collection) {
-		$timeStamp = time();
+		$timeStamp = microtime(true);
 		if (!is_array($collection)) {
 			return $this->createException('InvalidParameterValueException', 'Invalid parameter value. Parameter must be an array collection', 'E:S:001');
 		}
@@ -1187,10 +1187,10 @@ class LocationManagementModel extends CoreModel {
 		if ($countUpdates > 0) {
 			$this->em->flush();
 
-			return new ModelResponse($updatedItems, $countUpdates, 0, null, false, 'S:D:004', 'Selected entries have been successfully updated within database.', $timeStamp, time());
+			return new ModelResponse($updatedItems, $countUpdates, 0, null, false, 'S:D:004', 'Selected entries have been successfully updated within database.', $timeStamp, microtime(true));
 		}
 
-		return new ModelResponse(null, 0, 0, null, true, 'E:D:004', 'One or more entities cannot be updated within database.', $timeStamp, time());
+		return new ModelResponse(null, 0, 0, null, true, 'E:D:004', 'One or more entities cannot be updated within database.', $timeStamp, microtime(true));
 	}
 
 	/**
@@ -1208,7 +1208,7 @@ class LocationManagementModel extends CoreModel {
 	 * @return \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
 	 */
 	public function deleteStates(array $collection) {
-		$timeStamp = time();
+		$timeStamp = microtime(true);
 		if (!is_array($collection)) {
 			return $this->createException('InvalidParameterValueException', 'Invalid parameter value. Parameter must be an array collection', 'E:S:001');
 		}
@@ -1227,11 +1227,11 @@ class LocationManagementModel extends CoreModel {
 			}
 		}
 		if ($countDeleted < 0) {
-			return new ModelResponse(null, 0, 0, null, true, 'E:E:001', 'Unable to delete all or some of the selected entries.', $timeStamp, time());
+			return new ModelResponse(null, 0, 0, null, true, 'E:E:001', 'Unable to delete all or some of the selected entries.', $timeStamp, microtime(true));
 		}
 		$this->em->flush();
 
-		return new ModelResponse(null, 0, 0, null, false, 'S:D:001', 'Selected entries have been successfully removed from database.', $timeStamp, time());
+		return new ModelResponse(null, 0, 0, null, false, 'S:D:001', 'Selected entries have been successfully removed from database.', $timeStamp, microtime(true));
 	}
 
 	/**
@@ -1240,7 +1240,7 @@ class LocationManagementModel extends CoreModel {
 	 *
 	 * @return \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse|bool
 	 */
-	public function doesStateExist($state, \bool $bypass = false) {
+	public function doesStateExist($state, bool $bypass = false) {
 		$response = $this->getState($state);
 		$exist = true;
 		if ($response->error->exist) {
@@ -1260,9 +1260,9 @@ class LocationManagementModel extends CoreModel {
 	 * @return \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
 	 */
 	public function getState($state) {
-		$timeStamp = time();
+		$timeStamp = microtime(true);
 		if ($state instanceof BundleEntity\State) {
-			return new ModelResponse($state, 1, 0, null, false, 'S:D:002', 'Entries successfully fetched from database.', $timeStamp, time());
+			return new ModelResponse($state, 1, 0, null, false, 'S:D:002', 'Entries successfully fetched from database.', $timeStamp, microtime(true));
 		}
 		$result = null;
 		switch ($state) {
@@ -1281,10 +1281,10 @@ class LocationManagementModel extends CoreModel {
 				break;
 		}
 		if (is_null($result)) {
-			return new ModelResponse($result, 0, 0, null, true, 'E:D:002', 'Unable to find request entry in database.', $timeStamp, time());
+			return new ModelResponse($result, 0, 0, null, true, 'E:D:002', 'Unable to find request entry in database.', $timeStamp, microtime(true));
 		}
 
-		return new ModelResponse($result, 1, 0, null, false, 'S:D:002', 'Entries successfully fetched from database.', $timeStamp, time());
+		return new ModelResponse($result, 1, 0, null, false, 'S:D:002', 'Entries successfully fetched from database.', $timeStamp, microtime(true));
 	}
 
 	/**
@@ -1293,8 +1293,8 @@ class LocationManagementModel extends CoreModel {
 	 *
 	 * @return array|\BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
 	 */
-	public function getStateByUrlKey(\string $urlKey, $language = null) {
-		$timeStamp = time();
+	public function getStateByUrlKey(string $urlKey, $language = null) {
+		$timeStamp = microtime(true);
 		if (!is_string($urlKey)) {
 			return $this->createException('InvalidParameterValueException', '$urlKey must be a string.', 'E:S:007');
 		}
@@ -1342,7 +1342,7 @@ class LocationManagementModel extends CoreModel {
 	 * @return \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
 	 */
 	public function insertStates(array $collection) {
-		$timeStamp = time();
+		$timeStamp = microtime(true);
 		if (!is_array($collection)) {
 			return $this->createException('InvalidParameterValueException', 'Invalid parameter value. Parameter must be an array collection', 'E:S:001');
 		}
@@ -1397,10 +1397,10 @@ class LocationManagementModel extends CoreModel {
 		if ($countInserts > 0) {
 			$this->em->flush();
 
-			return new ModelResponse($insertedItems, $countInserts, 0, null, false, 'S:D:003', 'Selected entries have been successfully inserted into database.', $timeStamp, time());
+			return new ModelResponse($insertedItems, $countInserts, 0, null, false, 'S:D:003', 'Selected entries have been successfully inserted into database.', $timeStamp, microtime(true));
 		}
 
-		return new ModelResponse(null, 0, 0, null, true, 'E:D:003', 'One or more entities cannot be inserted into database.', $timeStamp, time());
+		return new ModelResponse(null, 0, 0, null, true, 'E:D:003', 'One or more entities cannot be inserted into database.', $timeStamp, microtime(true));
 	}
 
 	/**
@@ -1409,7 +1409,7 @@ class LocationManagementModel extends CoreModel {
 	 * @return \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
 	 */
 	public function insertStateLocalizations(array $collection) {
-		$timeStamp = time();
+		$timeStamp = microtime(true);
 		/** Parameter must be an array */
 		if (!is_array($collection)) {
 			return $this->createException('InvalidParameter', 'Array', 'err.invalid.parameter.collection');
@@ -1455,10 +1455,10 @@ class LocationManagementModel extends CoreModel {
 		if ($countInserts > 0) {
 			$this->em->flush();
 
-			return new ModelResponse($insertedItems, $countInserts, 0, null, false, 'S:D:003', 'Selected entries have been successfully inserted into database.', $timeStamp, time());
+			return new ModelResponse($insertedItems, $countInserts, 0, null, false, 'S:D:003', 'Selected entries have been successfully inserted into database.', $timeStamp, microtime(true));
 		}
 
-		return new ModelResponse(null, 0, 0, null, true, 'E:D:003', 'One or more entities cannot be inserted into database.', $timeStamp, time());
+		return new ModelResponse(null, 0, 0, null, true, 'E:D:003', 'One or more entities cannot be inserted into database.', $timeStamp, microtime(true));
 	}
 
 	/**
@@ -1469,7 +1469,7 @@ class LocationManagementModel extends CoreModel {
 	 * @return \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
 	 */
 	public function listCheckinLogs(array $filter = null, array $sortOrder = null, array $limit = null) {
-		$timeStamp = time();
+		$timeStamp = microtime(true);
 		if (!is_array($sortOrder) && !is_null($sortOrder)) {
 			return $this->createException('InvalidSortOrderException', '$sortOrder must be an array with key => value pairs where value can only be "asc" or "desc".', 'E:S:002');
 		}
@@ -1513,10 +1513,10 @@ class LocationManagementModel extends CoreModel {
 		unset($unique);
 		$totalRows = count($result);
 		if ($totalRows < 1) {
-			return new ModelResponse(null, 0, 0, null, true, 'E:D:002', 'No entries found in database that matches to your criterion.', $timeStamp, time());
+			return new ModelResponse(null, 0, 0, null, true, 'E:D:002', 'No entries found in database that matches to your criterion.', $timeStamp, microtime(true));
 		}
 
-		return new ModelResponse($result, $totalRows, 0, null, false, 'S:D:002', 'Entries successfully fetched from database.', $timeStamp, time());
+		return new ModelResponse($result, $totalRows, 0, null, false, 'S:D:002', 'Entries successfully fetched from database.', $timeStamp, microtime(true));
 	}
 
 	/**
@@ -1527,7 +1527,7 @@ class LocationManagementModel extends CoreModel {
 	 *
 	 * @return \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
 	 */
-	public function listCheckinLogsByCheckinCoordinates(\float $lat, \float $lon, array $sortOrder = null, array $limit = null) {
+	public function listCheckinLogsByCheckinCoordinates(float $lat, float $lon, array $sortOrder = null, array $limit = null) {
 		$filter[] = array(
 			'glue'      => ' and',
 			'condition' => array(
@@ -1561,7 +1561,7 @@ class LocationManagementModel extends CoreModel {
 	 *
 	 * @return \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
 	 */
-	public function listCheckinLogsByCheckoutCoordinates (\float $lat, \float $lon, array $sortOrder = null, array $limit = null) {
+	public function listCheckinLogsByCheckoutCoordinates (float $lat, float $lon, array $sortOrder = null, array $limit = null) {
 		$filter[] = array(
 			'glue'      => ' and',
 			'condition' => array(
@@ -1652,7 +1652,7 @@ class LocationManagementModel extends CoreModel {
 	 * @return array|\BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
 	 */
 	public function listCheckinLogsOfOfficeByMemberCheckedInDuring ($member, $office, array $dateRange = [], array $sortOrder = null, array $limit = null) {
-		$timeStamp = microtime();
+		$timeStamp = micromicrotime(true);
 		$response = $this->getOffice($office);
 		if($response->error->exist){
 			return $response;
@@ -1664,7 +1664,7 @@ class LocationManagementModel extends CoreModel {
 		}
 		foreach($dateRange as $dateTimeObj){
 			if(!$dateTimeObj instanceof \DateTime){
-				return new ModelResponse(null, 0, 0, null, true, 'E:T:001', 'DateTime object is exptected.', $timeStamp, microtime());
+				return new ModelResponse(null, 0, 0, null, true, 'E:T:001', 'DateTime object is exptected.', $timeStamp, micromicrotime(true));
 			}
 		}
 		$now = new \DateTime('now', new \DateTimeZone($this->kernel->getContainer()->getParameter('app_timezone')));
@@ -1682,7 +1682,7 @@ class LocationManagementModel extends CoreModel {
 				$dateEnd = $dateRange[1];
 				break;
 			default:
-				return new ModelResponse(null, 0, 0, null, true, 'E:T:002', 'DateTime object is exptected.', $timeStamp, microtime());
+				return new ModelResponse(null, 0, 0, null, true, 'E:T:002', 'DateTime object is exptected.', $timeStamp, micromicrotime(true));
 				break;
 		}
 		$filter[] = array(
@@ -1736,7 +1736,7 @@ class LocationManagementModel extends CoreModel {
 	 * @return array|\BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
 	 */
 	public function listCheckinLogsOfOfficeByMemberCheckedOutDuring ($member, $office, array $dateRange = [], array $sortOrder = null, array $limit = null) {
-		$timeStamp = microtime();
+		$timeStamp = micromicrotime(true);
 		$response = $this->getOffice($office);
 		if($response->error->exist){
 			return $response;
@@ -1748,7 +1748,7 @@ class LocationManagementModel extends CoreModel {
 		}
 		foreach($dateRange as $dateTimeObj){
 			if(!$dateTimeObj instanceof \DateTime){
-				return new ModelResponse(null, 0, 0, null, true, 'E:T:001', 'DateTime object is exptected.', $timeStamp, microtime());
+				return new ModelResponse(null, 0, 0, null, true, 'E:T:001', 'DateTime object is exptected.', $timeStamp, micromicrotime(true));
 			}
 		}
 		$now = new \DateTime('now', new \DateTimeZone($this->kernel->getContainer()->getParameter('app_timezone')));
@@ -1766,7 +1766,7 @@ class LocationManagementModel extends CoreModel {
 				$dateEnd = $dateRange[1];
 				break;
 			default:
-				return new ModelResponse(null, 0, 0, null, true, 'E:T:002', 'DateTime object is exptected.', $timeStamp, microtime());
+				return new ModelResponse(null, 0, 0, null, true, 'E:T:002', 'DateTime object is exptected.', $timeStamp, micromicrotime(true));
 				break;
 		}
 		$filter[] = array(
@@ -1818,14 +1818,14 @@ class LocationManagementModel extends CoreModel {
 	 * @return array|\BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
 	 */
 	public function listCheckinLogsOfOfficeCheckedInDuring($office, array $dateRange = [], array $sortOrder = null, array $limit = null) {
-		$timeStamp = microtime();
+		$timeStamp = micromicrotime(true);
 		$response = $this->getOffice($office);
 		if($response->error->exist){
 			return $response;
 		}
 		foreach($dateRange as $dateTimeObj){
 			if(!$dateTimeObj instanceof \DateTime){
-				return new ModelResponse(null, 0, 0, null, true, 'E:T:001', 'DateTime object is exptected.', $timeStamp, microtime());
+				return new ModelResponse(null, 0, 0, null, true, 'E:T:001', 'DateTime object is exptected.', $timeStamp, micromicrotime(true));
 			}
 		}
 		$now = new \DateTime('now', new \DateTimeZone($this->kernel->getContainer()->getParameter('app_timezone')));
@@ -1843,7 +1843,7 @@ class LocationManagementModel extends CoreModel {
 				$dateEnd = $dateRange[1];
 				break;
 			default:
-				return new ModelResponse(null, 0, 0, null, true, 'E:T:002', 'DateTime object is exptected.', $timeStamp, microtime());
+				return new ModelResponse(null, 0, 0, null, true, 'E:T:002', 'DateTime object is exptected.', $timeStamp, micromicrotime(true));
 				break;
 		}
 		$filter[] = array(
@@ -1888,7 +1888,7 @@ class LocationManagementModel extends CoreModel {
 	 * @return \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
 	 */
 	public function listCheckinLogsOfMemberCheckedOutDuring ($member, array $dateRange = [], array $sortOrder = null, array $limit = null) {
-		$timeStamp = microtime();
+		$timeStamp = micromicrotime(true);
 		$mModel = $this->kernel->getContainer()->get('membermanagement.model');
 		$response = $mModel->getMember($member, 'id');
 		if($response->error->exist){
@@ -1896,7 +1896,7 @@ class LocationManagementModel extends CoreModel {
 		}
 		foreach($dateRange as $dateTimeObj){
 			if(!$dateTimeObj instanceof \DateTime){
-				return new ModelResponse(null, 0, 0, null, true, 'E:T:001', 'DateTime object is exptected.', $timeStamp, microtime());
+				return new ModelResponse(null, 0, 0, null, true, 'E:T:001', 'DateTime object is exptected.', $timeStamp, micromicrotime(true));
 			}
 		}
 		$now = new \DateTime('now', new \DateTimeZone($this->kernel->getContainer()->getParameter('app_timezone')));
@@ -1914,7 +1914,7 @@ class LocationManagementModel extends CoreModel {
 				$dateEnd = $dateRange[1];
 				break;
 			default:
-				return new ModelResponse(null, 0, 0, null, true, 'E:T:002', 'DateTime object is exptected.', $timeStamp, microtime());
+				return new ModelResponse(null, 0, 0, null, true, 'E:T:002', 'DateTime object is exptected.', $timeStamp, micromicrotime(true));
 				break;
 		}
 		$filter[] = array(
@@ -1959,14 +1959,14 @@ class LocationManagementModel extends CoreModel {
 	 * @return array|\BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
 	 */
 	public function listCheckinLogsOfOfficeCheckedOutDuring($office, array $dateRange = [], array $sortOrder = null, array $limit = null) {
-		$timeStamp = microtime();
+		$timeStamp = micromicrotime(true);
 		$response = $this->getOffice($office);
 		if($response->error->exist){
 			return $response;
 		}
 		foreach($dateRange as $dateTimeObj){
 			if(!$dateTimeObj instanceof \DateTime){
-				return new ModelResponse(null, 0, 0, null, true, 'E:T:001', 'DateTime object is exptected.', $timeStamp, microtime());
+				return new ModelResponse(null, 0, 0, null, true, 'E:T:001', 'DateTime object is exptected.', $timeStamp, micromicrotime(true));
 			}
 		}
 		$now = new \DateTime('now', new \DateTimeZone($this->kernel->getContainer()->getParameter('app_timezone')));
@@ -1984,7 +1984,7 @@ class LocationManagementModel extends CoreModel {
 				$dateEnd = $dateRange[1];
 				break;
 			default:
-				return new ModelResponse(null, 0, 0, null, true, 'E:T:002', 'DateTime object is exptected.', $timeStamp, microtime());
+				return new ModelResponse(null, 0, 0, null, true, 'E:T:002', 'DateTime object is exptected.', $timeStamp, micromicrotime(true));
 				break;
 		}
 		$filter[] = array(
@@ -2029,7 +2029,7 @@ class LocationManagementModel extends CoreModel {
 	 * @return \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
 	 */
 	public function listCheckinLogsOfMemberCheckedInDuring ($member, array $dateRange = [], array $sortOrder = null, array $limit = null) {
-		$timeStamp = microtime();
+		$timeStamp = micromicrotime(true);
 		$mModel = $this->kernel->getContainer()->get('membermanagement.model');
 		$response = $mModel->getMember($member, 'id');
 		if($response->error->exist){
@@ -2037,7 +2037,7 @@ class LocationManagementModel extends CoreModel {
 		}
 		foreach($dateRange as $dateTimeObj){
 			if(!$dateTimeObj instanceof \DateTime){
-				return new ModelResponse(null, 0, 0, null, true, 'E:T:001', 'DateTime object is exptected.', $timeStamp, microtime());
+				return new ModelResponse(null, 0, 0, null, true, 'E:T:001', 'DateTime object is exptected.', $timeStamp, micromicrotime(true));
 			}
 		}
 		$now = new \DateTime('now', new \DateTimeZone($this->kernel->getContainer()->getParameter('app_timezone')));
@@ -2055,7 +2055,7 @@ class LocationManagementModel extends CoreModel {
 				$dateEnd = $dateRange[1];
 				break;
 			default:
-				return new ModelResponse(null, 0, 0, null, true, 'E:T:002', 'DateTime object is exptected.', $timeStamp, microtime());
+				return new ModelResponse(null, 0, 0, null, true, 'E:T:002', 'DateTime object is exptected.', $timeStamp, micromicrotime(true));
 				break;
 		}
 		$filter[] = array(
@@ -2159,7 +2159,7 @@ class LocationManagementModel extends CoreModel {
 	 * @return \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
 	 */
 	public function listStates(array $filter = null, array $sortOrder = null, array $limit = null) {
-		$timeStamp = time();
+		$timeStamp = microtime(true);
 		if (!is_array($sortOrder) && !is_null($sortOrder)) {
 			return $this->createException('InvalidSortOrderException', '$sortOrder must be an array with key => value pairs where value can only be "asc" or "desc".', 'E:S:002');
 		}
@@ -2209,10 +2209,10 @@ class LocationManagementModel extends CoreModel {
 		unset($unique);
 		$totalRows = count($entities);
 		if ($totalRows < 1) {
-			return new ModelResponse(null, 0, 0, null, true, 'E:D:002', 'No entries found in database that matches to your criterion.', $timeStamp, time());
+			return new ModelResponse(null, 0, 0, null, true, 'E:D:002', 'No entries found in database that matches to your criterion.', $timeStamp, microtime(true));
 		}
 
-		return new ModelResponse($entities, $totalRows, 0, null, false, 'S:D:002', 'Entries successfully fetched from database.', $timeStamp, time());
+		return new ModelResponse($entities, $totalRows, 0, null, false, 'S:D:002', 'Entries successfully fetched from database.', $timeStamp, microtime(true));
 	}
 
 	/**
@@ -2260,7 +2260,7 @@ class LocationManagementModel extends CoreModel {
 	 * @return \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
 	 */
 	public function updateCheckinLogs(array $collection) {
-		$timeStamp = time();
+		$timeStamp = microtime(true);
 		if (!is_array($collection)) {
 			return $this->createException('InvalidParameterValueException', 'Invalid parameter value. Parameter must be an array collection', 'E:S:001');
 		}
@@ -2326,10 +2326,10 @@ class LocationManagementModel extends CoreModel {
 		if ($countUpdates > 0) {
 			$this->em->flush();
 
-			return new ModelResponse($updatedItems, $countUpdates, 0, null, false, 'S:D:004', 'Selected entries have been successfully updated within database.', $timeStamp, time());
+			return new ModelResponse($updatedItems, $countUpdates, 0, null, false, 'S:D:004', 'Selected entries have been successfully updated within database.', $timeStamp, microtime(true));
 		}
 
-		return new ModelResponse(null, 0, 0, null, true, 'E:D:004', 'One or more entities cannot be updated within database.', $timeStamp, time());
+		return new ModelResponse(null, 0, 0, null, true, 'E:D:004', 'One or more entities cannot be updated within database.', $timeStamp, microtime(true));
 	}
 
 	/**
@@ -2347,7 +2347,7 @@ class LocationManagementModel extends CoreModel {
 	 * @return \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
 	 */
 	public function updateStates(array $collection) {
-		$timeStamp = time();
+		$timeStamp = microtime(true);
 		if (!is_array($collection)) {
 			return $this->createException('InvalidParameterValueException', 'Invalid parameter value. Parameter must be an array collection', 'E:S:001');
 		}
@@ -2428,10 +2428,10 @@ class LocationManagementModel extends CoreModel {
 		if ($countUpdates > 0) {
 			$this->em->flush();
 
-			return new ModelResponse($updatedItems, $countUpdates, 0, null, false, 'S:D:004', 'Selected entries have been successfully updated within database.', $timeStamp, time());
+			return new ModelResponse($updatedItems, $countUpdates, 0, null, false, 'S:D:004', 'Selected entries have been successfully updated within database.', $timeStamp, microtime(true));
 		}
 
-		return new ModelResponse(null, 0, 0, null, true, 'E:D:004', 'One or more entities cannot be updated within database.', $timeStamp, time());
+		return new ModelResponse(null, 0, 0, null, true, 'E:D:004', 'One or more entities cannot be updated within database.', $timeStamp, microtime(true));
 	}
 
 	/**
@@ -2449,7 +2449,7 @@ class LocationManagementModel extends CoreModel {
 	 * @return \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
 	 */
 	public function deleteOffices(array $collection) {
-		$timeStamp = time();
+		$timeStamp = microtime(true);
 		if (!is_array($collection)) {
 			return $this->createException('InvalidParameterValueException', 'Invalid parameter value. Parameter must be an array collection', 'E:S:001');
 		}
@@ -2468,11 +2468,11 @@ class LocationManagementModel extends CoreModel {
 			}
 		}
 		if ($countDeleted < 0) {
-			return new ModelResponse(null, 0, 0, null, true, 'E:E:001', 'Unable to delete all or some of the selected entries.', $timeStamp, time());
+			return new ModelResponse(null, 0, 0, null, true, 'E:E:001', 'Unable to delete all or some of the selected entries.', $timeStamp, microtime(true));
 		}
 		$this->em->flush();
 
-		return new ModelResponse(null, 0, 0, null, false, 'S:D:001', 'Selected entries have been successfully removed from database.', $timeStamp, time());
+		return new ModelResponse(null, 0, 0, null, false, 'S:D:001', 'Selected entries have been successfully removed from database.', $timeStamp, microtime(true));
 	}
 
 	/**
@@ -2481,7 +2481,7 @@ class LocationManagementModel extends CoreModel {
 	 *
 	 * @return array|bool
 	 */
-	public function doesOfficeExist($office, \bool $bypass = false) {
+	public function doesOfficeExist($office, bool $bypass = false) {
 		$response = $this->getOffice($office);
 		$exist = true;
 		if ($response->error->exist) {
@@ -2502,9 +2502,9 @@ class LocationManagementModel extends CoreModel {
 	 */
 
 	public function getOffice($office) {
-		$timeStamp = time();
+		$timeStamp = microtime(true);
 		if ($office instanceof BundleEntity\Office) {
-			return new ModelResponse($office, 1, 0, null, false, 'S:D:002', 'Entries successfully fetched from database.', $timeStamp, time());
+			return new ModelResponse($office, 1, 0, null, false, 'S:D:002', 'Entries successfully fetched from database.', $timeStamp, microtime(true));
 		}
 		$result = null;
 		switch ($office) {
@@ -2517,10 +2517,10 @@ class LocationManagementModel extends CoreModel {
 				break;
 		}
 		if (is_null($result)) {
-			return new ModelResponse($result, 0, 0, null, true, 'E:D:002', 'Unable to find request entry in database.', $timeStamp, time());
+			return new ModelResponse($result, 0, 0, null, true, 'E:D:002', 'Unable to find request entry in database.', $timeStamp, microtime(true));
 		}
 
-		return new ModelResponse($result, 1, 0, null, false, 'S:D:002', 'Entries successfully fetched from database.', $timeStamp, time());
+		return new ModelResponse($result, 1, 0, null, false, 'S:D:002', 'Entries successfully fetched from database.', $timeStamp, microtime(true));
 	}
 
 	/**
@@ -2538,7 +2538,7 @@ class LocationManagementModel extends CoreModel {
 	 * @return \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
 	 */
 	public function insertCheckinLogs(array $collection) {
-		$timeStamp = time();
+		$timeStamp = microtime(true);
 		if (!is_array($collection)) {
 			return $this->createException('InvalidParameterValueException', 'Invalid parameter value. Parameter must be an array collection', 'E:S:001');
 		}
@@ -2591,10 +2591,10 @@ class LocationManagementModel extends CoreModel {
 		if ($countInserts > 0) {
 			$this->em->flush();
 
-			return new ModelResponse($insertedItems, $countInserts, 0, null, false, 'S:D:003', 'Selected entries have been successfully inserted into database.', $timeStamp, time());
+			return new ModelResponse($insertedItems, $countInserts, 0, null, false, 'S:D:003', 'Selected entries have been successfully inserted into database.', $timeStamp, microtime(true));
 		}
 
-		return new ModelResponse(null, 0, 0, null, true, 'E:D:003', 'One or more entities cannot be inserted into database.', $timeStamp, time());
+		return new ModelResponse(null, 0, 0, null, true, 'E:D:003', 'One or more entities cannot be inserted into database.', $timeStamp, microtime(true));
 	}
 
 	/**
@@ -2612,7 +2612,7 @@ class LocationManagementModel extends CoreModel {
 	 * @return \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
 	 */
 	public function insertOffices(array $collection) {
-		$timeStamp = time();
+		$timeStamp = microtime(true);
 		if (!is_array($collection)) {
 			return $this->createException('InvalidParameterValueException', 'Invalid parameter value. Parameter must be an array collection', 'E:S:001');
 		}
@@ -2681,10 +2681,10 @@ class LocationManagementModel extends CoreModel {
 		if ($countInserts > 0) {
 			$this->em->flush();
 
-			return new ModelResponse($insertedItems, $countInserts, 0, null, false, 'S:D:003', 'Selected entries have been successfully inserted into database.', $timeStamp, time());
+			return new ModelResponse($insertedItems, $countInserts, 0, null, false, 'S:D:003', 'Selected entries have been successfully inserted into database.', $timeStamp, microtime(true));
 		}
 
-		return new ModelResponse(null, 0, 0, null, true, 'E:D:003', 'One or more entities cannot be inserted into database.', $timeStamp, time());
+		return new ModelResponse(null, 0, 0, null, true, 'E:D:003', 'One or more entities cannot be inserted into database.', $timeStamp, microtime(true));
 	}
 
 	/**
@@ -2695,7 +2695,7 @@ class LocationManagementModel extends CoreModel {
 	 * @return \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
 	 */
 	public function listOffices(array $filter = null, array $sortOrder = null, array $limit = null) {
-		$timeStamp = time();
+		$timeStamp = microtime(true);
 		if (!is_array($sortOrder) && !is_null($sortOrder)) {
 			return $this->createException('InvalidSortOrderException', '$sortOrder must be an array with key => value pairs where value can only be "asc" or "desc".', 'E:S:002');
 		}
@@ -2738,10 +2738,10 @@ class LocationManagementModel extends CoreModel {
 		$result = $q->getResult();
 		$totalRows = count($result);
 		if ($totalRows < 1) {
-			return new ModelResponse(null, 0, 0, null, true, 'E:D:002', 'No entries found in database that matches to your criterion.', $timeStamp, time());
+			return new ModelResponse(null, 0, 0, null, true, 'E:D:002', 'No entries found in database that matches to your criterion.', $timeStamp, microtime(true));
 		}
 
-		return new ModelResponse($result, $totalRows, 0, null, false, 'S:D:002', 'Entries successfully fetched from database.', $timeStamp, time());
+		return new ModelResponse($result, $totalRows, 0, null, false, 'S:D:002', 'Entries successfully fetched from database.', $timeStamp, microtime(true));
 
 	}
 
@@ -2751,7 +2751,7 @@ class LocationManagementModel extends CoreModel {
 	 *
 	 * @return \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
 	 */
-	public function listOfficesByCoordinates(\float $lat, \float $lon) {
+	public function listOfficesByCoordinates(float $lat, float $lon) {
 		$filter[] = array(
 			'glue'      => ' and',
 			'condition' => array(
@@ -2785,9 +2785,9 @@ class LocationManagementModel extends CoreModel {
 	 * @return \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
 	 */
 	public function listOfficesWithinCoordinates(array $coordinates, array $sortOrder = null, array $limit = null) {
-		$timeStamp = time();
+		$timeStamp = microtime(true);
 		if(!isset($coordinates['from']) || !isset($coordinates['to'])){
-			return new ModelResponse(null, 0, 0, null, true, 'E:D:002', 'Invalid coordinate', $timeStamp, time());
+			return new ModelResponse(null, 0, 0, null, true, 'E:D:002', 'Invalid coordinate', $timeStamp, microtime(true));
 		}
 		$coordinateFrom = $coordinates['from'];
 		$coordinateTo = $coordinates['to'];
@@ -2838,7 +2838,7 @@ class LocationManagementModel extends CoreModel {
 	 *
 	 * @return \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
 	 */
-	public function listOfficesByType(\string $type) {
+	public function listOfficesByType(string $type) {
 		$filter[] = array(
 			'glue'      => ' and',
 			'condition' => array(
@@ -2861,7 +2861,7 @@ class LocationManagementModel extends CoreModel {
 	 *
 	 * @return \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
 	 */
-	public function listOfficesByName(\string $name) {
+	public function listOfficesByName(string $name) {
 		$filter[] = array(
 			'glue'      => ' and',
 			'condition' => array(
@@ -2887,7 +2887,7 @@ class LocationManagementModel extends CoreModel {
 	 * @return \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
 	 */
 	public function listOfficesInCities(array $cities, array $sortOrder = null, array $limit = null) {
-		$timeStamp = time();
+		$timeStamp = microtime(true);
 		$in = [];
 		foreach($cities as $city){
 			$response = $this->getCity($city);
@@ -2898,7 +2898,7 @@ class LocationManagementModel extends CoreModel {
 		}
 		unset($response);
 		if(count($in) < 1){
-			return new ModelResponse(null, 0, 0, null, true, 'E:D:002', 'No entries found in database that matches to your criterion.', $timeStamp, time());
+			return new ModelResponse(null, 0, 0, null, true, 'E:D:002', 'No entries found in database that matches to your criterion.', $timeStamp, microtime(true));
 		}
 
 		$filter[] = array(
@@ -3058,7 +3058,7 @@ class LocationManagementModel extends CoreModel {
 	 * @return \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
 	 */
 	public function updateOffices(array $collection) {
-		$timeStamp = time();
+		$timeStamp = microtime(true);
 		if (!is_array($collection)) {
 			return $this->createException('InvalidParameterValueException', 'Invalid parameter value. Parameter must be an array collection', 'E:S:001');
 		}
@@ -3128,8 +3128,8 @@ class LocationManagementModel extends CoreModel {
 		}
 		if ($countUpdates > 0) {
 			$this->em->flush();
-			return new ModelResponse($updatedItems, $countUpdates, 0, null, false, 'S:D:004', 'Selected entries have been successfully updated within database.', $timeStamp, time());
+			return new ModelResponse($updatedItems, $countUpdates, 0, null, false, 'S:D:004', 'Selected entries have been successfully updated within database.', $timeStamp, microtime(true));
 		}
-		return new ModelResponse(null, 0, 0, null, true, 'E:D:004', 'One or more entities cannot be updated within database.', $timeStamp, time());
+		return new ModelResponse(null, 0, 0, null, true, 'E:D:004', 'One or more entities cannot be updated within database.', $timeStamp, microtime(true));
 	}
 }

@@ -118,7 +118,7 @@ class CheckinLogs extends CoreEntity
      *
      * @return $this
      */
-    public function setId(\integer $id){
+    public function setId(int $id){
         if(!$this->setModified('id', $id)->isModified()){
             return $this;
         }
@@ -181,7 +181,7 @@ class CheckinLogs extends CoreEntity
      *
      * @return $this
      */
-    public function setLatCheckin(\float $lat_checkin){
+    public function setLatCheckin(float $lat_checkin){
         if(!$this->setModified('lat_checkin', $lat_checkin)->isModified()){
             return $this;
         }
@@ -202,7 +202,7 @@ class CheckinLogs extends CoreEntity
      *
      * @return $this
      */
-    public function setLonCheckin(\float $lon_checkin){
+    public function setLonCheckin(float $lon_checkin){
         if(!$this->setModified('lon_checkin', $lon_checkin)->isModified()){
             return $this;
         }
@@ -223,7 +223,7 @@ class CheckinLogs extends CoreEntity
      *
      * @return $this
      */
-    public function setLatCheckout(\float $lat_checkout){
+    public function setLatCheckout(float $lat_checkout){
         if(!$this->setModified('lat_checkout', $lat_checkout)->isModified()){
             return $this;
         }
@@ -244,7 +244,7 @@ class CheckinLogs extends CoreEntity
      *
      * @return $this
      */
-    public function setLonCheckout(\float $lon_checkout){
+    public function setLonCheckout(float $lon_checkout){
         if(!$this->setModified('lon_checkout', $lon_checkout)->isModified()){
             return $this;
         }
@@ -307,7 +307,7 @@ class CheckinLogs extends CoreEntity
      *
      * @return $this
      */
-    public function setCheckoutType(\string $checkoutType){
+    public function setCheckoutType(string $checkoutType){
         if(!$this->setModified('checkoutType', $checkoutType)->isModified()){
             return $this;
         }

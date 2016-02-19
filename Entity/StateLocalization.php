@@ -79,7 +79,7 @@ class StateLocalization extends CoreEntity
      *
      * @return $this
      */
-    public function setName(\string $name) {
+    public function setName(string $name) {
         if(!$this->setModified('name', $name)->isModified()) {
             return $this;
         }
@@ -119,7 +119,7 @@ class StateLocalization extends CoreEntity
      *
      * @return $this
      */
-    public function setUrlKey(\string $url_key) {
+    public function setUrlKey(string $url_key) {
         if(!$this->setModified('url_key', $url_key)->isModified()) {
             return $this;
         }

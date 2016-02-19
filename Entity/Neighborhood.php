@@ -72,7 +72,7 @@ class Neighborhood extends CoreLocalizableEntity
 	 *
 	 * @return $this
 	 */
-	public function setZip(\string $zip){
+	public function setZip(string $zip){
 		if(!$this->setModified('zip', $zip)->isModified()){
 			return $this;
 		}

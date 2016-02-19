@@ -90,7 +90,7 @@ class State extends CoreLocalizableEntity
      *
      * @return $this
      */
-    public function setCodeIso(\string $code_iso) {
+    public function setCodeIso(string $code_iso) {
         if(!$this->setModified('code_iso', $code_iso)->isModified()) {
             return $this;
         }

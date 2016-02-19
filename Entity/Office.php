@@ -150,7 +150,7 @@ class Office extends CoreEntity
      *
      * @return $this
      */
-    public function setAddress(\string $address) {
+    public function setAddress(string $address) {
         if(!$this->setModified('address', $address)->isModified()) {
             return $this;
         }
@@ -190,7 +190,7 @@ class Office extends CoreEntity
      *
      * @return $this
      */
-    public function setLon(\float $lon) {
+    public function setLon(float $lon) {
         if(!$this->setModified('lon', $lon)->isModified()) {
             return $this;
         }
@@ -210,7 +210,7 @@ class Office extends CoreEntity
      *
      * @return $this
      */
-    public function setLat(\float $lat) {
+    public function setLat(float $lat) {
         if(!$this->setModified('lat', $lat)->isModified()) {
             return $this;
         }
@@ -250,7 +250,7 @@ class Office extends CoreEntity
      *
      * @return $this
      */
-    public function setEmail(\string $email) {
+    public function setEmail(string $email) {
         if(!$this->setModified('email', $email)->isModified()) {
             return $this;
         }
@@ -270,7 +270,7 @@ class Office extends CoreEntity
      *
      * @return $this
      */
-    public function setFax(\string $fax) {
+    public function setFax(string $fax) {
         if(!$this->setModified('fax', $fax)->isModified()) {
             return $this;
         }
@@ -290,7 +290,7 @@ class Office extends CoreEntity
      *
      * @return $this
      */
-    public function setName(\string $name) {
+    public function setName(string $name) {
         if(!$this->setModified('name', $name)->isModified()) {
             return $this;
         }
@@ -310,7 +310,7 @@ class Office extends CoreEntity
      *
      * @return $this
      */
-    public function setPhone(\string $phone) {
+    public function setPhone(string $phone) {
         if(!$this->setModified('phone', $phone)->isModified()) {
             return $this;
         }
@@ -370,7 +370,7 @@ class Office extends CoreEntity
      *
      * @return $this
      */
-    public function setUrlKey(\string $url_key) {
+    public function setUrlKey(string $url_key) {
         if(!$this->setModified('url_key', $url_key)->isModified()) {
             return $this;
         }
