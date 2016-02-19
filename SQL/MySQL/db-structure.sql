@@ -32,6 +32,7 @@ CREATE TABLE `checkin_logs` (
   `date_added` datetime NOT NULL,
   `date_updated` datetime DEFAULT NULL,
   `date_removed` datetime DEFAULT NULL,
+  `extra_info` TEXT DEFAULT NULL,
   `checkout_type` char(1) COLLATE utf8_turkish_ci DEFAULT NULL COMMENT 's:system, u:user',
   PRIMARY KEY (`id`),
   UNIQUE KEY `idxUCheckinId` (`id`),

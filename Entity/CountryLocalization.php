@@ -44,7 +44,7 @@ class CountryLocalization extends CoreEntity
     /** 
      * @ORM\Id
      * @ORM\ManyToOne(targetEntity="BiberLtd\Bundle\MultiLanguageSupportBundle\Entity\Language")
-     * @ORM\JoinColumn(name="language", referencedColumnName="id", onDelete="CASCADE")
+     * @ORM\JoinColumn(name="language", referencedColumnName="id", nullable=false, onDelete="CASCADE")
      */
     private $language;
 
@@ -54,7 +54,7 @@ class CountryLocalization extends CoreEntity
      *     targetEntity="BiberLtd\Bundle\LocationManagementBundle\Entity\Country",
      *     inversedBy="localizations"
      * )
-     * @ORM\JoinColumn(name="country", referencedColumnName="id", onDelete="CASCADE")
+     * @ORM\JoinColumn(name="country", referencedColumnName="id", nullable=false, onDelete="CASCADE")
      */
     private $country;
 

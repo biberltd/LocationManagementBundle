@@ -88,6 +88,11 @@ class CheckinLogs extends CoreEntity
     private $checkout_type;
 
     /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $extra_info;
+
+    /**
      * @ORM\ManyToOne(targetEntity="BiberLtd\Bundle\LocationManagementBundle\Entity\Office")
      * @ORM\JoinColumn(name="office", referencedColumnName="id", nullable=false, onDelete="CASCADE")
      */
@@ -448,6 +453,39 @@ class CheckinLogs extends CoreEntity
 
         return $this;
     }
+    /**
+     * @name        setEctraInfo ()
+     *
+     * @author      Can Berkol
+     *
+     * @since       1.0.0
+     * @version     1.0.0
+     *
+     * @return      mixed
+     */
+    public function getExtraInfo(){
+        return $this->extra_info;
+    }
 
+    /**
+     * @name        setEctraInfo ()
+     *
+     * @author      Can Berkol
+     *
+     * @since       1.0.0
+     * @version     1.0.0
+     *
+     * @param       mixed $info
+     *
+     * @return      $this
+     */
+    public function setEctraInfo($info){
+        if(!$this->setModified('extra_info', $info)->isModified()){
+            return $this;
+        }
+        $this->extra_info = $info;
+
+        return $this;
+    }
 
 }
