@@ -17,10 +17,8 @@ use BiberLtd\Bundle\CoreBundle\CoreEntity;
  * @ORM\Entity
  * @ORM\Table(
  *     name="office",
- *     uniqueConstraints={
- *         @ORM\UniqueConstraint(name="idxUOfficeId", columns={"id"}),
- *         @ORM\UniqueConstraint(name="idxUOfficeUrlKey", columns={"url_key","site"})
- *     }
+ *     indexes={@ORM\Index(name="idxUOfficeUrlKey", columns={"url_key","site"})},
+ *     uniqueConstraints={@ORM\UniqueConstraint(name="idxUOfficeId", columns={"id"})}
  * )
  */
 class Office extends CoreEntity
