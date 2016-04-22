@@ -120,8 +120,8 @@ class Office extends CoreEntity
      * @ORM\JoinColumn(name="member", referencedColumnName="id", onDelete="CASCADE")
      */
     private $member;
-    /**
-     * 
+    /** 
+     * @ORM\Column(type="text", nullable=true)
      */
     private $extra_info;
     /******************************************************************
