@@ -131,10 +131,6 @@ class Office extends CoreEntity
      * @var Member
      */
     private $member;
-    /**
-     * 
-     */
-    private $extra_info;
 
     /**
      * @return int
@@ -382,4 +378,27 @@ class Office extends CoreEntity
     public function getUrlKey() {
         return $this->url_key;
     }
+
+    /**
+     * @return Member
+     */
+    public function getMember()
+    {
+        return $this->member;
+    }
+
+    /**
+     * @param $member
+     * @return $this
+     */
+    public function setMember($member)
+    {
+        if (!$this->setModified('member', $member)->isModified()) {
+            return $this;
+        }
+        $this->member = $member;
+        return $this;
+    }
+
+
 }

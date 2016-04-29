@@ -9,50 +9,48 @@
  */
 
 namespace BiberLtd\Bundle\LocationManagementBundle\Entity;
+use BiberLtd\Bundle\CoreBundle\CoreLocalizableEntity;
 use Doctrine\ORM\Mapping AS ORM;
 
 /**
  * @ORM\Entity
- * @ORM\Table(
- *     name="district",
- *     options={"charset":"utf8","collate":"utf8_turkish_ci","engine":"innodb"},
- *     indexes={@ORM\Index(name="idxNDistrictZips", columns={"zip"})}
- * )
+ * @ORM\Table(name="district", options={"charset":"utf8","collate":"utf8_turkish_ci","engine":"innodb"})
  */
-class District
+class District extends CoreLocalizableEntity
 {
     /**
      * @ORM\Id
-     * @ORM\Column(type="integer", options={"unsigned":true})
+     * @ORM\Column(type="integer", length=10, options={"unsigned":true})
      * @ORM\GeneratedValue(strategy="AUTO")
      * @var int
      */
     private $id;
 
     /**
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(type="string", length=20, nullable=true)
      * @var string
      */
     private $zip;
 
     /**
-     * @ORM\OneToMany(targetEntity="BiberLtd\Bundle\LocationManagementBundle\Entity\Neighborhood", mappedBy="district")
+     * 
      * @var Neighborhood
      */
     private $neighborhood;
 
     /**
+     * 
+     * @var array
      * @ORM\OneToMany(
      *     targetEntity="BiberLtd\Bundle\LocationManagementBundle\Entity\DistrictLocalization",
      *     mappedBy="district"
-     * )
-     * @var array
+     * ) array
      */
     private $localizations;
 
     /**
      * @ORM\ManyToOne(targetEntity="BiberLtd\Bundle\LocationManagementBundle\Entity\City")
-     * @ORM\JoinColumn(name="city", referencedColumnName="id", onDelete="CASCADE")
+     * @ORM\JoinColumn(name="city", referencedColumnName="id", nullable=false, onDelete="CASCADE")
      * @var City
      */
     private $city;

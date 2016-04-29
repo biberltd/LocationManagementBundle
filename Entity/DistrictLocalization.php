@@ -8,18 +8,15 @@
  * @date        12.01.2015
  */
 namespace BiberLtd\Bundle\LocationManagementBundle\Entity;
+use BiberLtd\Bundle\CoreBundle\CoreEntity;
 use BiberLtd\Bundle\MultiLanguageSupportBundle\Entity\Language;
 use Doctrine\ORM\Mapping AS ORM;
 
 /**
  * @ORM\Entity
- * @ORM\Table(
- *     name="district_localization",
- *     options={"charset":"utf8","collate":"utf8_turkish_ci","engine":"innodb"},
- *     uniqueConstraints={@ORM\UniqueConstraint(name="idxUDistrictLocalization", columns={"district","language"})}
- * )
+ * @ORM\Table(name="district_localization", options={"charset":"utf8","collate":"utf8_turkish_ci","engine":"innodb"})
  */
-class DistrictLocalization
+class DistrictLocalization extends CoreEntity
 {
     /**
      * @ORM\Column(type="string", length=155, nullable=false)
@@ -47,7 +44,7 @@ class DistrictLocalization
     /**
      * @ORM\Id
      * @ORM\ManyToOne(targetEntity="BiberLtd\Bundle\MultiLanguageSupportBundle\Entity\Language")
-     * @ORM\JoinColumn(name="language", referencedColumnName="id", nullable=false, onDelete="CASCADE")
+     * @ORM\JoinColumn(name="language", referencedColumnName="id", nullable=false)
      * @var Language
      */
     private $language;
