@@ -499,13 +499,13 @@ class LocationManagementModel extends CoreModel {
 					case 'country':
 					case 'state':
 					case 'code':
-						$column = $this->entity['c']['alias'] . '.' . $column;
+						$column = $this->entity['d']['alias'] . '.' . $column;
 						break;
 					case 'language':
 					case 'city':
 					case 'name':
 					case 'url_key':
-						$column = $this->entity['cl']['alias'] . '.' . $column;
+						$column = $this->entity['dl']['alias'] . '.' . $column;
 						break;
 				}
 				$oStr .= ' ' . $column . ' ' . strtoupper($direction) . ', ';
