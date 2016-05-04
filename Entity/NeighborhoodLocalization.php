@@ -39,7 +39,7 @@ class NeighborhoodLocalization extends CoreEntity
      *     targetEntity="BiberLtd\Bundle\LocationManagementBundle\Entity\Neighborhood",
      *     inversedBy="localizations"
      * )
-     * @ORM\JoinColumn(name="neighborhood", referencedColumnName="id", nullable=false)
+     * @ORM\JoinColumn(name="neighborhood", referencedColumnName="id", nullable=false, onDelete="CASCADE")
      * @var Neighborhood
      */
     private $neighborhood;

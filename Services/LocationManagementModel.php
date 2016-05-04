@@ -3132,4 +3132,32 @@ class LocationManagementModel extends CoreModel {
 		}
 		return new ModelResponse(null, 0, 0, null, true, 'E:D:004', 'One or more entities cannot be updated within database.', $timeStamp, microtime(true));
 	}
+	/**
+	 * @param mixed $city
+	 * @param array|null $ortOrder
+	 * @param array|null $limit
+	 *
+	 * @return \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
+	 */
+	public function listDistrictsOfCity($city, array $ortOrder = null, array $limit = null) {
+		$response = $this->getCity($city);
+		if ($response->error->exist) {
+			return $response;
+		}
+		$city = $response->result->set;
+		unset($response);
+		$filter[] = array(
+			'glue'      => 'and',
+			'condition' => array(
+				array(
+					'glue'      => 'and',
+					'condition' => array(
+						'column'     => $this->entity['d']['alias'] . '.city',
+						'comparison' => '=', 'value' => $city->getId()),
+				)
+			)
+		);
+
+		return $this->listDistricts($filter, $ortOrder, $limit);
+	}
 }

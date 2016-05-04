@@ -13,20 +13,24 @@ use Doctrine\ORM\Mapping AS ORM;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="neighboorhood", options={"charset":"utf8","collate":"utf8_turkish_ci","engine":"innodb"})
+ * @ORM\Table(
+ *     name="neighborhood",
+ *     options={"charset":"utf8","collate":"utf8_turkish_ci","engine":"innodb"},
+ *     indexes={@ORM\Index(name="idxNNeighborhoodZips", columns={"zip"})}
+ * )
  */
 class Neighborhood extends CoreLocalizableEntity
 {
     /**
      * @ORM\Id
-     * @ORM\Column(type="integer", length=10, options={"unsigned":true})
+     * @ORM\Column(type="integer", options={"unsigned":true})
      * @ORM\GeneratedValue(strategy="AUTO")
      * @var int
      */
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=20, nullable=true)
+     * @ORM\Column(type="string", nullable=true)
      * @var string
      */
     private $zip;
@@ -40,7 +44,10 @@ class Neighborhood extends CoreLocalizableEntity
     public $localizations;
 
     /**
-     * @ORM\ManyToOne(targetEntity="BiberLtd\Bundle\LocationManagementBundle\Entity\District")
+     * @ORM\ManyToOne(
+     *     targetEntity="BiberLtd\Bundle\LocationManagementBundle\Entity\District",
+     *     inversedBy="neighborhood"
+     * )
      * @ORM\JoinColumn(name="district", referencedColumnName="id", nullable=false, onDelete="CASCADE")
      * @var District
      */

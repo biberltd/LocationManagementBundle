@@ -93,7 +93,7 @@ class CheckinLogs extends CoreEntity
     private $checkout_type;
 
     /**
-     * @ORM\Column(type="text", nullable=true)
+     * 
      */
     private $extra_info;
 

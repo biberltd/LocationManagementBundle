@@ -14,7 +14,11 @@ use Doctrine\ORM\Mapping AS ORM;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="district_localization", options={"charset":"utf8","collate":"utf8_turkish_ci","engine":"innodb"})
+ * @ORM\Table(
+ *     name="district_localization",
+ *     options={"charset":"utf8","collate":"utf8_turkish_ci","engine":"innodb"},
+ *     uniqueConstraints={@ORM\UniqueConstraint(name="idxUDistrictLocalization", columns={"district","language"})}
+ * )
  */
 class DistrictLocalization extends CoreEntity
 {
@@ -44,7 +48,7 @@ class DistrictLocalization extends CoreEntity
     /**
      * @ORM\Id
      * @ORM\ManyToOne(targetEntity="BiberLtd\Bundle\MultiLanguageSupportBundle\Entity\Language")
-     * @ORM\JoinColumn(name="language", referencedColumnName="id", nullable=false)
+     * @ORM\JoinColumn(name="language", referencedColumnName="id", nullable=false, onDelete="CASCADE")
      * @var Language
      */
     private $language;
