@@ -41,7 +41,7 @@ class Neighborhood extends CoreLocalizableEntity
      *     mappedBy="neighborhood"
      * ) array
      */
-    public $localizations;
+    protected $localizations;
 
     /**
      * @ORM\ManyToOne(

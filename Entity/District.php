@@ -51,7 +51,7 @@ class District extends CoreLocalizableEntity
      *     mappedBy="district"
      * ) array
      */
-    private $localizations;
+    protected $localizations;
 
     /**
      * @ORM\ManyToOne(targetEntity="BiberLtd\Bundle\LocationManagementBundle\Entity\City")
