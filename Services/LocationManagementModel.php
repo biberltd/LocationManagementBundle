@@ -3160,4 +3160,79 @@ class LocationManagementModel extends CoreModel {
 
 		return $this->listDistricts($filter, $ortOrder, $limit);
 	}
+
+	/**
+	 * @param $district
+	 * @return ModelResponse
+	 */
+	public function getDistrict($district) {
+		$timeStamp = microtime(true);
+		if ($district instanceof BundleEntity\District) {
+			return new ModelResponse($district, 1, 0, null, false, 'S:D:002', 'Entries successfully fetched from database.', $timeStamp, microtime(true));
+		}
+		$result = null;
+		switch ($district) {
+			case is_numeric($district):
+				$result = $this->em->getRepository($this->entity['d']['name'])->findOneBy(array('id' => $district));
+				break;
+			case is_string($district):
+				$response = $this->getDistrictByUrlKey($district);
+				if (!$response->error->exist) {
+					$result = $response->result->set;
+				}
+				unset($response);
+				break;
+		}
+		if (is_null($result)) {
+			return new ModelResponse($result, 0, 0, null, true, 'E:D:002', 'Unable to find request entry in database.', $timeStamp, microtime(true));
+		}
+
+		return new ModelResponse($result, 1, 0, null, false, 'S:D:002', 'Entries successfully fetched from database.', $timeStamp, microtime(true));
+	}
+
+	/**
+	 * @param string $urlKey
+	 * @param null $language
+	 * @return ModelResponse
+	 */
+	public function getDistrictByUrlKey(string $urlKey, $language = null) {
+		$timeStamp = microtime(true);
+		if (!is_string($urlKey)) {
+			return $this->createException('InvalidParameterValueException', '$urlKey must be a string.', 'E:S:007');
+		}
+		$filter[] = array(
+			'glue'      => 'and',
+			'condition' => array(
+				array(
+					'glue'      => 'and',
+					'condition' => array('column' => $this->entity['dl']['alias'] . '.url_key', 'comparison' => '=', 'value' => $urlKey),
+				)
+			)
+		);
+		if (!is_null($language)) {
+			$mModel = $this->kernel->getContainer()->get('multilanguagesupport.model');
+			$response = $mModel->getLanguage($language);
+			if (!$response->error->exist) {
+				$filter[] = array(
+					'glue'      => 'and',
+					'condition' => array(
+						array(
+							'glue'      => 'and',
+							'condition' => array('column' => $this->entity['dl']['alias'] . '.language', 'comparison' => '=', 'value' => $response->result->set->getId()),
+						)
+					)
+				);
+			}
+		}
+		$response = $this->listDistricts($filter, null, array('start' => 0, 'count' => 1));
+
+		if ($response->error->exist) {
+			return $response;
+		}
+		$response->result->set = $response->result->set[0];
+		$response->stats->execution->start = $timeStamp;
+		$response->stats->execution->end = microtime(true);
+
+		return $response;
+	}
 }
