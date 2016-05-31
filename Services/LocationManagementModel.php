@@ -2731,8 +2731,9 @@ class LocationManagementModel extends CoreModel {
 		if (!is_null($filter)) {
 			$fStr = $this->prepareWhere($filter);
 			$wStr .= ' WHERE ' . $fStr;
-			$qStr .= $wStr;
 		}
+		$qStr .= $wStr . $gStr . $oStr;
+
 		$q = $this->em->createQuery($qStr);
 		$q = $this->addLimit($q, $limit);
 		$result = $q->getResult();
