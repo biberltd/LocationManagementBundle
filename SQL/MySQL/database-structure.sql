@@ -98,7 +98,7 @@ CREATE TABLE `country_localization` (
   UNIQUE KEY `idxULocalizedUrlKeyOfCountry` (`country`,`language`,`url_key`) USING BTREE,
   KEY `idxFCountryLocalizationLanguage` (`language`) USING BTREE,
   KEY `idxFLocalizedCountry` (`country`) USING BTREE,
-  KEY `idxULocalizedNameOfCountry` (`country`,`language`,`name`) USING BTREE,
+  KEY `idxNLocalizedNameOfCountry` (`country`,`language`,`name`) USING BTREE,
   CONSTRAINT `idxFCountryLocalizationLanguage` FOREIGN KEY (`country`) REFERENCES `country` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `idxFLocalizedCountry` FOREIGN KEY (`language`) REFERENCES `language` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_turkish_ci ROW_FORMAT=COMPACT;
@@ -213,10 +213,10 @@ CREATE TABLE `state` (
   `country` int(10) unsigned NOT NULL COMMENT 'Country that state is located in.',
   `code_iso` varchar(45) COLLATE utf8_turkish_ci DEFAULT NULL COMMENT 'Iso code of state.',
   PRIMARY KEY (`id`),
-  UNIQUE KEY `idx_u_state_id` (`id`),
-  UNIQUE KEY `idx_u_state_code_iso` (`code_iso`),
+  UNIQUE KEY `idxUStateId` (`id`),
+  UNIQUE KEY `idxNStateCodeIso` (`code_iso`),
   KEY `idx_f_state_country_idx` (`country`),
-  CONSTRAINT `state_ibfk_1` FOREIGN KEY (`country`) REFERENCES `country` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `idxFCountryOfState` FOREIGN KEY (`country`) REFERENCES `country` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_turkish_ci ROW_FORMAT=COMPACT;
 
 -- ----------------------------
@@ -229,9 +229,9 @@ CREATE TABLE `state_localization` (
   `name` varchar(45) COLLATE utf8_turkish_ci DEFAULT NULL COMMENT 'Localized name of state.',
   `url_key` varchar(155) COLLATE utf8_turkish_ci DEFAULT NULL COMMENT 'Localized url key of state.',
   PRIMARY KEY (`state`,`language`),
-  UNIQUE KEY `idx_u_state_localization` (`state`,`language`),
-  UNIQUE KEY `idx_u_state_localization_url_key` (`state`,`language`,`url_key`),
-  UNIQUE KEY `idx_u_state_localization_name` (`state`,`language`,`name`),
+  UNIQUE KEY `idxUStateLocalization` (`state`,`language`),
+  UNIQUE KEY `idxUStateLocalizationUrlKey` (`state`,`language`,`url_key`),
+  UNIQUE KEY `idxUStateLocalizationName` (`state`,`language`,`name`),
   KEY `idx_f_state_localization_language_idx` (`language`),
   KEY `idx_f_state_localization_state_idx` (`state`),
   CONSTRAINT `state_localization_ibfk_1` FOREIGN KEY (`language`) REFERENCES `language` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,

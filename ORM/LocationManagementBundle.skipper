@@ -291,10 +291,10 @@
       <field name="country" description="Country where city is located." type="integer" size="10" required="true" uuid="73d16e41-7684-4021-9dca-f4c4d94d9a67"/>
       <field name="state" description="State where city is located." type="integer" size="10" uuid="49d16a27-e9c1-40b8-b2a9-030719eb9bb0"/>
       <field name="code" description="City code." type="string" size="45" uuid="b5b6148f-9c36-4954-9753-2af8e016ca44"/>
-      <index name="idx_u_city_id" unique="true">
+      <index name="idxUCityId" unique="true">
         <index-field name="id"/>
       </index>
-      <index name="idx_u_city_code" unique="true">
+      <index name="idxUCityCode" unique="true">
         <index-field name="country"/>
         <index-field name="state"/>
         <index-field name="code"/>
@@ -330,16 +330,16 @@
       <field name="language" description="Localization language." type="integer" size="5" required="true" primary="true" uuid="df72ee67-840b-460b-9d0a-d204645f639e"/>
       <field name="name" description="Localized name of city." type="string" size="45" required="true" uuid="f8e5b665-a1d2-4715-9da9-380219c1625b"/>
       <field name="url_key" description="Localized url key of city." type="string" size="155" required="true" uuid="5a4b3340-2659-4f74-a643-593cfec98c51"/>
-      <index name="idx_u_city_localization" unique="true">
+      <index name="idxUCityLocalization" unique="true">
         <index-field name="city"/>
         <index-field name="language"/>
       </index>
-      <index name="idx_u_city_localization_name" unique="true">
+      <index name="idxUCityLocalizationName" unique="true">
         <index-field name="city"/>
         <index-field name="language"/>
         <index-field name="name"/>
       </index>
-      <index name="idx_u_city_localization_url_key" unique="true">
+      <index name="idxUCityLocalizationUrlKey" unique="true">
         <index-field name="city"/>
         <index-field name="language"/>
         <index-field name="url_key"/>
@@ -379,10 +379,10 @@
         </orm-attributes>
       </field>
       <field name="code_iso" description="ISO code of country." type="string" size="45" required="true" unique="true" uuid="85621623-a7f9-4e62-abe0-9fc93a017fe6"/>
-      <index name="idx_u_country_id" unique="true">
+      <index name="idxUCountryId" unique="true">
         <index-field name="id"/>
       </index>
-      <index name="idx_u_country_code_iso" unique="true">
+      <index name="idxUCountryCodeIso" unique="true">
         <index-field name="code_iso"/>
       </index>
       <orm-attributes>
@@ -400,16 +400,16 @@
       <field name="language" description="Localized language." type="integer" size="5" required="true" primary="true" uuid="ea90e223-2089-49ed-af22-1fa2a52b51b5"/>
       <field name="name" description="Localized name of country." type="string" size="45" required="true" uuid="413002e4-4446-4f4d-95e7-43cb36b47a18"/>
       <field name="url_key" description="Localized url key of country." type="string" size="155" required="true" uuid="4d3eb989-99d1-48c8-9a3f-dde229f415fe"/>
-      <index name="idx_u_country_localization" unique="true">
+      <index name="idxUCountryLocalization" unique="true">
         <index-field name="country"/>
         <index-field name="language"/>
       </index>
-      <index name="idx_u_country_localization_url_key" unique="true">
+      <index name="idxULocalizedUrlKeyOfCountry" unique="true">
         <index-field name="url_key"/>
         <index-field name="country"/>
         <index-field name="language"/>
       </index>
-      <index name="idx_u_country_localization_name">
+      <index name="idxNLocalizedNameOfCountry">
         <index-field name="name"/>
         <index-field name="country"/>
         <index-field name="language"/>
@@ -525,10 +525,10 @@
       </field>
       <field name="country" description="Country where state is located." type="integer" size="10" uuid="732bcb10-8a07-45a1-ad0f-d8505875a2cf"/>
       <field name="code_iso" description="Iso code." type="string" size="45" uuid="caa0502c-9498-4a98-827f-3d0a321fa4b4"/>
-      <index name="idx_u_state_id" unique="true">
+      <index name="idxUStateId" unique="true">
         <index-field name="id"/>
       </index>
-      <index name="idx_u_state_code_iso">
+      <index name="idxNStateCodeIso">
         <index-field name="code_iso"/>
       </index>
       <orm-attributes>
@@ -554,16 +554,16 @@
       <field name="language" description="Localization language." type="integer" size="5" required="true" primary="true" uuid="50ef43df-e7c5-48af-b341-b54e208c9fc3"/>
       <field name="name" description="Localized name of state." type="string" size="45" required="true" uuid="924f4e16-eca0-495e-9321-b20e779b23f6"/>
       <field name="url_key" description="Localized url key of state." type="string" size="155" required="true" uuid="a5c0e9da-95fa-4448-a2c7-4c898a20cd7f"/>
-      <index name="idx_u_state_localization" unique="true">
+      <index name="idxUStateLocalization" unique="true">
         <index-field name="state"/>
         <index-field name="language"/>
       </index>
-      <index name="idx_u_state_localization_name" unique="true">
+      <index name="idxUStateLocalizationName" unique="true">
         <index-field name="state"/>
         <index-field name="language"/>
         <index-field name="name"/>
       </index>
-      <index name="idx_u_state_localization_url_key" unique="true">
+      <index name="idxUStateLocalizationUrlKey" unique="true">
         <index-field name="state"/>
         <index-field name="language"/>
         <index-field name="url_key"/>
@@ -1281,30 +1281,30 @@
     <association uuid="f1f49857-ea44-4326-a0c3-7d2264ae610e" color="#969696"/>
     <association uuid="f4b0d82d-96f6-49e4-b213-9292f3fa75bd" color="#969696"/>
     <entity uuid="04602777-d7d4-4b5f-9557-c3a1ba1f9dbb" bg-color="#FFFFFF" hdr-color="#D2D2D2" position-x="350" position-y="100" size-x="0" size-x2="20" size-y="0" size-y2="20"/>
-    <entity uuid="049505c7-3acd-4136-b5ed-1647bdd2044a" bg-color="4294967295" hdr-color="4292006610" position-x="229" position-y="140" size-x="0" size-x2="110" size-y="0" size-y2="59"/>
+    <entity uuid="049505c7-3acd-4136-b5ed-1647bdd2044a" bg-color="#FFFFFF" hdr-color="#D2D2D2" position-x="229" position-y="140" size-x="0" size-x2="110" size-y="0" size-y2="59"/>
     <entity uuid="062dc364-3d01-474f-8a28-77bb8b1e21fd" bg-color="#FFFFFF" hdr-color="#D2D2D2" position-x="550" position-y="1" size-x="0" size-x2="130" size-y="0" size-y2="87"/>
     <entity uuid="07eeeac7-da1a-48f5-96c1-665a12f5d84f" bg-color="#FFFFFF" hdr-color="#D2D2D2" position-x="450" position-y="401" size-x="0" size-x2="125" size-y="0" size-y2="59"/>
     <entity uuid="08d2afb5-f4dd-4e24-82bb-1e5f529f940d" bg-color="#FFFFFF" hdr-color="#D2D2D2" position-x="30" position-y="240" size-x="0" size-x2="130" size-y="0" size-y2="241"/>
-    <entity uuid="0bdf95d0-6dd8-4200-9fda-73f5bff5d4b5" bg-color="4294967295" hdr-color="4292006610" position-x="519" position-y="290" size-x="0" size-x2="110" size-y="0" size-y2="73"/>
+    <entity uuid="0bdf95d0-6dd8-4200-9fda-73f5bff5d4b5" bg-color="#FFFFFF" hdr-color="#D2D2D2" position-x="519" position-y="290" size-x="0" size-x2="110" size-y="0" size-y2="73"/>
     <entity uuid="2d0a30b3-246d-47fa-b198-331e87d4a439" bg-color="#FFFFFF" hdr-color="#D2D2D2" position-x="200" position-y="294" size-x="0" size-x2="121" size-y="0" size-y2="59"/>
     <entity uuid="3e8dc8f5-d5ef-4c4b-9812-82193cb9d7b7" bg-color="#FFFFFF" hdr-color="#D2D2D2" position-x="431" position-y="466" size-x="0" size-x2="109" size-y="0" size-y2="45"/>
     <entity uuid="41bcf7a2-e5e3-42a8-af5a-39de1f0e86ff" bg-color="#FFFFFF" hdr-color="#D2D2D2" position-x="400" position-y="44" size-x="0" size-x2="130" size-y="0" size-y2="115"/>
-    <entity uuid="4491fd31-1d20-4753-9166-184196ae6040" bg-color="4294967295" hdr-color="4292006610" position-x="429" position-y="47" size-x="0" size-x2="110" size-y="0" size-y2="73"/>
+    <entity uuid="4491fd31-1d20-4753-9166-184196ae6040" bg-color="#FFFFFF" hdr-color="#D2D2D2" position-x="429" position-y="47" size-x="0" size-x2="110" size-y="0" size-y2="73"/>
     <entity uuid="45fa10e6-64bd-4726-82aa-61fd301b1b5f" bg-color="#FFFFFF" hdr-color="#D2D2D2" position-x="50" position-y="50" size-x="0" size-x2="148" size-y="0" size-y2="157"/>
     <entity uuid="4da3d5f1-bc44-46ce-9405-c08218f83507" bg-color="#FFFFFF" hdr-color="#D2D2D2" position-x="730" position-y="40" size-x="0" size-x2="131" size-y="0" size-y2="143"/>
     <entity uuid="51a49df6-ca2b-4fdd-92bc-e8ad59b3865e" bg-color="#FFFFFF" hdr-color="#D2D2D2" position-x="255" position-y="444" size-x="0" size-x2="85" size-y="0" size-y2="45"/>
     <entity uuid="7ce99bbb-4d97-4ee5-8703-dfe82e965514" bg-color="#FFFFFF" hdr-color="#D2D2D2" position-x="100" position-y="94" size-x="0" size-x2="109" size-y="0" size-y2="115"/>
     <entity uuid="9109d3a6-7a5c-4ab9-8ff7-8b5da86662c6" bg-color="#FFFFFF" hdr-color="#D2D2D2" position-x="50" position-y="401" size-x="0" size-x2="363" size-y="0" size-y2="87"/>
-    <entity uuid="9b3e403e-b5ab-4cce-ba8b-89f148856874" bg-color="4294967295" hdr-color="4292006610" position-x="329" position-y="240" size-x="0" size-x2="110" size-y="0" size-y2="73"/>
+    <entity uuid="9b3e403e-b5ab-4cce-ba8b-89f148856874" bg-color="#FFFFFF" hdr-color="#D2D2D2" position-x="329" position-y="240" size-x="0" size-x2="110" size-y="0" size-y2="73"/>
     <entity uuid="9df7cd56-6a97-410f-b0fe-2fd5538bd528" bg-color="#FFFFFF" hdr-color="#D2D2D2" position-x="350" position-y="51" size-x="0" size-x2="112" size-y="0" size-y2="87"/>
     <entity uuid="a12d9552-e3b0-4189-870d-82bf4cd5b6ed" bg-color="#FFFFFF" hdr-color="#D2D2D2" position-x="500" position-y="151" size-x="0" size-x2="130" size-y="0" size-y2="87"/>
     <entity uuid="afaa4cd5-a9f4-4fa8-a0f3-c68989c619fc" bg-color="#FFFFFF" hdr-color="#D2D2D2" position-x="50" position-y="1" size-x="0" size-x2="159" size-y="0" size-y2="269"/>
-    <entity uuid="bd6f61b6-36df-4553-9758-fefbe894e2f5" bg-color="4294967295" hdr-color="4292006610" position-x="519" position-y="190" size-x="0" size-x2="110" size-y="0" size-y2="73"/>
+    <entity uuid="bd6f61b6-36df-4553-9758-fefbe894e2f5" bg-color="#FFFFFF" hdr-color="#D2D2D2" position-x="519" position-y="190" size-x="0" size-x2="110" size-y="0" size-y2="73"/>
     <entity uuid="c04c801c-5047-41eb-9209-dfd6732d5e31" bg-color="#FFFFFF" hdr-color="#D2D2D2" position-x="445" position-y="30" size-x="0" size-x2="156" size-y="0" size-y2="213"/>
     <entity uuid="cf5e8fea-aa64-4bbf-9857-4ab6ea189b62" bg-color="#FFFFFF" hdr-color="#D2D2D2" position-x="734" position-y="468" size-x="0" size-x2="20" size-y="0" size-y2="20"/>
     <entity uuid="d2239fdc-8e09-4f31-9560-586129111850" bg-color="#FFFFFF" hdr-color="#D2D2D2" position-x="926" position-y="412" size-x="0" size-x2="20" size-y="0" size-y2="20"/>
     <entity uuid="d731b316-305d-4125-8824-3385eb5120ea" bg-color="#FFFFFF" hdr-color="#D2D2D2" position-x="300" position-y="251" size-x="0" size-x2="130" size-y="0" size-y2="129"/>
-    <entity uuid="de18dab0-920f-417b-be06-295fafcfa738" bg-color="4294967295" hdr-color="4292006610" position-x="229" position-y="65" size-x="0" size-x2="110" size-y="0" size-y2="45"/>
+    <entity uuid="de18dab0-920f-417b-be06-295fafcfa738" bg-color="#FFFFFF" hdr-color="#D2D2D2" position-x="229" position-y="65" size-x="0" size-x2="110" size-y="0" size-y2="45"/>
     <entity uuid="e19f9517-5f61-4eeb-ba10-cbc7ba6448e0" bg-color="#FFFFFF" hdr-color="#D2D2D2" position-x="41" position-y="145" size-x="0" size-x2="20" size-y="0" size-y2="20"/>
     <entity uuid="edc820a6-e14d-41ad-a986-7cabb15fd53a" bg-color="#FFFFFF" hdr-color="#D2D2D2" position-x="197" position-y="99" size-x="0" size-x2="130" size-y="0" size-y2="269"/>
     <module uuid="116d2750-ee5f-4537-84d5-7d45771499d3" bg-color="#C70000" position-x="220" position-y="560" size-x="20" size-x2="1079" size-y="10" size-y2="559"/>
